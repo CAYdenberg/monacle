@@ -8,7 +8,6 @@ var hbs = require('express-hbs');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var search = require('./routes/search');
 var lens = require('./routes/lens');
 
 var app = express();
@@ -30,7 +29,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/search', search);
 app.use('/lens', lens);
 
 // catch 404 and forward to error handler
