@@ -281,7 +281,6 @@ function render(request, response) {
   var results = response.pages[page].results;
   var journals = request.journalList.allJournals;
   var resultTemplate = Handlebars.compile($('#result-template').html());
-  console.log(request);
   var journalTemplate = Handlebars.compile($('#journal-template').html());
   $('#result-total').html(response.paginator.generateMessage());
   $('#pagination').bootstrapPaginator({
@@ -303,6 +302,7 @@ function render(request, response) {
   $('.search-refresh').unbind().change(function() {
     modifyRequest( $(this) );
   });
+  bindHandlers();
 }
 
 //get GET variable by name
@@ -314,8 +314,24 @@ function getParameterByName(name) {
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+function bindHandlers() {
+  $('.save').click(function(e) {
+    e.preventDefault();
+    var data = 'pmcid=' + $(this).data('pmcid');
+    console.log(data);
+    $.ajax({
+      method : 'POST',
+      url : '/save/',
+      data : data,
+      dataType : 'json',
+      success : function(dataBack) {
+        console.log(dataBack);
+      }
+    });
+  });
+}
 
-$( document ).ready(function() {  
+$(document).ready(function() {  
   //on page load, get GET variable "query"
   var value = getParameterByName("query");
   if (value.length > 0) {
@@ -329,4 +345,5 @@ $( document ).ready(function() {
   $('.search-refresh').change(function() {
     modifyRequest( $(this) );
   });
+
 });

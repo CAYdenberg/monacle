@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
+var mongoose = require('mongoose');
 
+//models
+var User = require('../models/user.js');
 
 function getGeneralResponse() {
 	return {
@@ -18,6 +21,7 @@ function getGeneralResponse() {
 router.get('/:page?', function(req, res, next) {
 	var page = req.params.page;
 	var fields = getGeneralResponse();
+	console.log(req.session.passport.user);
 	if ( typeof page === 'undefined' ) {
 		res.render('home', fields );
 	} else if ( page === 'about' ) {
@@ -37,6 +41,16 @@ router.get('/search', function(req, res) {
  	fields.scripts.push('/js/handlebars-v2.0.0.js');
  	fields.scripts.push('/js/livesearch.js');
  	res.render('search', fields );
+});
+
+router.get('/signup', function(req, res) {
+	var context = getGeneralResponse();
+	res.render('signup', context);
+});
+
+router.get('/signin', function(req, res) {
+	var context = getGeneralResponse();
+	res.render('signin', context);
 });
 
 module.exports = router;
