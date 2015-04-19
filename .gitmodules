@@ -1,0 +1,3 @@
+[submodule "dist/lens-starter"]
+	path = dist/lens-starter
+	url = https://github.com/CAYdenberg/lens-starter.git
