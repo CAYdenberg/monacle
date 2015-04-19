@@ -5,10 +5,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var hbs = require('express-hbs');
+var config = require('./config.js');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var lens = require('./routes/lens');
 
 var app = express();
 
@@ -25,11 +25,10 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'dist')));
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/lens', lens);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -42,7 +41,7 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
+if (config.env === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {
