@@ -6,6 +6,7 @@ var rename = require('gulp-rename');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
+var less = require('gulp-less-sourcemap');
 var minifyCSS = require('gulp-minify-css');
 var concat = require('gulp-concat');
 var sourcemaps = require('gulp-sourcemaps');
@@ -66,7 +67,14 @@ gulp.task('js', function () {
 });
 
 gulp.task('css', function() {
-	return gulp.src('./src/css/style.css')
+	return gulp.src('./src/less/main.less')
+		.pipe(rename('style.css'))
+		.pipe(less({
+        	sourceMap: {
+            	sourceMapRootpath: '../less' // Optional absolute or relative path to your LESS files 
+        	}
+    	}))
+    	.on('error', gutil.log)
 		.pipe(gulp.dest('./dist/css'))
 		.pipe(rename('style.min.css'))
 		.pipe(minifyCSS())
