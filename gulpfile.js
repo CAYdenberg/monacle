@@ -11,6 +11,21 @@ var minifyCSS = require('gulp-minify-css');
 var concat = require('gulp-concat');
 var sourcemaps = require('gulp-sourcemaps');
 var gutil = require('gulp-util');
+var mocha = require('gulp-mocha');
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* RUN TESTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+gulp.task('test', function() {
+    return gulp.src(['test/*.js'], { read: false })
+        .pipe(mocha({ reporter: 'list' }))
+        .on('error', gutil.log);
+});
+
+gulp.task('test-watch', function() {
+    gulp.watch(['lib/**', 'test/**', 'routes/**'], ['test']);
+});
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -71,7 +86,7 @@ gulp.task('css', function() {
 		.pipe(rename('style.css'))
 		.pipe(less({
         	sourceMap: {
-            	sourceMapRootpath: '../less' // Optional absolute or relative path to your LESS files 
+            	sourceMapRootpath: '../less' // Optional absolute or relative path to your LESS files
         	}
     	}))
     	.on('error', gutil.log)
