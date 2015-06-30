@@ -1,5 +1,4 @@
 //test the tests
-
 var assert = require("assert")
 describe('Array', function(){
   describe('#indexOf()', function(){
@@ -8,7 +7,7 @@ describe('Array', function(){
       assert.equal(-1, [1,2,3].indexOf(0));
     })
   })
-});
+})
 
 
 var Eutils = require('../lib/ncbi-eutils/Eutils.js');
@@ -42,12 +41,40 @@ describe('Eutils', function() {
 
 var Parser = require('../lib/ncbi-eutils/Parser.js');
 describe('Parser', function() {
-  var parser = new Parser();
+  var documentParser = new Parser('entireDoc');
+  var xml = '<eSearchResult> <Count>8</Count> <RetMax>8</RetMax> <RetStart>0</RetStart> <IdList> <Id>25995115</Id> <Id>24719456</Id> <Id>23727094</Id> <Id>22323294</Id> <Id>22002930</Id> <Id>19188495</Id> <Id>18979235</Id> <Id>18474625</Id> </IdList> <TranslationSet/> <TranslationStack> <TermSet> <Term>ydenberg ca[Author]</Term> <Field>Author</Field> <Count>8</Count> <Explode>N</Explode> </TermSet> <OP>GROUP</OP> </TranslationStack> <QueryTranslation>ydenberg ca[Author]</QueryTranslation> </eSearchResult>';
 
-  describe('load', function() {
-    it('should return a promise with method then', function() {
-      load = parser.load('<eSearchResult> <Count>8</Count> <RetMax>8</RetMax> <RetStart>0</RetStart> <IdList> <Id>25995115</Id> <Id>24719456</Id> <Id>23727094</Id> <Id>22323294</Id> <Id>22002930</Id> <Id>19188495</Id> <Id>18979235</Id> <Id>18474625</Id> </IdList> <TranslationSet/> <TranslationStack> <TermSet> <Term>ydenberg ca[Author]</Term> <Field>Author</Field> <Count>8</Count> <Explode>N</Explode> </TermSet> <OP>GROUP</OP> </TranslationStack> <QueryTranslation>ydenberg ca[Author]</QueryTranslation> </eSearchResult>');
-      load.then();
+  describe('parse', function() {
+    it('should return a promise that resolves with valid data', function(done) {
+      documentParser.parse(xml).then(function(data) {
+        assert.equal(data.eSearchResult.Count, 8);
+        done();
+      });
+    });
+  });
+
+
+  describe('protocols', function() {
+
+    var countParser = new Parser('count');
+    describe('count', function() {
+      it('should get the count attribute from the parsed data', function(done) {
+        countParser.parse(xml).then(function(data) {
+          assert.equal(data, 8);
+          done();
+        });
+      });
+    });
+
+    var idParser = new Parser('ids');
+    describe('ids', function() {
+      it('should return the ids from the parsed data as a simple array', function(done) {
+        idParser.parse(xml).then(function(data) {
+          assert.equal(data.length, 8);
+          assert.equal(data[0], '25995115');
+          done();
+        });
+      });
     });
 
   });
