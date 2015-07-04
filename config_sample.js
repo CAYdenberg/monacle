@@ -1,4 +1,6 @@
 module.exports = {
 	secretKey : '',
-	dbConnect : ''
+	dbConnect : '',
+	env: 'development',
+	port: ''
 };
