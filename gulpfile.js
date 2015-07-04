@@ -105,9 +105,7 @@ gulp.task('css', function() {
 gulp.task('build', ['js', 'css', 'vendor-js', 'vendor-css']);
 
 //default. Just the primary (non-vendor) CSS and JS
-gulp.task('default', ['js', 'css'], function(cb){
-  cb();
-});
+gulp.task('default', ['js', 'css']);
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~
@@ -118,7 +116,7 @@ gulp.task('default', ['js', 'css'], function(cb){
 // connected to browser-sync after restarting nodemon
 var BROWSER_SYNC_RELOAD_DELAY = 500;
 
-gulp.task('nodemon', function (cb) {
+gulp.task('nodemon', function () {
   var called = false;
   return nodemon({
 
