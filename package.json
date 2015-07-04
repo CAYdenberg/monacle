@@ -13,6 +13,7 @@
     "event-emitter": "~0.3.3",
     "express": "~4.9.0",
     "express-hbs": "*",
+    "gulp-browserify": "~0.5.1",
     "gulp-concat": "~2.5.2",
     "gulp-less-sourcemap": "~1.4.2",
     "gulp-minify-css": "~1.0.0",
@@ -29,9 +30,10 @@
     "xml2js": "^0.4.9"
   },
   "devDependencies": {
-    "gulp": "~3.8.10",
-    "gulp-browserify": "~0.5.1",
+    "browser-sync": "^2.7.13",
+    "gulp": "^3.9.0",
     "gulp-mocha": "^2.1.2",
+    "gulp-nodemon": "^2.0.3",
     "mocha": "^2.2.5"
   }
 }
