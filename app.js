@@ -13,11 +13,7 @@ var MongoSessionStore = require('session-mongoose')(require('connect'));
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var lens = require('./routes/lens');
 var config = require('./config.js');
-
-var routes = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
 

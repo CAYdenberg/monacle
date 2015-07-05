@@ -1,8 +1,9 @@
 node_modules/*
-notes.md
+npm-debug.log
 
 config.js
 dist/css/*
 dist/js/*
 
 *~
+notes.md

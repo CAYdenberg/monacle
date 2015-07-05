@@ -12,15 +12,10 @@ router.get('/lens', function(req, res) {
 });
 
 
+/* GET other pages. */
 router.all('/*', function(req, res, next) {
-	req.context = {
-		nav : [
-			{address: '/', label: 'Home'},
-			{address: '/about/', label: 'About'},
-			{address: '/contact/', label: 'Contact'}
-		],
-	};
-	if (env === 'development') {
+	req.context = {};
+  if (env === 'development') {
 		req.context.stylesheets = ['vendor.css', 'style.css'];
 		req.context.scripts = ['vendor.js', 'script.js'];
 	} else {
@@ -31,32 +26,20 @@ router.all('/*', function(req, res, next) {
 });
 
 
-/* GET other pages. */
-router.get('/:page?', function(req, res, next) {
-	var page = req.params.page;
-	var fields = req.context;
-	if ( typeof page === 'undefined' ) {
-		res.render('home', fields );
-	} else if ( page === 'about' ) {
-		res.render('about', fields );
-	} else if ( page === 'contact' ) {
-		res.render('contact', fields );
-	} else if ( page === 'search' ) {
-		res.render( 'search', fields )
-	} else {
-		next();
-	}
+router.get('/', function(req, res) {
+  res.render('home', req.context);
 });
 
+router.get('/search', function(req, res) {
+  res.render('search', req.context);
+});
 
 router.get('/signup', function(req, res) {
-	var context = getGeneralResponse();
-	res.render('signup', context);
+	res.render('signup', req.context);
 });
 
 router.get('/signin', function(req, res) {
-	var context = getGeneralResponse();
-	res.render('signin', context);
+	res.render('signin', req.context);
 });
 
 module.exports = router;
