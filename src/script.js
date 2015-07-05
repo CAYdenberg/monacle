@@ -1,6 +1,6 @@
 //javascript document
 
-var Eutils = require('../../lib/ncbi-eutils/Eutils.js');
+var Eutils = require('../lib/ncbi-eutils/Eutils.js');
 
 //get GET variable by name
 // got from http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript

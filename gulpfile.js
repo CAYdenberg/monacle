@@ -36,8 +36,8 @@ gulp.task('test-watch', function() {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 gulp.task('vendor-js', function(){
-	var dir = './src/vendor/js/';
-	var files = ['jquery.js', 'bootstrap.js', 'bootstrap-paginator.js', 'jquery-dateFormat.js', 'handlebars-v2.0.0.js'];
+	var dir = './bower_components/';
+	var files = ['jquery/dist/jquery.js', 'bootstrap/dist/js/bootstrap.js', 'jasny-bootstrap/dist/js/jasny-bootstrap.js'];
 	var paths = files.map(function(file) {
 		return dir + file;
 	});
@@ -49,16 +49,7 @@ gulp.task('vendor-js', function(){
 		.pipe(gulp.dest('./dist/js'))
 });
 
-gulp.task('vendor-css', function() {
-	return gulp.src('./src/vendor/css/*.css')
-		.pipe(concat('vendor.css'))
-		.pipe(gulp.dest('./dist/css'))
-		.pipe(rename('vendor.min.css'))
-		.pipe(minifyCSS())
-		.pipe(gulp.dest('./dist/css'))
-});
-
-gulp.task('vendor', ['vendor-js', 'vendor-css']);
+gulp.task('vendor', ['vendor-js']);
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -68,7 +59,7 @@ gulp.task('vendor', ['vendor-js', 'vendor-css']);
 gulp.task('js', function () {
   // set up the browserify instance on a task basis
   var b = browserify({
-    entries: ['./src/js/script.js'],
+    entries: ['./src/script.js'],
     debug: true
   });
 
@@ -86,11 +77,11 @@ gulp.task('js', function () {
 });
 
 gulp.task('css', function() {
-	return gulp.src('./src/less/main.less')
+	return gulp.src('./src/main.less')
 		.pipe(rename('style.css'))
 		.pipe(less({
         	sourceMap: {
-            	sourceMapRootpath: '../less' // Optional absolute or relative path to your LESS files
+            	sourceMapRootpath: './src/less/main.less' // Optional absolute or relative path to your LESS files
         	}
     	}))
     	.on('error', gutil.log)
@@ -102,7 +93,7 @@ gulp.task('css', function() {
 });
 
 //do everything
-gulp.task('build', ['js', 'css', 'vendor-js', 'vendor-css']);
+gulp.task('build', ['js', 'css', 'vendor-js']);
 
 //default. Just the primary (non-vendor) CSS and JS
 gulp.task('default', ['js', 'css']);
