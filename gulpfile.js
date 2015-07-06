@@ -44,9 +44,6 @@ gulp.task('vendor-js', function(){
 	return gulp.src(paths)
 		.pipe(concat('vendor.js'))
 		.pipe(gulp.dest('./dist/js/'))
-		.pipe(rename('vendor.min.js'))
-		.pipe(uglify())
-		.pipe(gulp.dest('./dist/js'))
 });
 
 gulp.task('vendor', ['vendor-js']);
@@ -67,27 +64,16 @@ gulp.task('js', function () {
     .pipe(source('script.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(gulp.dest('./dist/js'))
-        .pipe(rename({ extname: '.min.js' }))
-        .pipe(uglify())
-        .on('error', gutil.log)
-    .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('./dist/js'))
     .pipe(browserSync.stream());
 });
 
 gulp.task('css', function() {
 	return gulp.src('./src/main.less')
-		.pipe(rename('style.css'))
-		.pipe(less({
-        	sourceMap: {
-            	sourceMapRootpath: './src/less/main.less' // Optional absolute or relative path to your LESS files
-        	}
-    	}))
+		.pipe(rename('style'))
+		.pipe(rename({extname : '.css'}))
+		.pipe(less())
     	.on('error', gutil.log)
-		.pipe(gulp.dest('./dist/css'))
-		.pipe(rename('style.min.css'))
-		.pipe(minifyCSS())
 		.pipe(gulp.dest('./dist/css'))
     .pipe(browserSync.stream());
 });
@@ -107,29 +93,25 @@ gulp.task('default', ['js', 'css']);
 // connected to browser-sync after restarting nodemon
 var BROWSER_SYNC_RELOAD_DELAY = 500;
 
-gulp.task('nodemon', function () {
-  var called = false;
+gulp.task('nodemon', function (cb) {
+
   return nodemon({
 
     // nodemon our expressjs server
     script: 'bin/www',
 
     // watch core server file(s) that require server restart on change
-    watch: ['routes/**']
+    watch: ['routes/**.js']
   })
-    .on('start', function onStart() {
-      // ensure start only got called once
-      if (!called) { cb(); }
-      called = true;
-    })
-    .on('restart', ['default'], function onRestart() {
-      // reload connected browsers after a slight delay
-      setTimeout(function reload() {
-        browserSync.reload({
-          stream: false   //
-        });
-      }, BROWSER_SYNC_RELOAD_DELAY);
-    });
+  .once('start', cb)
+  .on('restart', function onRestart() {
+    // reload connected browsers after a slight delay
+    setTimeout(function reload() {
+      browserSync.reload({
+        stream: false   //
+      });
+    }, BROWSER_SYNC_RELOAD_DELAY);
+  });
 });
 
 gulp.task('watch', ['nodemon'], function () {
@@ -146,7 +128,7 @@ gulp.task('watch', ['nodemon'], function () {
 
   });
 
-  gulp.watch(['src/js/**', 'lib/**'], ['js']);
-  gulp.watch(['src/less/**'], ['css']);
-  gulp.watch(['views/**']).on('change', browserSync.reload);
+  gulp.watch(['src/**.js', 'lib/**.js'], ['js']);
+  gulp.watch(['src/**.less'], ['css']);
+  gulp.watch(['views/**.hbs']).on('change', browserSync.reload);
 });

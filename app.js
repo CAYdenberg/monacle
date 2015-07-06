@@ -9,7 +9,8 @@ var hbs = require('express-hbs');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var expressSession = require('express-session');
-var MongoSessionStore = require('session-mongoose')(require('connect'));
+
+// var MongoSessionStore = require('session-mongoose')(require('connect'));
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -26,19 +27,19 @@ app.set('views', path.join(__dirname, 'views'));
 
 mongoose.connect(config.dbConnect, {
     server : {
-        socketOptions : { keepAlive : 1}
+        socketOptions : { keepAlive : 1 }
     }
 });
 
-var sessionStore = new MongoSessionStore({
-    url : config.dbConnect
-});
+// var sessionStore = new MongoSessionStore({
+//     url : config.dbConnect
+// });
 
 app.use(expressSession({
     secret : config.secretKey,
     resave : true,
     saveUninitialized : false,
-    store : sessionStore
+    // store : sessionStore
 }));
 app.use(passport.initialize());
 app.use(passport.session());

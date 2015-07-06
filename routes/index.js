@@ -24,6 +24,7 @@ router.all('/*', function(req, res, next) {
 	next();
 });
 
+
 router.get('/', function(req, res) {
   req.context.pagename = 'home';
   res.render('home', req.context);
