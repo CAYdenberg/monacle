@@ -57,6 +57,7 @@ gulp.task('js', function () {
   // set up the browserify instance on a task basis
   var b = browserify({
     entries: ['./src/script.js'],
+    transform: ['reactify'],
     debug: true
   });
 
