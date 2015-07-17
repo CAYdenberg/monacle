@@ -1,6 +1,7 @@
 var React = require('react');
+var utils = require('../utils.js');
+var emitter = utils.emitter;
 
-var emitter = require('../utils.js').emitter;
 var CitationStore = require('../stores/CitationStore.js');
 var Citation = require('./Citation.js');
 
@@ -12,10 +13,10 @@ module.exports = React.createClass({
       items : []
     }
   },
-  componentDidMount : function() {
+  componentWillMount : function() {
     emitter.on('CITATIONS_UPDATED', function() {
-      console.log(store);
-    });
+      this.setState({ items : store.data });
+    }.bind(this));
   },
   render : function() {
     return (

@@ -2,7 +2,7 @@ var utils = require('../utils.js');
 var dispatcher = utils.dispatcher;
 var emitter = utils.emitter;
 
-var NCBI = require('../../lib/ncbi-eutils/actions.js');
+var NCBI = require('../../lib/NCBI/NCBI.js');
 
 function CitationStore() {
 
@@ -11,7 +11,10 @@ function CitationStore() {
   dispatcher.register(function(payload) {
     switch (payload.type) {
       case 'NEW_SEARCH':
-        NCBI.pubmedSearch(this.update, payload.content.queryString);
+        var search = NCBI.pubmedSearch(payload.content.queryString);
+        search.then(function(data) {
+          this.update(data);
+        }.bind(this));
         break;
       default:
         return true;
@@ -22,7 +25,6 @@ function CitationStore() {
 
 CitationStore.prototype.update = function(data) {
   this.data = data;
-  console.log(this.data);
   emitter.emit('CITATIONS_UPDATED');
 }
 

@@ -15,6 +15,6 @@ function getParameterByName(name) {
 
 $(document).ready(function() {
   //on page load, get GET variable "query"
-  dispatcher.dispatch({ type : 'NEW_SEARCH', content : { queryString : getParameterByName("query") } });
   React.render(<CitationList />, document.getElementById('citations'));
+  dispatcher.dispatch({ type : 'NEW_SEARCH', content : { queryString : getParameterByName("query") } });
 });
