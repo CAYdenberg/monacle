@@ -23,7 +23,7 @@ module.exports = React.createClass({
       <div className="items">
         {
           this.state.items.map(function(item) {
-            return ( <Citation data={item} key={item.pmid} /> );
+            return ( <Citation data={item} key={item.uid} /> );
           })
         }
       </div>
