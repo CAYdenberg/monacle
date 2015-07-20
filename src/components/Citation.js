@@ -1,7 +1,13 @@
 var _ = require('underscore');
 var React = require('react');
+var CitationDetails = require('./CitationDetails');
+
+var utils = require('../utils.js'),
+  dispatcher = utils.dispatcher;
+  emitter = utils.emitter;
 
 module.exports = React.createClass({
+
   formatAuthorList : function() {
     var authArr,
       authStr = '';
@@ -13,12 +19,31 @@ module.exports = React.createClass({
     }
     return authStr;
   },
+
+  toggleDetails : function() {
+    dispatcher.dispatch({ type : 'GET_DETAILS', content : {pmid : this.uid} });
+  },
+
   render: function() {
+    var headingId = "heading-PMID" + this.props.data.pubmed;
+    var collapseId = "collapse-PMID" + this.props.data.pubmed;
     return (
-      <div className="item">
-        <h4>{this.props.data.title}</h4>
-        <h5>{this.formatAuthorList()}</h5>
+      <div className="panel panel-default">
+        <div className="panel-heading" id={headingId}>
+          <h4>
+            <a onClick={this.toggleDetails} data-toggle="collapse" data-parent="#accordion" data-target={"#" + collapseId}>
+              {this.props.data.title}
+            </a>
+          </h4>
+          <h5>{this.formatAuthorList()}</h5>
+        </div>
+        <div className="panel-collapse collapse" id={collapseId}>
+          <div className="panel-body">
+            <CitationDetails data={this.props.data} />
+          </div>
+        </div>
       </div>
     )
   }
+
 });

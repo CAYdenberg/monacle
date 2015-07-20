@@ -15,12 +15,12 @@ module.exports = React.createClass({
   },
   componentWillMount : function() {
     emitter.on('CITATIONS_UPDATED', function() {
-      this.setState({ items : store.data });
+      this.setState({ items : store.items });
     }.bind(this));
   },
   render : function() {
     return (
-      <div className="items">
+      <div className="panel-group" id="accordion">
         {
           this.state.items.map(function(item) {
             return ( <Citation data={item} key={item.uid} /> );

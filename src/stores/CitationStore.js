@@ -7,14 +7,14 @@ var NCBI = require('../../lib/NCBI/NCBI.js');
 
 function CitationStore() {
 
-  this.data = [];
+  this.items = [];
 
   dispatcher.register(function(payload) {
     switch (payload.type) {
       case 'NEW_SEARCH':
         var search = NCBI.pubmedSearch(payload.content.queryString);
         search.then(function(data) {
-          this.update(data);
+          this.importItems(data);
         }.bind(this));
         break;
       default:
@@ -24,24 +24,44 @@ function CitationStore() {
 
 }
 
-CitationStore.prototype.update = function(data) {
-  this.data = data;
-  this.sortItems();
-  console.log(this.data);
-  emitter.emit('CITATIONS_UPDATED');
-}
-
 CitationStore.prototype.sortItems = function(sortingFunction) {
   if (_.isFunction(sortingFunction)) {
-    this.data.sort(sortingFunction);
+    this.items.sort(sortingFunction);
   } else {
     //default sorting function: reverse chronological
-    this.data.sort(function(a, b) {
+    this.items.sort(function(a, b) {
       aNumericDate = a.sortpubdate.replace(/\D/g,'');
       bNumericDate = b.sortpubdate.replace(/\D/g,'');
       return bNumericDate - aNumericDate;
     });
   }
+}
+
+CitationStore.prototype.importItem = function(pubmedRecord) {
+  //copy the article ids into the top-level of the obejct
+  _.each(pubmedRecord.articleids, function(idObject) {
+    if ( ['doi', 'pubmed', 'pmc'].indexOf(idObject.idtype) !== -1 ) {
+      pubmedRecord[idObject.idtype] = idObject.value;
+    }
+  });
+  var item = _.extend({
+    pubmed : null,
+    pmc : null,
+    doi : null,
+    abstract : null,
+    fulltext : null,
+    extras : null
+  }, pubmedRecord);
+  this.items.push(item);
+}
+
+CitationStore.prototype.importItems = function(data) {
+  _.each(data, function(pubmedRecord) {
+    this.importItem(pubmedRecord);
+  }.bind(this));
+  this.sortItems();
+  console.log(this.items);
+  emitter.emit('CITATIONS_UPDATED');
 }
 
 module.exports = CitationStore;
