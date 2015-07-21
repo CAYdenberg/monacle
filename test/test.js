@@ -10,11 +10,11 @@ describe('Array', function(){
 })
 
 
-var Eutils = require('../lib/ncbi-eutils/Eutils.js');
-describe('Eutils', function() {
+var Api = require('../lib/NCBI/src/Api.js');
+describe('Api', function() {
 
   //before each
-  var eutils = new Eutils({
+  var search = new Api({
     method : 'esearch',
     params : {
       db : 'pubmed',
@@ -24,13 +24,13 @@ describe('Eutils', function() {
 
   describe('generateUrl', function() {
     it('should build a valid search url', function() {
-      assert.equal(eutils.generateUrl(), 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=ydenberg%20ca&retmode=json');
+      assert.equal(search.generateUrl(), 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=ydenberg%20ca&retmode=json');
     });
   });
 
   describe('send', function() {
     it('should return a promise with method then', function() {
-      send = eutils.send();
+      send = search.send();
       send.then();
     });
   });
@@ -38,57 +38,37 @@ describe('Eutils', function() {
 });
 
 
-// var Parser = require('../lib/ncbi-eutils/Parser.js');
-// describe('Parser', function() {
-//   var documentParser = new Parser('entireResponse');
-//   var xml = '<eSearchResult> <Count>8</Count> <RetMax>8</RetMax> <RetStart>0</RetStart> <IdList> <Id>25995115</Id> <Id>24719456</Id> <Id>23727094</Id> <Id>22323294</Id> <Id>22002930</Id> <Id>19188495</Id> <Id>18979235</Id> <Id>18474625</Id> </IdList> <TranslationSet/> <TranslationStack> <TermSet> <Term>ydenberg ca[Author]</Term> <Field>Author</Field> <Count>8</Count> <Explode>N</Explode> </TermSet> <OP>GROUP</OP> </TranslationStack> <QueryTranslation>ydenberg ca[Author]</QueryTranslation> </eSearchResult>';
-//
-//   describe('parse', function() {
-//     it('should return a promise that resolves with valid data', function(done) {
-//       documentParser.parseXml(xml).then(function(data) {
-//         assert.equal(data.eSearchResult.Count, 8);
-//         done();
-//       });
-//     });
-//   });
-//
-//
-//   describe('protocols', function() {
-//
-//     var countParser = new Parser('count');
-//     describe('count', function() {
-//       it('should get the count attribute from the parsed data', function(done) {
-//         countParser.parseXml(xml).then(function(data) {
-//           assert.equal(data, 8);
-//           done();
-//         });
-//       });
-//     });
-//
-//     var idParser = new Parser('ids');
-//     describe('ids', function() {
-//       it('should return the ids from the parsed data as a simple array', function(done) {
-//         idParser.parseXml(xml).then(function(data) {
-//           assert.equal(data.length, 8);
-//           assert.equal(data[0], '25995115');
-//           done();
-//         });
-//       });
-//     });
-//
-//   });
-// });
+var parsers = require('../lib/NCBI/src/parsers.js');
+describe('Parser', function() {
+
+  var xml = '<eSearchResult> <Count>8</Count> <RetMax>8</RetMax> <RetStart>0</RetStart> <IdList> <Id>25995115</Id> <Id>24719456</Id> <Id>23727094</Id> <Id>22323294</Id> <Id>22002930</Id> <Id>19188495</Id> <Id>18979235</Id> <Id>18474625</Id> </IdList> <TranslationSet/> <TranslationStack> <TermSet> <Term>ydenberg ca[Author]</Term> <Field>Author</Field> <Count>8</Count> <Explode>N</Explode> </TermSet> <OP>GROUP</OP> </TranslationStack> <QueryTranslation>ydenberg ca[Author]</QueryTranslation> </eSearchResult>';
+  var json = JSON.parse('{"header":{"type":"esearch","version":"0.3"},"esearchresult":{"count":"9","retmax":"9","retstart":"0","idlist":["26147656","25995115","24719456","23727094","22323294","22002930","19188495","18979235","18474625"],"translationset":[],"translationstack":[{"term":"ydenberg ca[Author]","field":"Author","count":"9","explode":"N"},"GROUP"],"querytranslation":"ydenberg ca[Author]"}}');
+
+  describe('count', function() {
+    it('should return a promise that resolves with valid data', function() {
+      assert.equal(parsers.count(json), 9);
+    });
+  });
+
+  describe('ids', function() {
+    it('should return an array of ids', function() {
+      assert.equal(parsers.ids(json).length, 9);
+    });
+  });
+
+  
+});
 
 
-var actions = require('../lib/ncbi-eutils/actions.js');
-describe('actions', function() {
+var actions = require('../lib/NCBI/NCBI.js');
+describe('NCBI actions', function() {
   var pubmedSearch = actions.pubmedSearch;
   describe('pubmedSearch', function() {
     it('should search pubmed', function(done) {
-      var result = pubmedSearch(function(papers) {
+      var result = pubmedSearch('rose md', {resultsPerPage : 10}).then(function(papers) {
         assert.equal(papers.length, 10);
         done();
-      }, 'rose md', {resultsPerPage : 10});
+      });
     });
   });
 
