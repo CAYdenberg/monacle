@@ -67,6 +67,7 @@ describe('Parser', function() {
 
 var actions = require('../lib/NCBI/ncbi.js');
 describe('ncbi', function() {
+
   var pubmedSearch = actions.pubmedSearch;
   describe('pubmedSearch', function() {
     it('should search pubmed', function(done) {
@@ -75,9 +76,32 @@ describe('ncbi', function() {
         done();
       });
     });
-    it('should return an empty array if no results are found', function() {
+    it('should return an empty array if no results are found', function(done) {
       var result = pubmedSearch('canucks flames').then(function(result) {
-        assert.equal([], result);
+        assert.equal(0, result.length);
+        done();
+      });
+    });
+  });
+
+  var getAbstract = actions.getAbstract;
+  describe('getAbstract', function() {
+    it('should return the abstract from pubmed', function(done) {
+      getAbstract(26147656).then(function(data) {
+        assert.ok(data);
+        done();
+      });
+    });
+    it('should return multiple abstracts from pubmed', function(done) {
+      var result = getAbstract([25187651, 26147656]).then(function(data) {
+        assert.ok(data);
+        done();
+      });
+    });
+    it('should return null if bad pmid is sent', function(done) {
+      var result = getAbstract(0).then(function(data) {
+        assert.equal(0, data.length);
+        done();
       });
     });
   });

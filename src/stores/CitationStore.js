@@ -3,7 +3,7 @@ var utils = require('../utils.js');
 var dispatcher = utils.dispatcher;
 var emitter = utils.emitter;
 
-var NCBI = require('../../lib/NCBI/NCBI.js');
+var ncbi = require('../../lib/NCBI/ncbi.js');
 
 function CitationStore() {
 
@@ -11,12 +11,17 @@ function CitationStore() {
 
   dispatcher.register(function(payload) {
     switch (payload.type) {
+
       case 'NEW_SEARCH':
-        var search = NCBI.pubmedSearch(payload.content.queryString);
+        var search = ncbi.pubmedSearch(payload.content.queryString);
         search.then(function(data) {
           this.importItems(data);
         }.bind(this));
         break;
+
+      case 'GET_DETAILS':
+        
+
       default:
         return true;
     }
