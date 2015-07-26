@@ -7,13 +7,13 @@ var utils = require('../utils.js'),
 
 module.exports = React.createClass({
   render: function() {
-    if ( ! _.isNull(this.props.data.abstract) ) {
+    if ( _.isNull(this.props.data.abstract) ) {
       return (
-        <div className="abstract">{this.props.data.abstract}</div>
+        <div className="progressBar">Progress bar</div>
       )
     } else {
       return (
-        <div className="progressBar">Progress bar</div>
+        <div className="abstract">{this.props.data.abstract}</div>
       )
     }
   }

@@ -20,7 +20,10 @@ function CitationStore() {
         break;
 
       case 'GET_DETAILS':
-        
+        ncbi.getAbstract(payload.content.pmid).then(function(data) {
+          this.updateItems(payload.content.pmid, {abstract : data});
+        }.bind(this));
+        break;
 
       default:
         return true;
@@ -65,6 +68,18 @@ CitationStore.prototype.importItems = function(data) {
     this.importItem(pubmedRecord);
   }.bind(this));
   this.sortItems();
+  console.log(this.items);
+  emitter.emit('CITATIONS_UPDATED');
+}
+
+CitationStore.prototype.updateItems = function(pubmed, updates) {
+  updatedItems = _.map( this.items, function(item) {
+    if (item.pubmed === pubmed) {
+      _.extend(item, updates);
+    }
+    return item;
+  });
+  this.items = updatedItems;
   console.log(this.items);
   emitter.emit('CITATIONS_UPDATED');
 }

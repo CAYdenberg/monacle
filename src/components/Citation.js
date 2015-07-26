@@ -21,7 +21,10 @@ module.exports = React.createClass({
   },
 
   toggleDetails : function() {
-    dispatcher.dispatch({ type : 'GET_DETAILS', content : {pmid : this.uid} });
+    if ( !this.props.data.abstract ) {
+      //... then lets go get it
+      dispatcher.dispatch({ type : 'GET_DETAILS', content : {pmid : this.props.data.pubmed} });
+    }
   },
 
   render: function() {
