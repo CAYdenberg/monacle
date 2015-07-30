@@ -62,6 +62,17 @@ describe('Parser', function() {
     });
   });
 
+  describe('deepSearch', function() {
+    it('should not get caught in a stack error no matter what kind of data it gets', function(done) {
+      assert.ok(json._deepSearch(null));
+      assert.ok(json._deepSearch([]));
+      assert.ok(json._deepSearch(0));
+      assert.ok(json._deepSearch(Math.pi));
+      assert.ok(json._deepSearch(undefined));
+      done();
+    });
+  });
+
 });
 
 
@@ -71,14 +82,15 @@ describe('ncbi', function() {
   var pubmedSearch = actions.pubmedSearch;
   describe('pubmedSearch', function() {
     it('should search pubmed', function(done) {
-      var result = pubmedSearch('rose md', {resultsPerPage : 10}).then(function(papers) {
-        assert.equal(papers.length, 10);
+      var result = pubmedSearch('rose md', {resultsPerPage : 10}).then(function(res) {
+        assert.equal(res.papers.length, 10);
+        assert(res.total);
         done();
       });
     });
     it('should return an empty array if no results are found', function(done) {
-      var result = pubmedSearch('canucks flames').then(function(result) {
-        assert.equal(0, result.length);
+      var result = pubmedSearch('canucks flames').then(function(res) {
+        assert.equal(0, res.papers.length);
         done();
       });
     });
