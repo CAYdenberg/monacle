@@ -24,6 +24,7 @@ module.exports = React.createClass({
     if ( !this.props.data.abstract ) {
       //... then lets go get it
       dispatcher.dispatch({ type : 'GET_DETAILS', content : {pmid : this.props.data.pubmed} });
+      return false;
     }
   },
 
@@ -34,7 +35,7 @@ module.exports = React.createClass({
       <div className="panel panel-default">
         <div className="panel-heading" id={headingId}>
           <h4>
-            <a onClick={this.toggleDetails} data-toggle="collapse" data-parent="#accordion" data-target={"#" + collapseId}>
+            <a href="#" onClick={this.toggleDetails} data-toggle="collapse" data-parent="#accordion" data-target={"#" + collapseId}>
               {this.props.data.title}
             </a>
           </h4>

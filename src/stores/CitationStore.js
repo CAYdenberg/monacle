@@ -8,6 +8,8 @@ var ncbi = require('../../lib/NCBI/ncbi.js');
 function CitationStore() {
 
   this.items = [];
+  this.total = 0;
+  this.endOfResults = false;
 
   dispatcher.register(function(payload) {
     switch (payload.type) {
@@ -15,21 +17,42 @@ function CitationStore() {
       case 'NEW_SEARCH':
         var search = ncbi.pubmedSearch(payload.content.queryString);
         search.then(function(data) {
-          this.importItems(data);
-        }.bind(this));
+          this.total = data.total;
+          this.importItems(data.papers);
+        }.bind(this)).then(function() {
+          emitter.emit('CITATIONS_UPDATED');
+        });
+        break;
+
+      case 'LOAD_MORE':
+        if ( this.items.length < this.total ) {
+          var search = ncbi.pubmedSearch(payload.content.queryString, {
+            start: this.items.length,
+            end: this.items.length + 10
+          });
+          search.then(function(data) {
+            this.importItems(data.papers);
+          }.bind(this)).then(function() {
+            emitter.emit('CITATIONS_UPDATED')
+          });
+        }
         break;
 
       case 'GET_DETAILS':
         ncbi.getAbstract(payload.content.pmid).then(function(data) {
           this.updateItems(payload.content.pmid, {abstract : data});
-        }.bind(this));
+        }.bind(this)).then(function() {
+          emitter.emit('CITATIONS_UPDATED');
+        });
         break;
 
       default:
         return true;
-    }
-  }.bind(this));
 
+    }
+
+    console.log(this.items);
+  }.bind(this));
 }
 
 CitationStore.prototype.sortItems = function(sortingFunction) {
@@ -68,8 +91,6 @@ CitationStore.prototype.importItems = function(data) {
     this.importItem(pubmedRecord);
   }.bind(this));
   this.sortItems();
-  console.log(this.items);
-  emitter.emit('CITATIONS_UPDATED');
 }
 
 CitationStore.prototype.updateItems = function(pubmed, updates) {
@@ -80,8 +101,6 @@ CitationStore.prototype.updateItems = function(pubmed, updates) {
     return item;
   });
   this.items = updatedItems;
-  console.log(this.items);
-  emitter.emit('CITATIONS_UPDATED');
 }
 
 module.exports = CitationStore;
