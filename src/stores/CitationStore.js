@@ -19,8 +19,10 @@ function CitationStore() {
         search.then(function(data) {
           this.total = data.total;
           this.importItems(data.papers);
-        }.bind(this)).then(function() {
+        }.bind(this)).then(function(data) {
           emitter.emit('CITATIONS_UPDATED');
+        }).catch(function(err) {
+          console.log(err);
         });
         break;
 
@@ -51,7 +53,6 @@ function CitationStore() {
 
     }
 
-    console.log(this.items);
   }.bind(this));
 }
 

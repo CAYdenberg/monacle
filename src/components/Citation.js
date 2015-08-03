@@ -20,11 +20,11 @@ module.exports = React.createClass({
     return authStr;
   },
 
-  toggleDetails : function() {
+  toggleDetails : function(e) {
+    e.preventDefault();
     if ( !this.props.data.abstract ) {
       //... then lets go get it
       dispatcher.dispatch({ type : 'GET_DETAILS', content : {pmid : this.props.data.pubmed} });
-      return false;
     }
   },
 

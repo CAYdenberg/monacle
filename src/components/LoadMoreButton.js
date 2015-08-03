@@ -7,7 +7,7 @@ var utils = require('../utils.js'),
 module.exports = React.createClass({
   getInitialState : function() {
     return {
-      loading : false
+      loading : true
     }
   },
   componentWillMount : function() {
