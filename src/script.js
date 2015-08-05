@@ -2,7 +2,10 @@
 
 var React = require('react');
 var utils = require('./utils.js')
-var CitationList = require('./components/CitationList.js');
+
+var CitationStore = require('./stores/CitationStore.js');
+var store = new CitationStore();
+var CitationList = require('./components/CitationList.js')(store);
 
 $(document).ready(function() {
   //on page load, get GET variable "query"

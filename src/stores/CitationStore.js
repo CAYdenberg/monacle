@@ -8,6 +8,7 @@ var ncbi = require('../../lib/NCBI/ncbi.js');
 function CitationStore() {
 
   this.items = [];
+  this.index = [];
   this.total = 0;
   this.endOfResults = false;
 
@@ -56,6 +57,10 @@ function CitationStore() {
   }.bind(this));
 }
 
+CitationStore.prototype.createIndex = function() {
+  this.index = _.pluck(this.items, 'pubmed');
+}
+
 CitationStore.prototype.sortItems = function(sortingFunction) {
   if (_.isFunction(sortingFunction)) {
     this.items.sort(sortingFunction);
@@ -67,10 +72,11 @@ CitationStore.prototype.sortItems = function(sortingFunction) {
       return bNumericDate - aNumericDate;
     });
   }
+  this.createIndex();
 }
 
 CitationStore.prototype.importItem = function(pubmedRecord) {
-  //copy the article ids into the top-level of the obejct
+  //copy the article ids into the top-level of the object
   _.each(pubmedRecord.articleids, function(idObject) {
     if ( ['doi', 'pubmed', 'pmc'].indexOf(idObject.idtype) !== -1 ) {
       pubmedRecord[idObject.idtype] = idObject.value;
@@ -92,16 +98,29 @@ CitationStore.prototype.importItems = function(data) {
     this.importItem(pubmedRecord);
   }.bind(this));
   this.sortItems();
+  console.log( this.index );
+  console.log( this.items );
+}
+
+CitationStore.prototype.getItem = function(pubmed) {
+  var index = this.index.indexOf(pubmed);
+  return this.items[index];
+}
+
+CitationStore.prototype.setItem = function(pubmed, item) {
+  var index = this.index.indexOf(pubmed);
+  this.items[index] = item;
+  return item;
 }
 
 CitationStore.prototype.updateItems = function(pubmed, updates) {
-  updatedItems = _.map( this.items, function(item) {
-    if (item.pubmed === pubmed) {
-      _.extend(item, updates);
-    }
-    return item;
-  });
-  this.items = updatedItems;
+  //find the item
+  var item = this.getItem(pubmed);
+  //update it
+  item = _.extend(item, updates);
+  //put it back into this.items
+  this.setItem(pubmed, item);
+  return item;
 }
 
 module.exports = CitationStore;
