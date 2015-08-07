@@ -13,10 +13,14 @@ module.exports = function(store) {
         data : this.props.data
       }
     },
+    citationsUpdated: function() {
+      this.setState({ data : store.getItem(this.props.data.pubmed) });
+    },
     componentWillMount: function() {
-      emitter.on('CITATIONS_UPDATED', function() {
-        this.setState({ data : store.getItem(this.props.data.pubmed) });
-      }.bind(this));
+      emitter.on('CITATIONS_UPDATED', this.citationsUpdated);
+    },
+    componentWillUnmount: function() {
+      emitter.off('CITATIONS_UPDATED', this.citationsUpdated);
     },
     render: function() {
       return (

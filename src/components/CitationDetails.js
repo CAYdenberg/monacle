@@ -8,7 +8,6 @@ var dispatcher = utils.dispatcher;
 module.exports = function(store) {
 
   var CitationDetails = React.createClass({
-
     render: function() {
       if ( _.isNull(this.props.data.abstract) ) {
         return (
@@ -16,11 +15,27 @@ module.exports = function(store) {
         )
       } else {
         return (
-          <div className="abstract">{this.props.data.abstract}</div>
+          <div className="citation-details">
+            <div className="abstract">{this.props.data.abstract}</div>
+            <LensLink link={this.props.data.pmc} />
+          </div>
         )
       }
     }
-    
+  });
+
+  var LensLink = React.createClass({
+    render: function() {
+      if ( this.props.link ) {
+        return (
+          <a href={"/lens/" + this.props.link} target="_blank">View in Lens</a>
+        )
+      } else {
+        return (
+          <div></div>
+        )
+      }
+    }
   });
 
   return CitationDetails;
