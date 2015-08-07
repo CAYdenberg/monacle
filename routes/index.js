@@ -7,7 +7,7 @@ var User = require('../models/user.js');
 var env = require('../config.js').env;
 
 
-router.get('/lens', function(req, res) {
+router.get('/lens/*', function(req, res) {
   res.render('lens');
 });
 

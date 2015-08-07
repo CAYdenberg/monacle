@@ -8,16 +8,7 @@ var dispatcher = utils.dispatcher;
 module.exports = function(store) {
 
   var CitationDetails = React.createClass({
-    getInitialState: function() {
-      return {
-        data : {}
-      };
-    },
-    componentWillMount: function() {
-      emitter.on('CITATIONS_UPDATED', function() {
-        this.setState({ data : store.getItem(this.props.data.pubmed) });
-      }.bind(this));
-    },
+
     render: function() {
       if ( _.isNull(this.props.data.abstract) ) {
         return (
@@ -25,10 +16,11 @@ module.exports = function(store) {
         )
       } else {
         return (
-          <div className="abstract">{this.state.data.abstract}</div>
+          <div className="abstract">{this.props.data.abstract}</div>
         )
       }
     }
+    
   });
 
   return CitationDetails;

@@ -50,11 +50,12 @@ module.exports = function(store) {
     },
     toggleDetails : function(e) {
       e.preventDefault();
+      React.unmountComponentAtNode(document.getElementById('paper-details'));
       if ( !this.props.data.abstract ) {
         //... then lets go get it
         dispatcher.dispatch({ type : 'GET_DETAILS', content : {pmid : this.props.data.pubmed} });
       }
-      var details = React.render(<CitationDetails data={this.props.data} />, document.getElementById('paper-details'));
+      React.render(<SingleCitation data={this.props.data} />, document.getElementById('paper-details'));
     },
     render: function() {
       var headingId = "heading-PMID" + this.props.data.pubmed;
@@ -78,6 +79,8 @@ module.exports = function(store) {
       )
     }
   });
+
+  var SingleCitation = require('./SingleCitation.js')(store);
 
   var CitationDetails = require('./CitationDetails.js')(store);
 
