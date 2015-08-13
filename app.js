@@ -6,17 +6,23 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var hbs = require('express-hbs');
 
-var mongoose = require('mongoose');
+var mongo = require('mongodb');
+var monk = require('monk');
 var passport = require('passport');
 var expressSession = require('express-session');
-
-// var MongoSessionStore = require('session-mongoose')(require('connect'));
-
-var routes = require('./routes/index');
-var users = require('./routes/users');
 var config = require('./config.js');
 
+var routes = require('./routes/index');
+// var users = require('./routes/users');
+
 var app = express();
+
+// Make our db accessible to our router
+var db = monk(config.dbConnect);
+app.use(function(req,res,next){
+    req.db = db;
+    next();
+});
 
 // view engine setup
 app.engine('hbs', hbs.express3({
@@ -25,24 +31,15 @@ app.engine('hbs', hbs.express3({
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-mongoose.connect(config.dbConnect, {
-    server : {
-        socketOptions : { keepAlive : 1 }
-    }
-});
 
-// var sessionStore = new MongoSessionStore({
-//     url : config.dbConnect
-// });
 
 app.use(expressSession({
     secret : config.secretKey,
     resave : true,
-    saveUninitialized : false,
-    // store : sessionStore
+    saveUninitialized : false
 }));
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -53,7 +50,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'dist')));
 
 app.use('/', routes);
-app.use('/users', users);
+// app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

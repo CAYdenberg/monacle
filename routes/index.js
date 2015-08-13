@@ -1,9 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var mongoose = require('mongoose');
 
-//models
-var User = require('../models/user.js');
 var env = require('../config.js').env;
 
 
