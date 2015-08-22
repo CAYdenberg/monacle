@@ -14,6 +14,7 @@ var config = require('./config.js');
 
 var routes = require('./routes/index');
 // var users = require('./routes/users');
+var folders = require('./routes/folders');
 
 var app = express();
 
@@ -51,6 +52,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 app.use('/', routes);
 // app.use('/users', users);
+app.use('/folders', folders);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

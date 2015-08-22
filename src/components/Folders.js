@@ -9,12 +9,17 @@ module.exports = function(store) {
   var Folders = React.createClass({
     getInitialState : function() {
       return {
-        folders : [
-          { name : "Folder 1", slug : "folder-1" },
-          { name : "Folder 2", slug : "folder-2" }
-        ],
+        folders : store.folders,
         newFolderName : ''
       }
+    },
+    componentWillMount : function() {
+      emitter.on('FOLDERS_UPDATED', function() {
+        this.setState({
+          folders: store.folders
+        });
+        console.log(this.state);
+      }.bind(this));
     },
     typing : function(e) {
       this.setState({ newFolderName : e.target.value });

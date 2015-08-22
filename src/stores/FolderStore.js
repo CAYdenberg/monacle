@@ -22,7 +22,8 @@ function FolderStore() {
             name : payload.content.name
           }
         }).then( function(res) {
-          console.log(res);
+          o.folders = res;
+          emitter.emit('FOLDERS_UPDATED');
         });
         break;
 
