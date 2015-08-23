@@ -21,11 +21,15 @@ router.all('/*', function(req, res, next) {
 	next();
 });
 
-
 router.get('/', function(req, res) {
   req.context.pagename = 'home';
   req.context.background = Math.ceil( Math.random() * 3 );
   res.render('home', req.context);
+});
+
+router.get('/about', function(req, res) {
+  req.context.pagename = 'about';
+  res.render('about', req.context);
 });
 
 router.get('/search', function(req, res) {
