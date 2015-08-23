@@ -33,8 +33,8 @@ router.get('/about', function(req, res) {
 });
 
 router.get('/search', function(req, res) {
-  req.context.pagename = 'search';
-  res.render('search', req.context);
+  req.context.pagename = 'app';
+  res.render('app', req.context);
 });
 
 router.get('/signup', function(req, res) {
