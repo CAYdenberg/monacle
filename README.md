@@ -1,4 +1,4 @@
-# Monacle #
+# Monocle #
 
 The goal of this project is to build reading and searching tools for the scientific literature based around open-access, online content. We have integrated [eLife Lens](https://github.com/elifesciences/lens "eLife Lens") with the open-access portion of the [PubMed Central database](http://www.ncbi.nlm.nih.gov/pmc/), and have built a Javascript search module for PubMed's Eutils API.
 
