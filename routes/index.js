@@ -24,6 +24,7 @@ router.all('/*', function(req, res, next) {
 
 router.get('/', function(req, res) {
   req.context.pagename = 'home';
+  req.context.background = Math.ceil( Math.random() * 3 );
   res.render('home', req.context);
 });
 

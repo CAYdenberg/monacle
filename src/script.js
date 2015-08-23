@@ -13,8 +13,10 @@ var CitationList = require('./components/CitationList.js')(citationStore, folder
 
 
 $(document).ready(function() {
-  //on page load, get GET variable "query"
-  React.render(<Folders />, document.getElementById('folders'));
-  React.render(<CitationList />, document.getElementById('citations'));
-  utils.dispatcher.dispatch({ type : 'NEW_SEARCH', content : { queryString : utils.getParameterByName("query") } });
+  if ( $('body').hasClass('search') ) {
+    //on page load, get GET variable "query"
+    React.render(<Folders />, document.getElementById('folders'));
+    React.render(<CitationList />, document.getElementById('citations'));
+    utils.dispatcher.dispatch({ type : 'NEW_SEARCH', content : { queryString : utils.getParameterByName("query") } });
+  }
 });
