@@ -23,7 +23,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 
-    <script src='/lens/lens.js'></script>
+    <script src='lens.js'></script>
 
     <script>
 
@@ -34,7 +34,7 @@
 
       // Little helper used to parse query strings from urls
       // --------
-      //
+      // 
 
       var qs = function () {
         var query_string = {};
@@ -60,7 +60,7 @@
 
       // Check for devices
       // --------
-      //
+      // 
 
       function isIOSDevice() {
         var iPadAgent = navigator.userAgent.match(/iPad/i) != null;
@@ -88,7 +88,7 @@
 
       // Example documents
       // --------
-      //
+      // 
       // Uncomment the document you want see
 
       // Remote Example 00005
@@ -118,7 +118,7 @@
       // Lens About Document
       // Deploy to: http://lens.elifesciences.org/about
       // var documentURL = "data/about/index.xml";
-
+        
       // Lens Article Description
       // Deploy to: http://lens.elifesciences.org/lens_article
       // var documentURL = "lens_article.xml";
@@ -133,7 +133,7 @@
       // PLOS Bio example
       var documentURL = "data/pbio_1001749/index.xml";
 
-
+      
       // Create a new Lens app instance
       // --------
       //
@@ -143,7 +143,7 @@
       //? altogether. Just need to direct all requests to this folder thru index.html
       var reg = new RegExp(/PMC(\d+)/);
       var pmcId = document.URL.match(reg)[0];
-
+      
       var app = new Lens({
         document_url: "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&id=" + pmcId.replace("PMC", ""),
       });
@@ -167,6 +167,6 @@
     </script>
   </head>
   <body class="loading">
-
+    
   </body>
 </html>
