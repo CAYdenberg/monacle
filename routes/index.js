@@ -11,13 +11,8 @@ router.get('/lens/*', function(req, res) {
 /* GET other pages. */
 router.all('/*', function(req, res, next) {
 	req.context = {};
-  if (env === 'development') {
-		req.context.stylesheets = ['style.css'];
-		req.context.scripts = ['vendor.js', 'script.js'];
-	} else {
-		req.context.stylesheets = ['style.min.css'];
-		req.context.scripts = ['vendor.min.js', 'script.min.js'];
-	}
+	req.context.stylesheets = ['style.css'];
+	req.context.scripts = ['vendor.js', 'script.js'];
 	next();
 });
 

@@ -18,11 +18,11 @@ var routes = require('./routes/index');
 var app = express();
 
 // Make our db accessible to our router
-var db = monk(config.dbConnect);
-app.use(function(req,res,next){
-    req.db = db;
-    next();
-});
+// var db = monk(config.dbConnect);
+// app.use(function(req,res,next){
+//     req.db = db;
+//     next();
+// });
 
 // view engine setup
 app.engine('hbs', hbs.express3({
