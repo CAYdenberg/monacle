@@ -22,6 +22,11 @@ module.exports = function(store) {
             <h5 className="author-list">{utils.formatAuthorList(this.props.data.authors)}</h5>
             <div className="abstract">{this.props.data.abstract}</div>
             <LensLink link={this.props.data.pmc} />
+            <div className="margin-vertical">
+              <a href={"http://www.ncbi.nlm.nih.gov/pubmed/" + this.props.data.pubmed} className="btn btn-info" target="_blank">
+                <span className="icon-pubmed"></span> View on PubMed
+              </a>
+            </div>
           </div>
         )
       }
@@ -35,7 +40,7 @@ module.exports = function(store) {
       if ( this.props.link ) {
         return (
           <div className="margin-vertical">
-            <a href={"/lens/" + this.props.link} target="_blank" className="btn btn-primary">
+            <a href={"/lens/" + this.props.link} target="_blank" className="btn btn-success">
               <span className="icon-lens"></span> View in Lens
             </a>
           </div>
