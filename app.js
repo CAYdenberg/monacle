@@ -33,11 +33,11 @@ app.set('views', path.join(__dirname, 'views'));
 
 
 
-app.use(expressSession({
-    secret : config.secretKey,
-    resave : true,
-    saveUninitialized : false
-}));
+// app.use(expressSession({
+//     secret : config.secretKey,
+//     resave : true,
+//     saveUninitialized : false
+// }));
 // app.use(passport.initialize());
 // app.use(passport.session());
 

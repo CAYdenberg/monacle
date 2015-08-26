@@ -21,16 +21,20 @@ This project uses parts of [http://github.com/ivangrub/oa-sandbox](OA-Sandbox) b
 
 ### Directions ###  
 
+1. Install dependencies above.
 
-## Roadmap ##
+1. `git clone https://github.com/CAYdenberg/monocle.git` and then `cd monocle`
 
-### Minimum viable product ###
+1. `npm install`
 
-1. Working search interface
-1. Serving OA articles with Lens
-1. Saving, user accounts
+1. `bower install`
 
-### Enhancements ###
+1. `cp config_sample.js config.js`
 
-1. Altmetrics
-1. Search CORE
+1. Enter a port (usually 3000) and leave env as `development`. The other lines don't matter for right now.
+
+1. `gulp vendor`, then `gulp`. 
+
+1. Run, `npm start`, open a browser and go to `http://localhost/3000` or whatever port you used above.
+
+1. To begin development with watch and automatic reloading, run `gulp watch`. A new browser tab should open at `localhost:4000`
