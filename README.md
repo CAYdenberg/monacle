@@ -13,13 +13,13 @@ This project uses parts of [http://github.com/ivangrub/oa-sandbox](OA-Sandbox) b
     <tr><th>Prerequisite</th><th>Version</th><th>How to Install</th></tr>
   </thead>
   <tbody>
-    <tr><td>Node.js</td><td>&gt; 0.12.5</td><td>[https://nodejs.org/](Nodejs.org)</td></tr>
+    <tr><td>Node.js</td><td>&gt; 0.12.5</td><td><a href="https://nodejs.org/">Nodejs.org</a></td></tr>
     <tr><td>Gulp</td><td>&gt; 3.9.0</td><td>npm install -g gulp</td></tr>
     <tr><td>Bower</td><td>&gt; 1.4.1</td><td>npm install -g bower</td></tr>
   </tbody>
 </table>
 
-### Directions ###  
+### Directions ###
 
 1. Install dependencies above.
 
@@ -35,6 +35,6 @@ This project uses parts of [http://github.com/ivangrub/oa-sandbox](OA-Sandbox) b
 
 1. `gulp vendor`, then `gulp`. 
 
-1. Run, `npm start`, open a browser and go to `http://localhost/3000` or whatever port you used above.
+1. Run `npm start`, open a browser and go to `http://localhost/3000` or whatever port you used above.
 
 1. To begin development with watch and automatic reloading, run `gulp watch`. A new browser tab should open at `localhost:4000`
