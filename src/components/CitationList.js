@@ -37,39 +37,31 @@ module.exports = function(store) {
   });
 
   var Citation = React.createClass({
-    formatAuthorList : function() {
-      var authArr,
-        authStr = '';
-      if (this.props.data.authors) {
-        authArr = _.map(this.props.data.authors, function(author) {
-          return author.name;
-        });
-        authStr = authArr.join(', ');
-      }
-      return authStr;
-    },
     toggleDetails : function(e) {
       e.preventDefault();
-      React.unmountComponentAtNode(document.getElementById('paper-details'));
+      React.unmountComponentAtNode(document.getElementById('single-citation'));
       if ( !this.props.data.abstract ) {
         //... then lets go get it
         dispatcher.dispatch({ type : 'GET_DETAILS', content : {pmid : this.props.data.pubmed} });
       }
-      React.render(<SingleCitation data={this.props.data} />, document.getElementById('paper-details'));
+      React.render(<SingleCitation data={this.props.data} />, document.getElementById('single-citation'));
     },
     render: function() {
       var headingId = "heading-PMID" + this.props.data.pubmed;
       var collapseId = "collapse-PMID" + this.props.data.pubmed;
       return (
-        <div className="panel panel-default">
-          <div className="panel-heading" id={headingId}>
-            <h4>
-              <a href="#" onClick={this.toggleDetails} data-toggle="collapse" data-parent="#accordion" data-target={"#" + collapseId}>
-                {this.props.data.title}
-              </a>
-            </h4>
-            <h5>{this.formatAuthorList()}</h5>
-          </div>
+        <div className="panel panel-info">
+          <a href="#" onClick={this.toggleDetails} data-toggle="collapse" data-parent="#accordion" data-target={"#" + collapseId}>
+            <div className="panel-heading" id={headingId}>
+              <h4>
+                  {this.props.data.title}
+              </h4>
+              <h5 className="author-list">
+                {utils.formatAuthorList(this.props.data.authors)},
+                &nbsp;<span className="year">{utils.formatYear(this.props.data.pubdate)}</span>
+              </h5>
+            </div>
+          </a>
           <div className="panel-collapse collapse" id={collapseId}>
             <div className="panel-body">
               <CitationDetails data={this.props.data} />
@@ -105,11 +97,11 @@ module.exports = function(store) {
     render : function() {
       if ( this.state.loading ) {
         return (
-          <div className="progressBar">Progress bar</div>
+          <ProgressBar />
         );
       } else if ( ! this.props.nMore ) {
         return (
-          <a href="#" disabled>End of results</a>
+          <span className="results-end">End of results</span>
         )
       } else {
         return (
@@ -118,6 +110,8 @@ module.exports = function(store) {
       }
     }
   });
+
+  var ProgressBar = require('./ProgressBar.js')();
 
   return CitationList;
 }

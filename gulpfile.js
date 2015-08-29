@@ -16,6 +16,8 @@ var mocha = require('gulp-mocha');
 var browserSync = require('browser-sync');
 var nodemon = require('gulp-nodemon');
 
+var config = require('./config.js');
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 * RUN TESTS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
@@ -43,6 +45,7 @@ gulp.task('vendor-js', function(){
 	});
 	return gulp.src(paths)
 		.pipe(concat('vendor.js'))
+    .pipe(uglify())
 		.pipe(gulp.dest('./dist/js/'))
 });
 
@@ -61,22 +64,40 @@ gulp.task('js', function () {
     debug: true
   });
 
-  return b.bundle()
-    .pipe(source('script.js'))
-    .pipe(buffer())
-    .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(gulp.dest('./dist/js'))
-    .pipe(browserSync.stream());
+  if (config.env === 'development') {
+    return b.bundle()
+      .pipe(source('script.js'))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({loadMaps: true}))
+      .pipe(gulp.dest('./dist/js'))
+      .pipe(browserSync.stream());
+  } else {
+    return b.bundle()
+      .pipe(source('script.js'))
+      .pipe(buffer())
+      .pipe(uglify())
+      .pipe(gulp.dest('./dist/js'));
+  }
 });
 
 gulp.task('css', function() {
-	return gulp.src('./src/main.less')
-		.pipe(rename('style'))
-		.pipe(rename({extname : '.css'}))
-		.pipe(less())
-    	.on('error', gutil.log)
-		.pipe(gulp.dest('./dist/css'))
-    .pipe(browserSync.stream());
+	if (config.env === 'development') {
+    return gulp.src('./src/main.less')
+  		.pipe(rename('style'))
+  		.pipe(rename({extname : '.css'}))
+  		.pipe(less())
+      .on('error', gutil.log)
+  		.pipe(gulp.dest('./dist/css'))
+      .pipe(browserSync.stream());
+  } else {
+    return gulp.src('./src/main.less')
+  		.pipe(rename('style'))
+  		.pipe(rename({extname : '.css'}))
+  		.pipe(less())
+      .on('error', gutil.log)
+      .pipe(minifyCSS())
+      .pipe(gulp.dest('./dist/css'));
+  }
 });
 
 //do everything

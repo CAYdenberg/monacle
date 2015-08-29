@@ -23,7 +23,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 
-    <script src='/lens/lens.js'></script>
+    <script src='lens.js'></script>
 
     <script>
 
@@ -144,19 +144,16 @@
       var reg = new RegExp(/PMC(\d+)/);
       var pmcId = document.URL.match(reg)[0];
 
-      var document_url = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&id=" + pmcId.replace("PMC", "");
+      document_url: "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&id=" + pmcId.replace("PMC", ""),
+
+      console.log(document_url);
 
       var app = new Lens({
         document_url : document_url
       });
 
       $(function() {
-        try {
-          app.start();
-        } catch(e) {
-          console.log(e);
-        }
-        console.log(app);
+        app.start();
 
         if (isTouchDevice()) {
           $('#container').addClass('touchable');

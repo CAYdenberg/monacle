@@ -19,11 +19,11 @@ var folders = require('./routes/folders');
 var app = express();
 
 // Make our db accessible to our router
-var db = monk(config.dbConnect);
-app.use(function(req,res,next){
-    req.db = db;
-    next();
-});
+// var db = monk(config.dbConnect);
+// app.use(function(req,res,next){
+//     req.db = db;
+//     next();
+// });
 
 // view engine setup
 app.engine('hbs', hbs.express3({
@@ -34,11 +34,11 @@ app.set('views', path.join(__dirname, 'views'));
 
 
 
-app.use(expressSession({
-    secret : config.secretKey,
-    resave : true,
-    saveUninitialized : false
-}));
+// app.use(expressSession({
+//     secret : config.secretKey,
+//     resave : true,
+//     saveUninitialized : false
+// }));
 // app.use(passport.initialize());
 // app.use(passport.session());
 
