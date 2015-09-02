@@ -33,7 +33,7 @@ This project uses parts of [http://github.com/ivangrub/oa-sandbox](OA-Sandbox) b
 
 1. Enter a port (usually 3000) and leave env as `development`. The other lines don't matter for right now.
 
-1. `gulp vendor`, then `gulp`. 
+1. Run `gulp build` to build resources.
 
 1. Run `npm start`, open a browser and go to `http://localhost/3000` or whatever port you used above.
 
