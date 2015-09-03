@@ -11,7 +11,7 @@ var expressSession = require('express-session');
 var config = require('./config.js');
 
 var routes = require('./routes/index');
-// var users = require('./routes/users');
+var users = require('./routes/users');
 var folders = require('./routes/folders');
 
 var app = express();
@@ -30,15 +30,13 @@ app.engine('hbs', hbs.express3({
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-
-
-// app.use(expressSession({
-//     secret : config.secretKey,
-//     resave : true,
-//     saveUninitialized : false
-// }));
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(expressSession({
+    secret : config.secretKey,
+    resave : true,
+    saveUninitialized : false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
