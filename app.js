@@ -17,10 +17,9 @@ var folders = require('./routes/folders');
 var app = express();
 
 // Make our db accessible to our router
-var Gateway = require('./ORM');
-var orm = new ORM(config.dbConnect);
+var ORM = require('./ORM');
 app.use(function(req, res, next){
-  req.gateway = gateway;
+  req.orm = new ORM(config.dbConnect);
   next();
 });
 

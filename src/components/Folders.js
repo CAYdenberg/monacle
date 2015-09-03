@@ -9,16 +9,16 @@ module.exports = function(store) {
   var Folders = React.createClass({
     getInitialState : function() {
       return {
-        folders : store.folders,
+        folders : [],
         newFolderName : ''
       }
     },
     componentWillMount : function() {
       emitter.on('FOLDERS_UPDATED', function() {
+        console.log(store);
         this.setState({
           folders: store.folders
         });
-        console.log(this.state);
       }.bind(this));
     },
     typing : function(e) {
@@ -32,8 +32,8 @@ module.exports = function(store) {
       return (
         <div>
           {
-            this.state.folders.map(function(item) {
-              return (<Folder data={item} key={item.slug} />)
+            this.state.folders.map(function(folder) {
+              return (<Folder data={folder} key={folder.slug} />)
             })
           }
           <form className="form-inline" method="POST" onSubmit={this.add}>
