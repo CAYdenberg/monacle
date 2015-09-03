@@ -6,8 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var hbs = require('express-hbs');
 
-var mongo = require('mongodb');
-var monk = require('monk');
 var passport = require('passport');
 var expressSession = require('express-session');
 var config = require('./config.js');
@@ -19,15 +17,16 @@ var folders = require('./routes/folders');
 var app = express();
 
 // Make our db accessible to our router
-// var db = monk(config.dbConnect);
-// app.use(function(req,res,next){
-//     req.db = db;
-//     next();
-// });
+var Gateway = require('./ORM');
+var orm = new ORM(config.dbConnect);
+app.use(function(req, res, next){
+  req.gateway = gateway;
+  next();
+});
 
 // view engine setup
 app.engine('hbs', hbs.express3({
-    partialsDir: __dirname + '/views/partials'
+  partialsDir: __dirname + '/views/partials'
 }));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
@@ -56,9 +55,9 @@ app.use('/folders', folders);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
 // error handlers
@@ -66,23 +65,23 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (config.env === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+      res.render('error', {
+        message: err.message,
+        error: err
     });
+  });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
 });
 
 
