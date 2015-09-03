@@ -18,18 +18,19 @@ var nodemon = require('gulp-nodemon');
 
 var config = require('./config.js');
 
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 * RUN TESTS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 gulp.task('test', function() {
-    return gulp.src(['test/*.js'], { read: false })
-        .pipe(mocha({ reporter: 'list' }))
-        .on('error', gutil.log);
+	return gulp.src(['test/*.js'], { read: false })
+		.pipe(mocha({ reporter: 'list' }))
+		.on('error', gutil.log);
 });
 
 gulp.task('test-watch', function() {
-    gulp.watch(['lib/**', 'test/**', 'src/**', 'routes/**'], ['test']);
+	gulp.watch(['lib/**', 'test/**', 'src/**', 'routes/**'], ['test']);
 });
 
 
@@ -45,7 +46,7 @@ gulp.task('vendor-js', function(){
 	});
 	return gulp.src(paths)
 		.pipe(concat('vendor.js'))
-    .pipe(uglify())
+		.pipe(uglify())
 		.pipe(gulp.dest('./dist/js/'))
 });
 
@@ -57,47 +58,47 @@ gulp.task('vendor', ['vendor-js']);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 gulp.task('js', function () {
-  // set up the browserify instance on a task basis
-  var b = browserify({
-    entries: ['./src/script.js'],
-    transform: ['reactify'],
-    debug: true
-  });
+	// set up the browserify instance on a task basis
+	var b = browserify({
+		entries: ['./src/script.js'],
+		transform: ['reactify'],
+		debug: true
+	});
 
-  if (config.env === 'development') {
-    return b.bundle()
-      .pipe(source('script.js'))
-      .pipe(buffer())
-      .pipe(sourcemaps.init({loadMaps: true}))
-      .pipe(gulp.dest('./dist/js'))
-      .pipe(browserSync.stream());
-  } else {
-    return b.bundle()
-      .pipe(source('script.js'))
-      .pipe(buffer())
-      .pipe(uglify())
-      .pipe(gulp.dest('./dist/js'));
-  }
+	if (config.env === 'development') {
+		return b.bundle()
+			.pipe(source('script.js'))
+			.pipe(buffer())
+			.pipe(sourcemaps.init({loadMaps: true}))
+			.pipe(gulp.dest('./dist/js'))
+			.pipe(browserSync.stream());
+	} else {
+		return b.bundle()
+			.pipe(source('script.js'))
+			.pipe(buffer())
+			.pipe(uglify())
+			.pipe(gulp.dest('./dist/js'));
+	}
 });
 
 gulp.task('css', function() {
 	if (config.env === 'development') {
-    return gulp.src('./src/main.less')
-  		.pipe(rename('style'))
-  		.pipe(rename({extname : '.css'}))
-  		.pipe(less())
-      .on('error', gutil.log)
-  		.pipe(gulp.dest('./dist/css'))
-      .pipe(browserSync.stream());
-  } else {
-    return gulp.src('./src/main.less')
-  		.pipe(rename('style'))
-  		.pipe(rename({extname : '.css'}))
-  		.pipe(less())
-      .on('error', gutil.log)
-      .pipe(minifyCSS())
-      .pipe(gulp.dest('./dist/css'));
-  }
+		return gulp.src('./src/main.less')
+			.pipe(rename('style'))
+			.pipe(rename({extname : '.css'}))
+			.pipe(less())
+			.on('error', gutil.log)
+			.pipe(gulp.dest('./dist/css'))
+			.pipe(browserSync.stream());
+	} else {
+		return gulp.src('./src/main.less')
+			.pipe(rename('style'))
+			.pipe(rename({extname : '.css'}))
+			.pipe(less())
+			.on('error', gutil.log)
+			.pipe(minifyCSS())
+			.pipe(gulp.dest('./dist/css'));
+	}
 });
 
 //do everything
@@ -117,40 +118,39 @@ var BROWSER_SYNC_RELOAD_DELAY = 500;
 
 gulp.task('nodemon', function (cb) {
 
-  return nodemon({
+	return nodemon({
+		// nodemon our expressjs server
+		script: 'bin/www',
+		// watch core server file(s) that require server restart on change
+		watch: ['routes/**.js']
+	})
+	.once('start', cb)
+	.on('restart', function onRestart() {
+		// reload connected browsers after a slight delay
+		setTimeout(function reload() {
+			browserSync.reload({
+				stream: false	 //
+			});
+		}, BROWSER_SYNC_RELOAD_DELAY);
+	});
 
-    // nodemon our expressjs server
-    script: 'bin/www',
-
-    // watch core server file(s) that require server restart on change
-    watch: ['routes/**.js']
-  })
-  .once('start', cb)
-  .on('restart', function onRestart() {
-    // reload connected browsers after a slight delay
-    setTimeout(function reload() {
-      browserSync.reload({
-        stream: false   //
-      });
-    }, BROWSER_SYNC_RELOAD_DELAY);
-  });
 });
 
 gulp.task('watch', ['nodemon'], function () {
 
-  // for more browser-sync config options: http://www.browsersync.io/docs/options/
-  browserSync.init({
+	// for more browser-sync config options: http://www.browsersync.io/docs/options/
+	browserSync.init({
 
-    // informs browser-sync to proxy our expressjs app which would run at the following location
-    proxy: 'http://localhost:3000',
+		// informs browser-sync to proxy our expressjs app which would run at the following location
+		proxy: 'http://localhost:' + config.port,
 
-    // informs browser-sync to use the following port for the proxied app
-    // notice that the default port is 3000, which would clash with our expressjs
-    port: 4000
+		// informs browser-sync to use the following port for the proxied app
+		// notice that the default port is 3000, which would clash with our expressjs
+		port: 4000
 
-  });
+	});
 
-  gulp.watch(['src/**/*.js', 'lib/**/*.js'], ['js']);
-  gulp.watch(['src/**/*.less'], ['css']);
-  gulp.watch(['views/**/*.hbs']).on('change', browserSync.reload);
+	gulp.watch(['src/**/*.js', 'lib/**/*.js'], ['js']);
+	gulp.watch(['src/**/*.less'], ['css']);
+	gulp.watch(['views/**/*.hbs']).on('change', browserSync.reload);
 });
