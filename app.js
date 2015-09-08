@@ -11,15 +11,16 @@ var expressSession = require('express-session');
 var config = require('./config.js');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var user = require('./routes/user');
 var folders = require('./routes/folders');
 
 var app = express();
 
 // Make our db accessible to our router
 var ORM = require('./ORM');
+var orm = new ORM(config.dbConnect);
 app.use(function(req, res, next){
-  req.orm = new ORM(config.dbConnect);
+  req.orm = orm;
   next();
 });
 
@@ -30,14 +31,6 @@ app.engine('hbs', hbs.express3({
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use(expressSession({
-    secret : config.secretKey,
-    resave : true,
-    saveUninitialized : false
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
@@ -46,8 +39,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'dist')));
 
+app.use(expressSession({
+    secret : config.secretKey,
+    resave : true,
+    saveUninitialized : false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', routes);
-// app.use('/users', users);
+app.use('/user', user);
 app.use('/folders', folders);
 
 // catch 404 and forward to error handler

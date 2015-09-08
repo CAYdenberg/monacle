@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var monk = require('monk');
 var slugify = require('slug');
+var bCrypt = require('bcrypt-nodejs');
 
 function ORM(connection) {
   this.db = monk(connection);
@@ -11,9 +12,73 @@ ORM.prototype.get = function(collection) {
   return collection;
 }
 
+ORM.prototype.users = function() {
+  var collection = this.get('users');
+
+  //Generates hash using bCrypt
+  var createHash = function(password){
+    return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
+  }
+
+  var isValidPassword = function(user, password){
+    return bCrypt.compareSync(password, user.password);
+  }
+
+  var operations = {
+
+    validate: function(email, password) {
+      return new Promise(function(resolve, reject) {
+        collection.findOne({ 'email' :  email }, function(err, user) {
+          if (err) {
+            reject(err);
+          }
+          if (!user) {
+            reject(new Error('User does not exist'));
+          }
+          if (!isValidPassword(user, password)) {
+            reject(new Error('Password is invalid'));
+          };
+          resolve(user);
+        });
+      });
+    },
+
+    createIfUnique: function(email, password) {
+      return new Promise(function(resolve, reject) {
+        collection.findOne({'email':email}, function(err, user) {
+          // In case of any error return
+          if (err) {
+            reject(err);
+          }
+          // already exists
+          if (user) {
+            reject(new Error('User already exists'));
+          } else {
+            // if there is no user with that email
+            // create the user
+            collection.insert({
+              email : email,
+              password : createHash(password)
+            }, function(err, newUser) {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(newUser);
+              }
+            })
+          }
+        })
+      })
+    }
+
+  };
+  return _.extend(collection, operations);
+}
+
 ORM.prototype.folders = function() {
   var collection = this.get('folders');
   var operations = {
+
     insertByName: function(name) {
       var slug = slugify(name);
       return new Promise( function(resolve, reject) {
@@ -36,7 +101,8 @@ ORM.prototype.folders = function() {
           }
         });
       });
-    },
+    }
+
   }
   return _.extend(collection, operations);
 }
