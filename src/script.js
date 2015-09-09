@@ -11,8 +11,12 @@ var CitationStore = require('./stores/CitationStore.js');
 var citationStore = new CitationStore();
 var CitationList = require('./components/CitationList.js')(citationStore, folderStore);
 
+var AccountArea = require('./components/AccountArea.js')();
 
 $(document).ready(function() {
+  var currentUser = $('#account-area').data('user');
+  React.render(<AccountArea currentUser={currentUser} />, document.getElementById('account-area'));
+
   if ( $('body').hasClass('app') ) {
     React.render(<Folders />, document.getElementById('folders'));
     React.render(<CitationList />, document.getElementById('citations'));

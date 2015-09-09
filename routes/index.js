@@ -13,7 +13,12 @@ router.all('/*', function(req, res, next) {
 	req.context.stylesheets = ['style.css'];
 	req.context.scripts = ['vendor.js', 'script.js'];
   // console.log(req.session.passport.user);
-  // req.context.user = req.session.passport.user.email;
+  var user = req.session.passport.user;
+  if (user) {
+    req.context.user = user.email;
+  } else {
+    req.context.user = '';
+  }
 	next();
 });
 
