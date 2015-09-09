@@ -14,7 +14,7 @@ module.exports = function(store) {
               <li><a href="#">Logout</a></li>
             </ul>
           </li>
-        );
+        )
       } else {
         return (
           <li>
