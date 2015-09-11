@@ -60,7 +60,7 @@ UserStore.prototype.logout = function() {
     method: 'GET',
     url: o.apiUrlBase + '/logout/'
   }).then(function(res) {
-    o.update('');
+    o.update(res.body.email);
     emitter.emit('USER_CHANGE');
   });
 }
