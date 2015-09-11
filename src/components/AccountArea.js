@@ -4,8 +4,14 @@ var _ = require('underscore');
 module.exports = function(store) {
 
   var AccountArea = React.createClass({
+    getInitialState: function() {
+      return ({
+        loggedIn : store.loggedIn,
+        currentUser : store.userEmail
+      })
+    },
     render: function() {
-      if (this.props.currentUser) {
+      if (this.state.loggedIn) {
         return (
           <li className="dropdown">
             <a href="#" className="dropdown-toggle" data-toggle="dropdown">{this.props.currentUser}</a>

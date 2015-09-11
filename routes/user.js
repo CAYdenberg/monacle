@@ -22,6 +22,7 @@ passport.use('signin', new LocalStrategy({
 		users.validate(email, password).then(function(user) {
       done(null, user);
     }, function(err) {
+      req.logout();
       done(err, false);
     })
 	}
@@ -50,12 +51,15 @@ passport.use('signup', new LocalStrategy({
 ));
 
 
-router.post('/signup', passport.authenticate('signup'), function(req, res, next) {
+router.post('/signup', passport.authenticate('signup'), function(err, req, res, next) {
   next();
 });
 
-router.post('/signin', passport.authenticate('signin'), function(req, res, next) {
-	next();
+router.post('/signin', passport.authenticate('signin'), function(err, req, res, next) {
+	if (err) {
+    res.status(401);
+  }
+  next();
 });
 
 router.all('/*', function(req, res) {
