@@ -22,6 +22,10 @@ $(document).ready(function() {
   React.render(<AccountArea />, document.getElementById('account-area'));
   React.render(<SigninForm />, document.getElementById('signin-form-wrapper'));
 
+  utils.emitter.on('CLOSE_MODALS', function() {
+    $('.modal').modal('hide');
+  });
+
   if ( $('body').hasClass('app') ) {
     React.render(<Folders />, document.getElementById('folders'));
     React.render(<CitationList />, document.getElementById('citations'));

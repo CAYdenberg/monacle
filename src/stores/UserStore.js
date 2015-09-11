@@ -10,13 +10,7 @@ function UserStore(userEmail) {
   this.apiUrlBase = '/user/';
 
   //set up
-  if (userEmail) {
-    this.userEmail = userEmail;
-    this.loggedIn = true;
-  } else {
-    this.userEmail = '';
-    this.loggedIn = false;
-  }
+  this.update(userEmail);
 
   dispatcher.register(function(payload) {
     switch (payload.type) {
@@ -36,6 +30,17 @@ function UserStore(userEmail) {
 
 }
 
+UserStore.prototype.update = function(email) {
+  if (email.length) {
+    this.userEmail = email;
+    this.loggedIn = true;
+  } else {
+    this.userEmail = '';
+    this.loggedIn = false;
+  }
+  console.log(this);
+}
+
 UserStore.prototype.login = function(email, password) {
   var o = this;
   popsicle({
@@ -43,21 +48,19 @@ UserStore.prototype.login = function(email, password) {
     body: {email: email, password: password},
     url: o.apiUrlBase + 'signin/'
   }).then(function(res) {
-    o.loggedIn = res.body.loggedIn;
-    o.userEmail = res.body.email;
+    o.update(res.body.email);
     emitter.emit('USER_CHANGE');
+    emitter.emit('CLOSE_MODALS');
   });
 }
 
 UserStore.prototype.logout = function() {
-  console.log('hello');
   var o = this;
   popsicle({
     method: 'GET',
     url: o.apiUrlBase + '/logout/'
   }).then(function(res) {
-    o.loggedIn = false;
-    o.userEmail = '';
+    o.update('');
     emitter.emit('USER_CHANGE');
   });
 }

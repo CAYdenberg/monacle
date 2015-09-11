@@ -62,7 +62,7 @@ router.post('/signin', passport.authenticate('signin'), function(err, req, res, 
   next();
 });
 
-router.get('/logoout', function(req, res, next) {
+router.get('/logout', function(req, res, next) {
   req.logout();
   next();
 });
