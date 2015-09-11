@@ -15,7 +15,6 @@ module.exports = function(store) {
     },
     componentWillMount : function() {
       emitter.on('FOLDERS_UPDATED', function() {
-        console.log(store);
         this.setState({
           folders: store.folders
         });

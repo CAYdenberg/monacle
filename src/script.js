@@ -15,7 +15,7 @@ $(document).ready(function() {
   var citationStore = new CitationStore();
   var CitationList = require('./components/CitationList.js')(citationStore, folderStore);
 
-  var userStore = new UserStore( $('account-area').data('user') );
+  var userStore = new UserStore( $('#account-area').data('user') );
   var AccountArea = require('./components/AccountArea.js')(userStore);
   var SigninForm = require('./components/SigninForm.js')();
 

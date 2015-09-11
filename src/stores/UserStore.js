@@ -43,7 +43,22 @@ UserStore.prototype.login = function(email, password) {
     body: {email: email, password: password},
     url: o.apiUrlBase + 'signin/'
   }).then(function(res) {
-    console.log(res);
+    o.loggedIn = res.body.loggedIn;
+    o.userEmail = res.body.email;
+    emitter.emit('USER_CHANGE');
+  });
+}
+
+UserStore.prototype.logout = function() {
+  console.log('hello');
+  var o = this;
+  popsicle({
+    method: 'GET',
+    url: o.apiUrlBase + '/logout/'
+  }).then(function(res) {
+    o.loggedIn = false;
+    o.userEmail = '';
+    emitter.emit('USER_CHANGE');
   });
 }
 

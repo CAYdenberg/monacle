@@ -1,5 +1,7 @@
 var React = require('react');
 var _ = require('underscore');
+var emitter = require('../utils').emitter;
+var dispatcher = require('../utils').dispatcher;
 
 module.exports = function(store) {
 
@@ -10,14 +12,26 @@ module.exports = function(store) {
         currentUser : store.userEmail
       })
     },
+    componentWillMount: function() {
+      emitter.on('USER_CHANGE', function() {
+        this.setState({
+          loggedIn: store.loggedIn,
+          currentUser: store.userEmail
+        });
+      }.bind(this));
+    },
+    logout: function(e) {
+      e.preventDefault();
+      dispatcher.dispatch({ type: 'LOG_OUT' });
+    },
     render: function() {
       if (this.state.loggedIn) {
         return (
           <li className="dropdown">
-            <a href="#" className="dropdown-toggle" data-toggle="dropdown">{this.props.currentUser}</a>
+            <a href="#" className="dropdown-toggle" data-toggle="dropdown">{this.state.currentUser}</a>
             <ul className="dropdown-menu navmenu-nav" role="menu">
               <li><a href="#">Profile</a></li>
-              <li><a href="#">Logout</a></li>
+              <li><a href="/users/logout/" onClick={this.logout}>Logout</a></li>
             </ul>
           </li>
         )

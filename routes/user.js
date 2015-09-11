@@ -62,6 +62,11 @@ router.post('/signin', passport.authenticate('signin'), function(err, req, res, 
   next();
 });
 
+router.get('/logoout', function(req, res, next) {
+  req.logout();
+  next();
+});
+
 router.all('/*', function(req, res) {
   var user = req.session.passport.user;
   if (user) {
