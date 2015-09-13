@@ -2,7 +2,7 @@ var React = require('react');
 var _ = require('underscore');
 var popsicle = require('popsicle');
 
-var dispatcher = require('../utils.js').dispatcher;
+var dispatcher = require('../utils').dispatcher;
 
 module.exports = function(store) {
 

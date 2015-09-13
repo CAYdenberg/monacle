@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var utils = require('../utils.js');
+var utils = require('../utils');
 var dispatcher = utils.dispatcher;
 var emitter = utils.emitter;
 
@@ -38,7 +38,6 @@ UserStore.prototype.update = function(email) {
     this.userEmail = '';
     this.loggedIn = false;
   }
-  console.log(this);
 }
 
 UserStore.prototype.login = function(email, password) {
@@ -65,4 +64,6 @@ UserStore.prototype.logout = function() {
   });
 }
 
-module.exports = UserStore;
+module.exports = function(user) {
+  return new UserStore(user);
+}

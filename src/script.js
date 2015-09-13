@@ -1,37 +1,42 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var utils = require('./utils.js')
-
-var FolderStore = require('./stores/FolderStore.js');
-var CitationStore = require('./stores/CitationStore.js');
-var UserStore = require('./stores/UserStore.js');
+var utils = require('./utils')
 
 $(document).ready(function() {
 
-  var folderStore = new FolderStore();
-  var Folders = require('./components/Folders.js')(folderStore);
+  var user = $('#account-area').data('user');
 
-  var citationStore = new CitationStore();
+  //create stores
+  var citationStore = require('./stores/citationStore.js')();
+  var folderStore = require('./stores/folderStore.js')();
+  var userStore = require('./stores/userStore.js')( user );
+
+  //get React classes and bind them to their stores
   var CitationList = require('./components/CitationList.js')(citationStore, folderStore);
-
-  var userStore = new UserStore( $('#account-area').data('user') );
+  var Folders = require('./components/Folders.js')(folderStore);
   var AccountArea = require('./components/AccountArea.js')(userStore);
   var SigninForm = require('./components/SigninForm.js')();
 
+  //Render React classes for every page
   React.render(<AccountArea />, document.getElementById('account-area'));
   React.render(<SigninForm />, document.getElementById('signin-form-wrapper'));
 
-  utils.emitter.on('CLOSE_MODALS', function() {
-    $('.modal').modal('hide');
-  });
-
   if ( $('body').hasClass('app') ) {
+    //Render React classes for the app/Search page specifically
     React.render(<Folders />, document.getElementById('folders'));
     React.render(<CitationList />, document.getElementById('citations'));
+
     //on page load, get GET variable "query"
     utils.dispatcher.dispatch({ type : 'GET_FOLDERS' });
     utils.dispatcher.dispatch({ type : 'NEW_SEARCH', content : { queryString : utils.getParameterByName("query") } });
   }
+
+  //Register bootstrap events.
+
+  //Closes ALL modals.
+  utils.emitter.on('CLOSE_MODALS', function() {
+    $('.modal').modal('hide');
+  });
 
 });

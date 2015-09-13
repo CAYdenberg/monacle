@@ -2,6 +2,8 @@ var flux = require('flux');
 var EE = require('event-emitter');
 var _ = require('underscore');
 
+var notifier = require('./notifier')();
+
 var getParameterByName = function(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
@@ -30,5 +32,6 @@ module.exports = {
   emitter : new EE(),
   getParameterByName : getParameterByName,
   formatAuthorList : formatAuthorList,
-  formatYear : formatYear
+  formatYear : formatYear,
+  notifier : notifier
 };

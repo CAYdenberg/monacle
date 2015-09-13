@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var utils = require('../utils.js');
+var utils = require('../utils');
 var dispatcher = utils.dispatcher;
 var emitter = utils.emitter;
 
@@ -98,8 +98,6 @@ CitationStore.prototype.importItems = function(data) {
     this.importItem(pubmedRecord);
   }.bind(this));
   this.sortItems();
-  console.log( this.index );
-  console.log( this.items );
 }
 
 CitationStore.prototype.getItem = function(pubmed) {
@@ -123,4 +121,6 @@ CitationStore.prototype.updateItems = function(pubmed, updates) {
   return item;
 }
 
-module.exports = CitationStore;
+module.exports = function() {
+  return new CitationStore();
+}

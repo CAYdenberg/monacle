@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var utils = require('../utils.js');
+var utils = require('../utils');
 var dispatcher = utils.dispatcher;
 var emitter = utils.emitter;
 
@@ -50,4 +50,6 @@ FolderStore.prototype.addFolder = function(folderName) {
   });
 }
 
-module.exports = FolderStore;
+module.exports = function() {
+  return new FolderStore();
+}

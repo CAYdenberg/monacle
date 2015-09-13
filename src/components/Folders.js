@@ -1,7 +1,7 @@
 var React = require('react');
 var _ = require('underscore');
 
-var utils = require('../utils.js');
+var utils = require('../utils');
 var emitter = utils.emitter;
 var dispatcher = utils.dispatcher;
 
