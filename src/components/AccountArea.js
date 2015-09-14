@@ -25,7 +25,6 @@ module.exports = function(store) {
       dispatcher.dispatch({ type: 'LOG_OUT' });
     },
     render: function() {
-      console.log(store);
       if (this.state.loggedIn) {
         return (
           <li className="dropdown">

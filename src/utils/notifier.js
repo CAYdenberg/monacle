@@ -1,5 +1,6 @@
 var React = require('react');
-var emitter = require('./index.js').emitter;
+
+var emitter;
 
 var alerts = {
   loginFailed: {
@@ -19,10 +20,10 @@ var alerts = {
 };
 
 
+
 function Notification(alertName, payload) {
   this.alert = alerts[alertName];
   this.payload = payload;
-  emitter.emit('NOTIFICATION');
 }
 
 Notification.prototype.dismiss = function() {
@@ -30,16 +31,19 @@ Notification.prototype.dismiss = function() {
   emitter.emit('NOTIFICATION');
 }
 
-function Notifier() {}
 
-Notifier.prototype = Object.create(Array.prototype);
+function Notifier() {
+  this.notifications = [];
+}
 
-Notifier.prototype.create = function() {
-  var notification = new Notification(arguments);
-  this.push(notification);
+Notifier.prototype.create = function(alertName, payload) {
+  var notification = new Notification(alertName, payload);
+  this.notifications.push(notification);
+  emitter.emit('NOTIFICATION');
   return notification;
 }
 
-module.exports = function() {
+module.exports = function(appEmitter) {
+  emitter = appEmitter;
   return new Notifier();
 }

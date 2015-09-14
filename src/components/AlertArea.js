@@ -1,21 +1,23 @@
 var React = require('react');
 var _ = require('underscore');
 
-var emitter = require('../utils').emitter;
-var dispatcher = require('../utils').dispatcher;
+var utils = require('../utils');
+var emitter = utils.emitter;
+var dispatcher = utils.dispatcher;
+var notifier = utils.notifier;
 
-module.exports = function(store) {
+module.exports = function() {
 
-  var AlertArea = React.createClass({
+  var NotificationArea = React.createClass({
     getInitialState: function() {
       return ({
-        alerts: []
+        notifications: []
       })
     },
     componentWillMount: function() {
       emitter.on('NOTIFICATION', function() {
         this.setState({
-          alerts: store
+          notifications: notifier.notifications
         });
       }.bind(this));
     },
@@ -23,30 +25,29 @@ module.exports = function(store) {
       return (
         <div>
           {
-            this.state.alerts.map(function(item, index) {
-              <Alert item={item} key={index} />
-            });
+            this.state.notifications.map(function(item, index) {
+              return (<Notification item={item} key={index} />)
+            })
           }
         </div>
       )
     }
   });
 
-  var Alert = React.createClass({
+  var Notification = React.createClass({
     retry: function() {
       dispatcher.dispatch(this.props.item.payload);
     },
     render: function() {
+      console.log(this.props);
       return (
-        <div className="alert alert-"+{this.props.item.alert.type} role="alert">
+        <div className={"alert alert-"+this.props.item.alert.type} role="alert">
           {this.props.item.alert.message}
-          {if (this.props.item.payload) {
-            <a onClick={this.retry}>Retry</a>
-          }}
+          {this.props.item.payload ? '<a onClick='+this.retry+'>Retry</a>' : ''}
         </div>
       )
     }
   });
 
-  return AlertArea;
+  return NotificationArea;
 }
