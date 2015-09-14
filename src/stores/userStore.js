@@ -31,6 +31,8 @@ function UserStore(userEmail) {
 }
 
 UserStore.prototype.update = function(email) {
+  this.createUserError = false;
+  this.loginError = false;
   if (email.length) {
     this.userEmail = email;
     this.loggedIn = true;
@@ -38,6 +40,8 @@ UserStore.prototype.update = function(email) {
     this.userEmail = '';
     this.loggedIn = false;
   }
+  emitter.emit('USER_CHANGE');
+  emitter.emit('CLOSE_MODALS');
 }
 
 UserStore.prototype.login = function(email, password) {
@@ -47,9 +51,12 @@ UserStore.prototype.login = function(email, password) {
     body: {email: email, password: password},
     url: o.apiUrlBase + 'signin/'
   }).then(function(res) {
-    o.update(res.body.email);
-    emitter.emit('USER_CHANGE');
-    emitter.emit('CLOSE_MODALS');
+    if (res.status === 200) {
+      o.update(res.body.email);
+    } else {
+      o.loginError = "Email address and password do not match";
+      emitter.emit('ERR_LOGIN');
+    }
   });
 }
 
@@ -60,7 +67,6 @@ UserStore.prototype.logout = function() {
     url: o.apiUrlBase + '/logout/'
   }).then(function(res) {
     o.update(res.body.email);
-    emitter.emit('USER_CHANGE');
   });
 }
 

@@ -17,7 +17,7 @@ $(document).ready(function() {
   var Folders = require('./components/Folders.js')(folderStore);
   var AlertArea = require('./components/AlertArea.js')();
   var AccountArea = require('./components/AccountArea.js')(userStore);
-  var SigninForm = require('./components/SigninForm.js')();
+  var SigninForm = require('./components/SigninForm.js')(userStore);
 
   //Render React classes for every page
   React.render(<AccountArea />, document.getElementById('account-area'));

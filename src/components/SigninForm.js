@@ -2,7 +2,9 @@ var React = require('react');
 var _ = require('underscore');
 var popsicle = require('popsicle');
 
-var dispatcher = require('../utils').dispatcher;
+var utils = require('../utils');
+var dispatcher = utils.dispatcher;
+var emitter = utils.emitter;
 
 module.exports = function(store) {
 
@@ -40,9 +42,37 @@ module.exports = function(store) {
             <label htmlFor="si-password">Password</label>
             <input type="password" className="form-control" id="si-password" name="password" value={this.state.password} onChange={this.typingPassword} />
           </div>
-          <button className="btn btn-success" onClick={this.submit}>Submit</button>
+          <div className="form-group">
+            <button className="btn btn-success" onClick={this.submit}>Submit</button>
+          </div>
+          <ErrorMsg />
         </form>
       )
+    }
+  });
+
+  var ErrorMsg = React.createClass({
+    getInitialState: function() {
+      return ({
+        message : ''
+      })
+    },
+    componentWillMount: function() {
+      emitter.on('ERR_LOGIN', function() {
+        this.setState({
+          message: store.loginError
+        })
+      }.bind(this));
+    },
+    render: function() {
+      console.log(store);
+      if (this.state.message) {
+        return (
+          <div className="alert alert-danger">{this.state.message}</div>
+        )
+      } else {
+        return <div />;
+      }
     }
   });
 
