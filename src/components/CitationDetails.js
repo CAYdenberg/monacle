@@ -33,7 +33,7 @@ module.exports = function(store) {
     }
   });
 
-  var ProgressBar = require('./ProgressBar.js')();
+  var ProgressBar = require('./partials/ProgressBar.js')();
 
   var LensLink = React.createClass({
     render: function() {

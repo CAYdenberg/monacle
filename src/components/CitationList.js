@@ -111,7 +111,7 @@ module.exports = function(store) {
     }
   });
 
-  var ProgressBar = require('./ProgressBar.js')();
+  var ProgressBar = require('./partials/ProgressBar.js')();
 
   return CitationList;
 }

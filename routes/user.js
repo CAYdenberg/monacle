@@ -52,6 +52,9 @@ passport.use('signup', new LocalStrategy({
 
 
 router.post('/signup', passport.authenticate('signup'), function(err, req, res, next) {
+  if (err) {
+    res.status(401);
+  }
   next();
 });
 
@@ -64,6 +67,18 @@ router.post('/signin', passport.authenticate('signin'), function(err, req, res, 
 
 router.get('/logout', function(req, res, next) {
   req.logout();
+  next();
+});
+
+router.get('/exists', function(req, res, next) {
+  var users = req.orm.users();
+  users.findOne({'email' : req.params.email}, function(err, found) {
+    if (found) {
+      res.json({userExists : true})
+    } else {
+      res.json({userExists : false})
+    }
+  });
   next();
 });
 

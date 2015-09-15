@@ -5,6 +5,7 @@ var popsicle = require('popsicle');
 var utils = require('../utils');
 var dispatcher = utils.dispatcher;
 var emitter = utils.emitter;
+var createTypingCallback = utils.createTypingCallback;
 
 module.exports = function(store) {
 
@@ -12,8 +13,16 @@ module.exports = function(store) {
     getInitialState: function() {
       return ({
         email: '',
-        password: ''
+        password: '',
+        loginError: ''
       });
+    },
+    componentWillMount: function() {
+      emitter.on('ERR_LOGIN', function() {
+        this.setState({
+          loginError: store.loginError
+        })
+      }.bind(this));
     },
     submit: function(e) {
       e.preventDefault();
@@ -25,56 +34,27 @@ module.exports = function(store) {
         }
       });
     },
-    typingEmail: function(e) {
-      this.setState({ email: e.target.value });
-    },
-    typingPassword: function(e) {
-      this.setState({ password: e.target.value });
-    },
     render: function() {
       return (
         <form>
           <div className="form-group">
             <label htmlFor="si-email">Email address</label>
-            <input type="email" className="form-control" id="si-email" name="email" value={this.state.email} onChange={this.typingEmail} />
+            <input type="email" className="form-control" id="si-email" name="email" value={this.state.email} onChange={createTypingCallback('email', this)} />
           </div>
           <div className="form-group">
             <label htmlFor="si-password">Password</label>
-            <input type="password" className="form-control" id="si-password" name="password" value={this.state.password} onChange={this.typingPassword} />
+            <input type="password" className="form-control" id="si-password" name="password" value={this.state.password} onChange={createTypingCallback('password', this)} />
           </div>
           <div className="form-group">
             <button className="btn btn-success" onClick={this.submit}>Submit</button>
           </div>
-          <ErrorMsg />
+          <ErrorMsg message={this.state.loginError} type="danger" />
         </form>
       )
     }
   });
 
-  var ErrorMsg = React.createClass({
-    getInitialState: function() {
-      return ({
-        message : ''
-      })
-    },
-    componentWillMount: function() {
-      emitter.on('ERR_LOGIN', function() {
-        this.setState({
-          message: store.loginError
-        })
-      }.bind(this));
-    },
-    render: function() {
-      console.log(store);
-      if (this.state.message) {
-        return (
-          <div className="alert alert-danger">{this.state.message}</div>
-        )
-      } else {
-        return <div />;
-      }
-    }
-  });
+  var ErrorMsg = require('./partials/ErrorMsg.js')();
 
   return SigninForm;
 }

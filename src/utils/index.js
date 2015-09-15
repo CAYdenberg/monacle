@@ -28,11 +28,20 @@ var formatYear = function(pubdate) {
   return pubdate.substring(0, 4);
 }
 
+var createTypingCallback = function(stateDefKey, reactClass) {
+  return function(e) {
+    stateDef = {};
+    stateDef[stateDefKey] = e.target.value;
+    reactClass.setState(stateDef);
+  };
+}
+
 module.exports = {
   dispatcher : new flux.Dispatcher(),
   emitter : emitter,
+  notifier : notifier,
   getParameterByName : getParameterByName,
   formatAuthorList : formatAuthorList,
   formatYear : formatYear,
-  notifier : notifier
+  createTypingCallback, createTypingCallback
 };

@@ -18,11 +18,13 @@ $(document).ready(function() {
   var AlertArea = require('./components/AlertArea.js')();
   var AccountArea = require('./components/AccountArea.js')(userStore);
   var SigninForm = require('./components/SigninForm.js')(userStore);
+  var SignupForm = require('./components/SignupForm.js')(userStore);
 
   //Render React classes for every page
   React.render(<AccountArea />, document.getElementById('account-area'));
   React.render(<SigninForm />, document.getElementById('signin-form-wrapper'));
   React.render(<AlertArea />, document.getElementById('alert-area'));
+  React.render(<SignupForm />, document.getElementById('signup-form-wrapper'));
 
   if ( $('body').hasClass('app') ) {
     //Render React classes for the app/Search page specifically
