@@ -23,6 +23,10 @@ function UserStore(userEmail) {
         this.logout();
         break;
 
+      case 'CREATE_USER':
+        this.create(payload.content.email, payload.content.password);
+        break;
+
       default:
         break;
     }
@@ -56,6 +60,21 @@ UserStore.prototype.login = function(email, password) {
     } else {
       o.loginError = "Email address and password do not match";
       emitter.emit('ERR_LOGIN');
+    }
+  });
+}
+
+UserStore.prototype.create = function(email, password) {
+  var o = this;
+  popsicle({
+    method: 'POST',
+    body: {email: email, password: password},
+    url: o.apiUrlBase + 'signup/'
+  }).then(function(res) {
+    if (res.status === 200) {
+      o.update(res.body.email);
+    } else {
+      //create an error
     }
   });
 }

@@ -25,13 +25,43 @@ module.exports = function(store) {
 
     //validation functions
     isEmailValid: function() {
-      if (validateEmail(this.state.email)) {
-
+      if ( ! this.state.email ) {
+        this.setState({ emailErr: 'Email address is required' });
+        return false;
+      }
+      else if ( ! validateEmail(this.state.email) ) {
+        this.setState({ emailErr: 'Email address is not valid' });
+        return false;
+      } else {
+        this.setState({ emailErr: '' });
+        return true;
       }
     },
-    isPasswordValid: function() {
 
+    isEmailUnique: function() {
+      var o = this;
+      popsicle({
+        method: 'GET',
+        url: '/user/exists/'+encodeURIComponent(this.state.email)
+      }).then(function(res) {
+        if (res.body.userExists) {
+          o.setState({ emailErr: 'This account already exists' });
+        } else {
+          o.setState({ emailErr: '' });
+        }
+      });
     },
+
+    isPasswordValid: function() {
+      if ( ! this.state.password1 ) {
+        this.setState({ password1Err: 'Password is required' });
+        return false;
+      } else {
+        this.setState({ password1Err: '' });
+        return true;
+      }
+    },
+
     checkPasswordsMatch: function() {
       var password1 = this.state.password1;
       var password2 = this.state.password2;
@@ -48,7 +78,7 @@ module.exports = function(store) {
     submit: function(e) {
       e.preventDefault();
       //check that passwords match
-      if ( this.checkPasswordsMatch() ) {
+      if (this.isEmailValid() && this.isPasswordValid() && this.checkPasswordsMatch()) {
         dispatcher.dispatch({
           type: 'CREATE_USER',
           content: {
@@ -67,6 +97,16 @@ module.exports = function(store) {
         o.setState(setStateArgs);
       }
     },
+
+    emailBlur: function() {
+      if ( this.isEmailValid() )
+        this.isEmailUnique();
+    },
+
+    password1Blur: function() {
+      this.isPasswordValid();
+    },
+
     password2Blur: function() {
       this.checkPasswordsMatch();
     },
@@ -79,9 +119,9 @@ module.exports = function(store) {
             <input type="email" className="form-control" id="su-email" name="email" value={this.state.email}
               onChange={createTypingCallback('email', this)}
               onFocus={this.reset('emailErr')}
-              onBlur={this.checkEmail}
+              onBlur={this.emailBlur}
             />
-            <ErrorMsg message={this.state.emailError} type="warning" />
+            <ErrorMsg message={this.state.emailErr} type="warning" />
           </div>
           <div className="form-group">
             <label htmlFor="su-password">Password</label>

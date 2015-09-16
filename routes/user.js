@@ -70,7 +70,7 @@ router.get('/logout', function(req, res, next) {
   next();
 });
 
-router.get('/exists', function(req, res, next) {
+router.get('/exists/:email', function(req, res, next) {
   var users = req.orm.users();
   users.findOne({'email' : req.params.email}, function(err, found) {
     if (found) {
@@ -79,7 +79,6 @@ router.get('/exists', function(req, res, next) {
       res.json({userExists : false})
     }
   });
-  next();
 });
 
 router.all('/*', function(req, res) {
