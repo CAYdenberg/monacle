@@ -46,6 +46,14 @@ app.use(expressSession({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(function(req, res, next) {
+  if (req.session.passport.user) {
+    req.user = req.session.passport.user.email;
+  } else {
+    req.user = null;
+  }
+  next();
+});
 
 app.use('/', routes);
 app.use('/user', user);

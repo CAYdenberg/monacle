@@ -4,45 +4,58 @@ var _ = require('underscore');
 var utils = require('../utils');
 var emitter = utils.emitter;
 var dispatcher = utils.dispatcher;
+var createTypingCallback = utils.createTypingCallback;
 
-module.exports = function(store) {
+module.exports = function(store, userStore) {
   var Folders = React.createClass({
+
     getInitialState : function() {
       return {
-        folders : [],
-        newFolderName : ''
+        folders: [],
+        newFolderName: '',
+        loggedIn: userStore.loggedIn
       }
     },
+
     componentWillMount : function() {
       emitter.on('FOLDERS_UPDATED', function() {
         this.setState({
           folders: store.folders
         });
       }.bind(this));
+      emitter.on('USER_CHANGE', function() {
+        this.setState({
+          loggedIn: userStore.loggedIn
+        });
+      }.bind(this));
     },
-    typing : function(e) {
-      this.setState({ newFolderName : e.target.value });
-    },
+
     add : function(e) {
       e.preventDefault();
       dispatcher.dispatch({ type : 'ADD_FOLDER', content : {name : this.state.newFolderName} });
     },
+
     render : function() {
-      return (
-        <div>
-          {
-            this.state.folders.map(function(folder) {
-              return (<Folder data={folder} key={folder.slug} />)
-            })
-          }
-          <form className="form-inline" method="POST" onSubmit={this.add}>
-            <div className="form-group">
-              <input type="text" className="form-control" value={this.state.newFolderName} onChange={this.typing} />
-              <button type="submit">+</button>
-            </div>
-          </form>
-        </div>
-      );
+      console.log(this.store);
+      if (this.state.loggedIn) {
+        return (
+          <div>
+            {
+              this.state.folders.map(function(folder) {
+                return (<Folder data={folder} key={folder.slug} />)
+              })
+            }
+            <form className="form-inline" method="POST" onSubmit={this.add}>
+              <div className="form-group">
+                <input type="text" className="form-control" value={this.state.newFolderName} onChange={createTypingCallback('newFolderName')} />
+                <button type="submit">+</button>
+              </div>
+            </form>
+          </div>
+        )
+      } else {
+        return (<div />);
+      }
     }
   });
 

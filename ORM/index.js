@@ -79,16 +79,17 @@ ORM.prototype.folders = function() {
   var collection = this.get('folders');
   var operations = {
 
-    insertByName: function(name) {
+    insertByName: function(name, user) {
       var slug = slugify(name);
       return new Promise( function(resolve, reject) {
-        collection.find({slug : slug}, function(err, res) {
+        collection.find({slug: slug, user: user}, function(err, res) {
           if (err) {
             reject(err);
           } else if (res.length) {
             reject(Error('Folder with that name already exists'));
           } else {
             collection.insert({
+              user : user,
               slug : slug,
               name : name
             }, function(err, res) {

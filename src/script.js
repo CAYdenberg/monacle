@@ -14,7 +14,7 @@ $(document).ready(function() {
 
   //get React classes and bind them to their stores
   var CitationList = require('./components/CitationList.js')(citationStore, folderStore);
-  var Folders = require('./components/Folders.js')(folderStore);
+  var Folders = require('./components/Folders.js')(folderStore, userStore);
   var AlertArea = require('./components/AlertArea.js')();
   var AccountArea = require('./components/AccountArea.js')(userStore);
   var SigninForm = require('./components/SigninForm.js')(userStore);
@@ -35,6 +35,10 @@ $(document).ready(function() {
     utils.dispatcher.dispatch({ type : 'GET_FOLDERS' });
     utils.dispatcher.dispatch({ type : 'NEW_SEARCH', content : { queryString : utils.getParameterByName("query") } });
   }
+
+  utils.emitter.on('USER_CHANGE', function() {
+    utils.dispatcher.dispatch({ type: 'GET_FOLDERS' });
+  });
 
   //Register bootstrap events.
 
