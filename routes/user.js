@@ -36,9 +36,13 @@ passport.use('signup', new LocalStrategy({
   },
   function(req, email, password, done) {
     var users = req.orm.users();
+    var folders = req.orm.folders();
 		var findOrCreateUser = function() {
       users.createIfUnique(email, password).then(function(user) {
-        done(null, user)
+        //when user is succesfully created, create one starting folder for them
+        folders.insertByName('My Papers', user.email).then(function() {
+          done(null, user);
+        });
       }, function(err) {
         done(err, false);
       });
@@ -62,6 +66,8 @@ router.post('/signin', passport.authenticate('signin'), function(err, req, res, 
 	if (err) {
     res.status(401);
   }
+  collection = req.orm.folders();
+  collection.insertByName()
   next();
 });
 

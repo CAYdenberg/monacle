@@ -12,7 +12,7 @@ router.post('/new', function(req, res, next) {
   });
 });
 
-router.all('/', function(req, res, next) {
+router.all('/*', function(req, res, next) {
   var collection = req.orm.folders();
   if (!req.user) {
     res.json([]);
