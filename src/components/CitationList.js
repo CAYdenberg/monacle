@@ -5,7 +5,7 @@ var utils = require('../utils');
 var emitter = utils.emitter;
 var dispatcher = utils.dispatcher;
 
-module.exports = function(store) {
+module.exports = function(store, folderStore) {
 
   var CitationList = React.createClass({
     getInitialState : function() {
@@ -72,9 +72,9 @@ module.exports = function(store) {
     }
   });
 
-  var SingleCitation = require('./SingleCitation.js')(store);
+  var SingleCitation = require('./SingleCitation.js')(store, folderStore);
 
-  var CitationDetails = require('./CitationDetails.js')(store);
+  var CitationDetails = require('./CitationDetails.js')(store, folderStore);
 
   var LoadMoreButton = React.createClass({
     getInitialState : function() {

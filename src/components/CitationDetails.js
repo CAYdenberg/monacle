@@ -6,7 +6,7 @@ var emitter = utils.emitter;
 var dispatcher = utils.dispatcher;
 
 
-module.exports = function(store) {
+module.exports = function(store, folderStore) {
 
   var CitationDetails = React.createClass({
     render: function() {
@@ -27,6 +27,7 @@ module.exports = function(store) {
                 <span className="icon-pubmed"></span> View on PubMed
               </a>
             </div>
+            <SaveMenu pmid={this.props.data.pubmed} />
           </div>
         )
       }
@@ -50,6 +51,53 @@ module.exports = function(store) {
           <div></div>
         )
       }
+    }
+  });
+
+  var SaveMenu = React.createClass({
+    getInitialState: function() {
+      return ({
+        folders: folderStore.folders
+      });
+    },
+    componentWillMount: function() {
+      emitter.on('FOLDERS_UPDATED', function() {
+        this.setState({
+          folders: folderStore.folders
+        });
+      }.bind(this));
+    },
+    saveCitation: function() {
+      alert(this.props.pmid);
+    },
+    render: function() {
+      if (this.state.folders.length) {
+
+        return (
+          <div className="margin-vertical">
+            <label for="save-to-folder">Save to:</label>
+            <select id="save-to-folder" className="form-control" onChange={this.saveCitation}>
+              <option value=""></option>
+              {
+                this.state.folders.map(function(item) {
+                  return (<SaveOption item={item} key={item.slug} />)
+                })
+              }
+            </select>
+          </div>
+        )
+
+      } else {
+        return (<div />);
+      }
+    }
+  });
+
+  var SaveOption = React.createClass({
+    render: function() {
+      return (
+        <option value={this.props.item.slug}>{this.props.item.name}</option>
+      )
     }
   });
 

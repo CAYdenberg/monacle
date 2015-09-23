@@ -49,6 +49,9 @@ function CitationStore() {
         });
         break;
 
+      case 'SAVE_TO_FOLDER':
+        break;
+
       default:
         return true;
 
@@ -82,8 +85,10 @@ CitationStore.prototype.importItem = function(pubmedRecord) {
       pubmedRecord[idObject.idtype] = idObject.value;
     }
   });
+  //set all unique identifiers to null if they dont exist.
+  //Note the change from "pubmed" to "pmid"
   var item = _.extend({
-    pubmed : null,
+    pmid : null,
     pmc : null,
     doi : null,
     abstract : null,
@@ -100,24 +105,24 @@ CitationStore.prototype.importItems = function(data) {
   this.sortItems();
 }
 
-CitationStore.prototype.getItem = function(pubmed) {
-  var index = this.index.indexOf(pubmed);
+CitationStore.prototype.getItem = function(pmid) {
+  var index = this.index.indexOf(pmid);
   return this.items[index];
 }
 
-CitationStore.prototype.setItem = function(pubmed, item) {
-  var index = this.index.indexOf(pubmed);
+CitationStore.prototype.setItem = function(pmid, item) {
+  var index = this.index.indexOf(pmid);
   this.items[index] = item;
   return item;
 }
 
-CitationStore.prototype.updateItems = function(pubmed, updates) {
+CitationStore.prototype.updateItems = function(pmid, updates) {
   //find the item
-  var item = this.getItem(pubmed);
+  var item = this.getItem(pmid);
   //update it
   item = _.extend(item, updates);
   //put it back into this.items
-  this.setItem(pubmed, item);
+  this.setItem(pmid, item);
   return item;
 }
 
