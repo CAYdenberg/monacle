@@ -3,23 +3,23 @@ var router = express.Router();
 
 router.post('/:folder/:pmid', function(req, res, next) {
   var folder = req.params.folder;
-  var citationData = req.body.citation;
+  var citationData = req.body.data;
   var user = req.user;
   var collection = req.orm.citations();
-  citations.save(citationData, folder, user).then(function(record) {
+  collection.save(citationData, folder, user).then(function(record) {
     next();
   }, function(err) {
     console.log('Error occurred while trying to save the paper');
   });
 });
 
-router.get('/:folder/:pmid', function(req, res, next) {
+router.all('/:folder/:pmid', function(req, res, next) {
   var pmid = req.params.pmid;
   var folder = req.params.folder;
   var collection = req.orm.citations();
   var user = req.user;
-  citations.findOne({
-    pubmed: pubmed,
+  collection.findOne({
+    pubmed: pmid,
     folder: folder,
     user: user
   }).then(function(record) {

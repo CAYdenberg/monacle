@@ -113,17 +113,11 @@ ORM.prototype.citations = function() {
   var operations = {
 
     save: function(data, folder, user, userData) {
-      collection.insert({
-        pubmed: data.pubmed,
+      return collection.insert({
+        pmid: data.pmid,
         data: data,
         folder: folder,
         user: user
-      }, function(err, res) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(res);
-        }
       });
     },
 

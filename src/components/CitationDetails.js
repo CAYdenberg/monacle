@@ -27,7 +27,7 @@ module.exports = function(store, folderStore) {
                 <span className="icon-pubmed"></span> View on PubMed
               </a>
             </div>
-            <SaveMenu pmid={this.props.data.pubmed} />
+            <SaveMenu pmid={this.props.data.pubmed} data={this.props.data} />
           </div>
         )
       }
@@ -57,7 +57,8 @@ module.exports = function(store, folderStore) {
   var SaveMenu = React.createClass({
     getInitialState: function() {
       return ({
-        folders: folderStore.folders
+        folders: folderStore.folders,
+        currentFolder: ''
       });
     },
     componentWillMount: function() {
@@ -67,16 +68,24 @@ module.exports = function(store, folderStore) {
         });
       }.bind(this));
     },
-    saveCitation: function() {
-      alert(this.props.pmid);
+    saveCitation: function(e) {
+      var o = this;
+      var newFolder = e.target.value;
+      this.setState({
+        currentFolder: newFolder
+      });
+      dispatcher.dispatch({
+        type: 'SAVE_TO_FOLDER',
+        content: { folder: newFolder, pmid: o.props.pmid, data: this.props.data }
+      });
     },
     render: function() {
       if (this.state.folders.length) {
 
         return (
           <div className="margin-vertical">
-            <label for="save-to-folder">Save to:</label>
-            <select id="save-to-folder" className="form-control" onChange={this.saveCitation}>
+            <label htmlFor="save-to-folder">Save to:</label>
+            <select id="save-to-folder" className="form-control" onChange={this.saveCitation} value={this.currentFolder}>
               <option value=""></option>
               {
                 this.state.folders.map(function(item) {

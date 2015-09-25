@@ -1,4 +1,6 @@
 var _ = require('underscore');
+var popsicle = require('popsicle');
+
 var utils = require('../utils');
 var dispatcher = utils.dispatcher;
 var emitter = utils.emitter;
@@ -11,6 +13,9 @@ function CitationStore() {
   this.index = [];
   this.total = 0;
   this.endOfResults = false;
+  this.apiUrlBase = '/library/';
+
+  var o = this;
 
   dispatcher.register(function(payload) {
     switch (payload.type) {
@@ -50,6 +55,16 @@ function CitationStore() {
         break;
 
       case 'SAVE_TO_FOLDER':
+        console.log(payload.content.data);
+        popsicle({
+          method: 'POST',
+          url: o.apiUrlBase + payload.content.folder + '/' + payload.content.pmid,
+          body: {data: payload.content.data}
+        }).then(function(res) {
+          console.log(res);
+        }, function(err) {
+          console.log(err);
+        });
         break;
 
       default:
@@ -80,8 +95,12 @@ CitationStore.prototype.sortItems = function(sortingFunction) {
 
 CitationStore.prototype.importItem = function(pubmedRecord) {
   //copy the article ids into the top-level of the object
+  //change "pubmed" (which is very generic) to "pmid" at this point
   _.each(pubmedRecord.articleids, function(idObject) {
-    if ( ['doi', 'pubmed', 'pmc'].indexOf(idObject.idtype) !== -1 ) {
+    if (idObject.idtype === 'pubmed') {
+      pubmedRecord['pmid'] = idObject.value;
+    }
+    if ( ['doi', 'pmc', 'pubmed'].indexOf(idObject.idtype) !== -1 ) {
       pubmedRecord[idObject.idtype] = idObject.value;
     }
   });
@@ -89,6 +108,7 @@ CitationStore.prototype.importItem = function(pubmedRecord) {
   //Note the change from "pubmed" to "pmid"
   var item = _.extend({
     pmid : null,
+    pubmed: null,
     pmc : null,
     doi : null,
     abstract : null,
