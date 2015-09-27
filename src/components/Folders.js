@@ -36,7 +36,6 @@ module.exports = function(store, userStore) {
     },
 
     render : function() {
-      console.log(this.store);
       if (this.state.loggedIn) {
         return (
           <div>
@@ -47,7 +46,7 @@ module.exports = function(store, userStore) {
             }
             <form className="form-inline" method="POST" onSubmit={this.add}>
               <div className="form-group">
-                <input type="text" className="form-control" value={this.state.newFolderName} onChange={createTypingCallback('newFolderName')} />
+                <input type="text" className="form-control" value={this.state.newFolderName} onChange={createTypingCallback('newFolderName', this)} />
                 <button type="submit">+</button>
               </div>
             </form>

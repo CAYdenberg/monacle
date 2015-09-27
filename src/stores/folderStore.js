@@ -42,8 +42,10 @@ FolderStore.prototype.getFolders = function(args) {
 }
 
 FolderStore.prototype.addFolder = function(folderName) {
+  var o = this;
   this.getFolders({
     method : 'POST',
+    url: o.apiUrlBase + 'new/',
     body : {
       name : folderName
     }
