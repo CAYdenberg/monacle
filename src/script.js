@@ -8,44 +8,48 @@ $(document).ready(function() {
   var user = $('#account-area').data('user');
 
   //create stores
-  var citationStore = require('./stores/citationStore.js')();
   var folderStore = require('./stores/folderStore.js')();
   var userStore = require('./stores/userStore.js')( user );
 
   //get React classes and bind them to their stores
-  var CitationList = require('./components/CitationList.js')(citationStore, folderStore);
   var Folders = require('./components/Folders.js')(folderStore, userStore);
   var AlertArea = require('./components/AlertArea.js')();
   var AccountArea = require('./components/AccountArea.js')(userStore);
   var SigninForm = require('./components/SigninForm.js')(userStore);
   var SignupForm = require('./components/SignupForm.js')(userStore);
 
-  //Render React classes for every page
+  //Render React classes
   React.render(<AccountArea />, document.getElementById('account-area'));
   React.render(<SigninForm />, document.getElementById('signin-form-wrapper'));
   React.render(<AlertArea />, document.getElementById('alert-area'));
   React.render(<SignupForm />, document.getElementById('signup-form-wrapper'));
+  React.render(<Folders />, document.getElementById('folders'));
 
-  if ( $('body').hasClass('app') ) {
-    //Render React classes for the app/Search page specifically
-    React.render(<Folders />, document.getElementById('folders'));
-    React.render(<CitationList />, document.getElementById('citations'));
+  utils.dispatcher.dispatch({ type : 'GET_FOLDERS' });
 
-    //on page load, get GET variable "query"
-    utils.dispatcher.dispatch({ type : 'GET_FOLDERS' });
-    utils.dispatcher.dispatch({ type : 'NEW_SEARCH', content : { queryString : utils.getParameterByName("query") } });
-  }
+  if ( $('body').hasClass('search') ) {
+    //stuff specific to the search page
+    var citationStore = require('./stores/citationStore.js')();
+    utils.dispatcher.dispatch({ type : 'NEW_SEARCH', content : { queryString : globals.query } });
+    $('input[name=query]').val(globals.query);
+  } else if ( $('body').hasClass('saved') ) {
+    utils.dispatcher.dispatch({ type : 'GET_FOLDER_CONTENTS' });
+  };
+
+  var CitationList = require('./components/CitationList.js')(citationStore, folderStore);
+  React.render(<CitationList />, document.getElementById('citations'));
 
   utils.emitter.on('USER_CHANGE', function() {
     utils.dispatcher.dispatch({ type: 'GET_FOLDERS' });
   });
 
-  //Register bootstrap events.
+  //Register non-React stuff.
 
-  //Closes ALL modals.
+  //Convenient event to close all the modals
   utils.emitter.on('CLOSE_MODALS', function() {
     $('.modal').modal('hide');
   });
+
 
   //var notification = utils.notifier.create('loginFailed');
 

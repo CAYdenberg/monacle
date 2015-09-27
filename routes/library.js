@@ -30,8 +30,4 @@ router.all('/:folder/:pmid', function(req, res, next) {
   });
 });
 
-router.get('/:folder', function(req, res, next) {
-
-});
-
 module.exports = router;

@@ -32,6 +32,10 @@ app.engine('hbs', hbs.express3({
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
+hbs.registerHelper('json', function(obj) {
+  return JSON.stringify(obj);
+});
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
