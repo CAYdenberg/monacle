@@ -91,7 +91,7 @@ module.exports = function(store, folderStore) {
       e.preventDefault();
       if ( this.props.nMore > 0 ) {
         this.setState({ loading : true });
-        dispatcher.dispatch({ type : 'LOAD_MORE', content : { queryString : utils.getParameterByName('query') } });
+        dispatcher.dispatch({ type : 'LOAD_MORE', content : { queryString : window.globals.query } });
       }
     },
     render : function() {
