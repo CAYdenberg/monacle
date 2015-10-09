@@ -1,6 +1,20 @@
 var express = require('express');
 var router = express.Router();
 
+router.get('/:folder', function(req, res, next) {
+  var folder = req.params.folder;
+  var collection = req.orm.citations();
+  var user = req.user;
+  collection.find({
+    folder: folder,
+    user: user
+  }).then(function(data) {
+    res.json(data);
+  }, function(err) {
+    console.log('Error occured while searching for that folder');
+  });
+});
+
 router.post('/:folder/:pmid', function(req, res, next) {
   var folder = req.params.folder;
   var citationData = req.body.data;
@@ -19,7 +33,7 @@ router.all('/:folder/:pmid', function(req, res, next) {
   var collection = req.orm.citations();
   var user = req.user;
   collection.findOne({
-    pubmed: pmid,
+    pmid: pmid,
     folder: folder,
     user: user
   }).then(function(record) {
