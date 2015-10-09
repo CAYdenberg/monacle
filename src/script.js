@@ -29,7 +29,7 @@ $(document).ready(function() {
 
   if ( $('body').hasClass('search') ) {
     //stuff specific to the search page
-    var citationStore = require('./stores/citationStore.js')();
+    var citationStore = require('./stores/citationStore')();
     utils.dispatcher.dispatch({ type : 'NEW_SEARCH', content : { queryString : globals.query } });
     $('input[name=query]').val(globals.query);
   } else if ( $('body').hasClass('saved') ) {

@@ -1,11 +1,9 @@
 var _ = require('underscore');
 var popsicle = require('popsicle');
 
-var utils = require('../utils');
+var utils = require('../../utils');
 var dispatcher = utils.dispatcher;
 var emitter = utils.emitter;
-
-var ncbi = require('../../lib/NCBI/ncbi.js');
 
 function CitationStore() {
 
@@ -19,41 +17,6 @@ function CitationStore() {
 
   dispatcher.register(function(payload) {
     switch (payload.type) {
-
-      case 'NEW_SEARCH':
-        var search = ncbi.pubmedSearch(payload.content.queryString);
-        search.then(function(data) {
-          this.total = data.total;
-          this.importItems(data.papers);
-        }.bind(this)).then(function(data) {
-          emitter.emit('CITATIONS_UPDATED');
-        }).catch(function(err) {
-          console.log(err);
-        });
-        break;
-
-      case 'LOAD_MORE':
-        if ( this.items.length < this.total ) {
-          var search = ncbi.pubmedSearch(payload.content.queryString, {
-            start: this.items.length,
-            end: this.items.length + 10
-          });
-          search.then(function(data) {
-            this.importItems(data.papers);
-          }.bind(this)).then(function() {
-            emitter.emit('CITATIONS_UPDATED')
-          });
-        }
-        break;
-
-      case 'GET_DETAILS':
-        ncbi.getAbstract(payload.content.pmid).then(function(data) {
-          this.updateItems(payload.content.pmid, {abstract : data});
-        }.bind(this)).then(function() {
-          emitter.emit('CITATIONS_UPDATED');
-        });
-        break;
-
       case 'SAVE_TO_FOLDER':
         popsicle({
           method: 'POST',
@@ -65,12 +28,9 @@ function CitationStore() {
           console.log(err);
         });
         break;
-
       default:
         return true;
-
     }
-
   }.bind(this));
 }
 
@@ -92,28 +52,7 @@ CitationStore.prototype.sortItems = function(sortingFunction) {
   this.createIndex();
 }
 
-CitationStore.prototype.importItem = function(pubmedRecord) {
-  //copy the article ids into the top-level of the object
-  //change "pubmed" (which is very generic) to "pmid" at this point
-  _.each(pubmedRecord.articleids, function(idObject) {
-    if (idObject.idtype === 'pubmed') {
-      pubmedRecord['pmid'] = idObject.value;
-    }
-    if ( ['doi', 'pmc', 'pubmed'].indexOf(idObject.idtype) !== -1 ) {
-      pubmedRecord[idObject.idtype] = idObject.value;
-    }
-  });
-  //set all unique identifiers to null if they dont exist.
-  //Note the change from "pubmed" to "pmid"
-  var item = _.extend({
-    pmid : null,
-    pubmed: null,
-    pmc : null,
-    doi : null,
-    abstract : null,
-    fulltext : null,
-    extras : null
-  }, pubmedRecord);
+CitationStore.prototype.importItem = function(item) {
   this.items.push(item);
 }
 
@@ -145,6 +84,4 @@ CitationStore.prototype.updateItems = function(pmid, updates) {
   return item;
 }
 
-module.exports = function() {
-  return new CitationStore();
-}
+module.exports = CitationStore;
