@@ -40,7 +40,7 @@ router.get('/search', function(req, res) {
   res.render('app', req.context);
 });
 
-router.get('/saved/:folder', function(req, res) {
+router.get('/library/:folder', function(req, res) {
   req.context.pagename = 'app saved';
   req.context.globals.currentFolder = req.params.folder;
   res.render('app', req.context);
