@@ -13,20 +13,36 @@ function CitationStore() {
 
   dispatcher.register(function(payload) {
     switch (payload.type) {
-      case: 'GET_FOLDER_CONTENTS':
+      case 'GET_FOLDER_CONTENTS':
         popsicle({
           method: 'GET',
           url: o.apiUrlBase + '/' + payload.content.folder
         }).then(function(res) {
           if (res.status === 200) {
-            this.importItems(res.body);
-          } else {
-
+            o.importItems(res.body);
           }
+        }).then(function() {
+          emitter.emit('CITATIONS_UPDATED');
+        }).catch(function() {
+          console.log('error retrieving citations from database');
         });
+        break;
+
+      default:
+        break;
+
     }
-  }.bind(this);
+  }.bind(this));
 
 }
 
 CitationStore.prototype = Object.create(Parent.prototype);
+
+CitationStore.prototype.importItems = function(items) {
+  _.each(items, function(item) {
+    this.importItem(item.data);
+  }.bind(this));
+  this.sortItems();
+}
+
+module.exports = CitationStore;

@@ -33,7 +33,8 @@ $(document).ready(function() {
     utils.dispatcher.dispatch({ type : 'NEW_SEARCH', content : { queryString : globals.query } });
     $('input[name=query]').val(globals.query);
   } else if ( $('body').hasClass('saved') ) {
-    utils.dispatcher.dispatch({ type : 'GET_FOLDER_CONTENTS' });
+    var citationStore = require('./stores/citationStore')('SAVED');
+    utils.dispatcher.dispatch({ type : 'GET_FOLDER_CONTENTS', content: {folder: globals.currentFolder} });
   };
 
   var CitationList = require('./components/CitationList.js')(citationStore, folderStore);
