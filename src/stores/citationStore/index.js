@@ -1,4 +1,9 @@
-module.exports = function(args) {
-  var SearchCitationStore = require('./SearchCitationStore');
-  return new SearchCitationStore();
+module.exports = function(type) {
+  var Store;
+  if (type === 'SAVED') {
+    Store = require('./SavedCitationStore');
+  } else {
+    Store = require('./SearchCitationStore');
+  }
+  return new Store();
 }

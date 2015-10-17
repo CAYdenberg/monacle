@@ -11,7 +11,7 @@ function CitationStore() {
   this.index = [];
   this.total = 0;
   this.endOfResults = false;
-  this.apiUrlBase = '/library/';
+  this.apiUrlBase = '/citations/';
 
   var o = this;
 

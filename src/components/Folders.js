@@ -61,7 +61,7 @@ module.exports = function(store, userStore) {
   var Folder = React.createClass({
     render : function() {
       return (
-        <li><a href="#">{this.props.data.name}</a></li>
+        <li><a href={'/library/'+this.props.data.slug+'/'}>{this.props.data.name}</a></li>
       )
     }
   });
