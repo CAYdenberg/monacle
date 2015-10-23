@@ -1,6 +1,6 @@
 var _ = require('underscore');
 
-var ncbi = require('../../../lib/NCBI/ncbi.js');
+var ncbi = require('../../../lib/node-ncbi');
 
 var dispatcher = require('../../utils').dispatcher;
 var emitter = require('../../utils').emitter;
