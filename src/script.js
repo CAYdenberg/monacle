@@ -20,8 +20,8 @@ $(document).ready(function() {
 
   //Render React classes
   React.render(<AccountArea />, document.getElementById('account-area'));
-  React.render(<SigninForm />, document.getElementById('signin-form-wrapper'));
   React.render(<AlertArea />, document.getElementById('alert-area'));
+  React.render(<SigninForm />, document.getElementById('signin-form-wrapper'));
   React.render(<SignupForm />, document.getElementById('signup-form-wrapper'));
   React.render(<Folders />, document.getElementById('folders'));
 
