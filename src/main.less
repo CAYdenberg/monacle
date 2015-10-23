@@ -45,6 +45,18 @@ a {
 	margin-bottom: ceil(@line-height-computed);
 }
 
+.horizontal-list {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	&>li {
+		display: inline-block;
+		padding-right: 10px;
+	}
+	&>li:last-child {
+		padding-right: 0;
+	}
+}
 
 /*================================
 * APP ACCORDION
@@ -193,6 +205,10 @@ Alert Area
 
 body.home {
 	min-height: 100%;
+}
+
+header {
+	padding-top: 15px;
 }
 
 .jumbotron-landing {
