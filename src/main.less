@@ -118,6 +118,26 @@ Alert Area
 	width: @mobile-nav-width;
 }
 
+.navmenu {
+	padding: 15px;
+}
+
+.account-area,
+.folders {
+	margin-bottom: 15px;
+}
+
+.account-area {
+	.open>a,
+	a:hover,
+	.open>a:hover {
+		background: transparent;
+	}
+	.navmenu-nav.dropdown-menu {
+		background-color: transparent;
+	}
+}
+
 .navmenu-inverse .navbar-toggle {
 	border-color: white;
 	.icon-bar {
@@ -125,14 +145,45 @@ Alert Area
 	}
 }
 
-.navmenu form {
-	padding: (@padding-base-vertical) (@padding-base-horizontal);
+.folder-list {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.new-folder-input {
+	padding: 0;
+	background: transparent;
+	border-radius: 0;
+	border: none;
+	border-bottom: 1px solid @brand-primary;
+	color: white;
+	line-height: 1.1;
+	height: 20px;
+	&:focus {
+		border: none;
+		border-bottom: 1px solid @brand-primary;
+		box-shadow: none;
+		-webkit-box-shadow: none;
+	}
+}
+
+.btn-new-folder {
+	background: transparent;
+	border: none;
+	color: @brand-primary;
+	font-weight: 900;
+	font-size: 30px;
+	line-height: 1;
 }
 
 .navbar-footer {
 	position: absolute;
 	bottom: 0;
 	padding-left: (@padding-base-vertical);
+	.nav>li>a:hover {
+		background: transparent;
+	}
 }
 
 
