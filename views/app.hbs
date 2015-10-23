@@ -1,24 +1,22 @@
 {{!< default}}
 
 <div id="main-nav" class="navmenu navmenu-inverse navmenu-fixed-left offcanvas-xs main-nav" role="navigation">
-  <ul class="nav navmenu-nav">
+  <div class="nav navmenu-nav">
 
-    <div id="account-area" data-user="{{user}}"></div>
+    <div id="account-area" class="account-area" data-user="{{user}}"></div>
 
-    <li>
-      <form role="search" method="GET" action="/search">
-        <div class="form-group">
-          <input type="text" class="form-control" name="query" placeholder="Search">
-        </div>
-        <div class="form-group">
-          <button type="submit" class="btn btn-success"><span class="icon-pubmed"></span></button>
-        </div>
-      </form>
-    </li>
+    <form role="search" method="GET" action="/search">
+      <div class="form-group">
+        <input type="text" class="form-control" name="query" placeholder="Search">
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-success"><span class="icon-pubmed"></span></button>
+      </div>
+    </form>
 
-    <div id="folders"></div>
+    <div id="folders" class="folders"></div>
 
-  </ul>
+  </div>
 
   <footer class="navbar-footer">
     {{>footer}}

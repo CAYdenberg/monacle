@@ -27,21 +27,22 @@ module.exports = function(store) {
     render: function() {
       if (this.state.loggedIn) {
         return (
-          <li className="dropdown">
-            <a href="#" className="dropdown-toggle" data-toggle="dropdown">{this.state.currentUser}</a>
-            <ul className="dropdown-menu navmenu-nav" role="menu">
-              <li><a href="#">Profile</a></li>
-              <li><a href="/users/logout/" onClick={this.logout}>Logout</a></li>
-            </ul>
-          </li>
+          <ul className="horizontal-list">
+            <li className="dropdown">
+              <a href="#" className="dropdown-toggle" data-toggle="dropdown">{this.state.currentUser}</a>
+              <ul className="dropdown-menu navmenu-nav" role="menu">
+                <li><a href="#">Profile</a></li>
+                <li><a href="/users/logout/" onClick={this.logout}>Logout</a></li>
+              </ul>
+            </li>
+          </ul>
         )
       } else {
         return (
-          <li>
-            <a href="#" data-toggle="modal" data-target="#modal-signin-form">Sign-in</a>
-            /
-            <a href="#" data-toggle="modal" data-target="#modal-signup-form">Create an account</a>
-          </li>
+          <ul className="horizontal-list">
+            <li><a href="#" data-toggle="modal" data-target="#modal-signin-form">Sign-in</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#modal-signup-form">Create an account</a></li>
+          </ul>
         )
       }
     }

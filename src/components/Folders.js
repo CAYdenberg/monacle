@@ -36,19 +36,20 @@ module.exports = function(store, userStore) {
     },
 
     render : function() {
-      console.log(this.store);
       if (this.state.loggedIn) {
         return (
           <div>
-            {
-              this.state.folders.map(function(folder) {
-                return (<Folder data={folder} key={folder.slug} />)
-              })
-            }
+            <ul className="folder-list">
+              {
+                this.state.folders.map(function(folder) {
+                  return (<Folder data={folder} key={folder.slug} />)
+                })
+              }
+            </ul>
             <form className="form-inline" method="POST" onSubmit={this.add}>
               <div className="form-group">
-                <input type="text" className="form-control" value={this.state.newFolderName} onChange={createTypingCallback('newFolderName')} />
-                <button type="submit">+</button>
+                <input type="text" className="form-control new-folder-input" value={this.state.newFolderName} onChange={createTypingCallback('newFolderName', this)} />
+                <button type="submit" className="btn-new-folder">+</button>
               </div>
             </form>
           </div>
@@ -62,7 +63,7 @@ module.exports = function(store, userStore) {
   var Folder = React.createClass({
     render : function() {
       return (
-        <li><a href="#">{this.props.data.name}</a></li>
+        <li><a href={'/library/'+this.props.data.slug+'/'}>{this.props.data.name}</a></li>
       )
     }
   });

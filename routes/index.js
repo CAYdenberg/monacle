@@ -12,6 +12,7 @@ router.all('/*', function(req, res, next) {
   req.context = {};
 	req.context.stylesheets = ['style.css'];
 	req.context.scripts = ['vendor.js', 'script.js'];
+  req.context.globals = {};
   // console.log(req.session.passport.user);
   var user = req.session.passport.user;
   if (user) {
@@ -34,7 +35,14 @@ router.get('/about', function(req, res) {
 });
 
 router.get('/search', function(req, res) {
-  req.context.pagename = 'app';
+  req.context.pagename = 'app search';
+  req.context.globals.query = req.query.query;
+  res.render('app', req.context);
+});
+
+router.get('/library/:folder', function(req, res) {
+  req.context.pagename = 'app saved';
+  req.context.globals.currentFolder = req.params.folder;
   res.render('app', req.context);
 });
 

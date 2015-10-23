@@ -5,13 +5,6 @@ var _ = require('underscore');
 var emitter = new EE();
 var notifier = require('./notifier')(emitter);
 
-var getParameterByName = function(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-    var results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
-
 var formatAuthorList = function(authors) {
   var authArr,
     authStr = '';
@@ -40,7 +33,6 @@ module.exports = {
   dispatcher : new flux.Dispatcher(),
   emitter : emitter,
   notifier : notifier,
-  getParameterByName : getParameterByName,
   formatAuthorList : formatAuthorList,
   formatYear : formatYear,
   createTypingCallback, createTypingCallback

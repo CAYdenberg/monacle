@@ -108,4 +108,33 @@ ORM.prototype.folders = function() {
   return _.extend(collection, operations);
 }
 
+ORM.prototype.citations = function() {
+  var collection = this.get('citations');
+  var operations = {
+
+    save: function(data, folder, user, userData) {
+      return collection.insert({
+        pmid: data.pmid,
+        data: data,
+        folder: folder,
+        user: user
+      });
+    },
+
+    move: function(pmid, newFolder, user) {
+      return;
+    },
+
+    copy: function(pmid, newFolder, user) {
+      return;
+    },
+
+    delete: function(pmid, newFolder, user) {
+
+    }
+
+  }
+  return _.extend(collection, operations);
+}
+
 module.exports = ORM;

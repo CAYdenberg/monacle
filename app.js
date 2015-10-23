@@ -13,6 +13,7 @@ var config = require('./config.js');
 var routes = require('./routes/index');
 var user = require('./routes/user');
 var folders = require('./routes/folders');
+var citations = require('./routes/citations');
 
 var app = express();
 
@@ -30,6 +31,10 @@ app.engine('hbs', hbs.express3({
 }));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
+
+hbs.registerHelper('json', function(obj) {
+  return JSON.stringify(obj);
+});
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -58,6 +63,7 @@ app.use(function(req, res, next) {
 app.use('/', routes);
 app.use('/user', user);
 app.use('/folders', folders);
+app.use('/citations', citations);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

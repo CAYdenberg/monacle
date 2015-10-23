@@ -1,16 +1,16 @@
 var _ = require('underscore');
-var utils = require('../utils');
-var dispatcher = utils.dispatcher;
-var emitter = utils.emitter;
 
-var ncbi = require('../../lib/NCBI/ncbi.js');
+var ncbi = require('../../../lib/NCBI/ncbi.js');
+
+var dispatcher = require('../../utils').dispatcher;
+var emitter = require('../../utils').emitter;
+
+var Parent = require('./CitationStore.js');
 
 function CitationStore() {
 
-  this.items = [];
-  this.index = [];
-  this.total = 0;
-  this.endOfResults = false;
+  Parent.call(this);
+  var o = this;
 
   dispatcher.register(function(payload) {
     switch (payload.type) {
@@ -49,41 +49,28 @@ function CitationStore() {
         });
         break;
 
-      default:
-        return true;
-
     }
-
   }.bind(this));
 }
 
-CitationStore.prototype.createIndex = function() {
-  this.index = _.pluck(this.items, 'pubmed');
-}
-
-CitationStore.prototype.sortItems = function(sortingFunction) {
-  if (_.isFunction(sortingFunction)) {
-    this.items.sort(sortingFunction);
-  } else {
-    //default sorting function: reverse chronological
-    this.items.sort(function(a, b) {
-      aNumericDate = a.sortpubdate.replace(/\D/g,'');
-      bNumericDate = b.sortpubdate.replace(/\D/g,'');
-      return bNumericDate - aNumericDate;
-    });
-  }
-  this.createIndex();
-}
+CitationStore.prototype = Object.create(Parent.prototype);
 
 CitationStore.prototype.importItem = function(pubmedRecord) {
   //copy the article ids into the top-level of the object
+  //change "pubmed" (which is very generic) to "pmid"
   _.each(pubmedRecord.articleids, function(idObject) {
-    if ( ['doi', 'pubmed', 'pmc'].indexOf(idObject.idtype) !== -1 ) {
+    if (idObject.idtype === 'pubmed') {
+      pubmedRecord['pmid'] = idObject.value;
+    }
+    if ( ['doi', 'pmc', 'pubmed'].indexOf(idObject.idtype) !== -1 ) {
       pubmedRecord[idObject.idtype] = idObject.value;
     }
   });
+  //set all unique identifiers to null if they dont exist.
+  //Note the change from "pubmed" to "pmid"
   var item = _.extend({
-    pubmed : null,
+    pmid : null,
+    pubmed: null,
     pmc : null,
     doi : null,
     abstract : null,
@@ -93,34 +80,4 @@ CitationStore.prototype.importItem = function(pubmedRecord) {
   this.items.push(item);
 }
 
-CitationStore.prototype.importItems = function(data) {
-  _.each(data, function(pubmedRecord) {
-    this.importItem(pubmedRecord);
-  }.bind(this));
-  this.sortItems();
-}
-
-CitationStore.prototype.getItem = function(pubmed) {
-  var index = this.index.indexOf(pubmed);
-  return this.items[index];
-}
-
-CitationStore.prototype.setItem = function(pubmed, item) {
-  var index = this.index.indexOf(pubmed);
-  this.items[index] = item;
-  return item;
-}
-
-CitationStore.prototype.updateItems = function(pubmed, updates) {
-  //find the item
-  var item = this.getItem(pubmed);
-  //update it
-  item = _.extend(item, updates);
-  //put it back into this.items
-  this.setItem(pubmed, item);
-  return item;
-}
-
-module.exports = function() {
-  return new CitationStore();
-}
+module.exports = CitationStore;
