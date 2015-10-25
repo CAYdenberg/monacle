@@ -35,5 +35,5 @@ module.exports = {
   notifier : notifier,
   formatAuthorList : formatAuthorList,
   formatYear : formatYear,
-  createTypingCallback, createTypingCallback
+  createTypingCallback : createTypingCallback
 };

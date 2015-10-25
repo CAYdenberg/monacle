@@ -76,7 +76,7 @@ gulp.task('js', function () {
 		return b.bundle()
 			.pipe(source('script.js'))
 			.pipe(buffer())
-			.pipe(uglify())
+			.pipe(uglify().on('error', gutil.log))
 			.pipe(gulp.dest('./dist/js'));
 	}
 });
