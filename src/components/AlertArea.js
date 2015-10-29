@@ -38,12 +38,18 @@ module.exports = function() {
     retry: function() {
       dispatcher.dispatch(this.props.item.payload);
     },
+    dismiss: function() {
+      this.props.item.dismiss();
+    },
     render: function() {
-      console.log(this.props);
       return (
         <div className={"alert alert-"+this.props.item.alert.type} role="alert">
+          <button type="button" className="close" aria-label="Close" onClick={this.dismiss}>
+            <span aria-hidden="true">&times;</span>
+          </button>
           {this.props.item.alert.message}
           {this.props.item.payload ? '<a onClick='+this.retry+'>Retry</a>' : ''}
+          &nbsp; &nbsp;
         </div>
       )
     }

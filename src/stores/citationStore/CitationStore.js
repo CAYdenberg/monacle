@@ -23,7 +23,7 @@ function CitationStore() {
           url: o.apiUrlBase + payload.content.folder + '/' + payload.content.pmid,
           body: {data: payload.content.data}
         }).then(function(res) {
-          console.log(res);
+          utils.notifier.create('addedToFolder');
         }, function(err) {
           console.log(err);
         });
