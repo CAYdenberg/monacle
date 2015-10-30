@@ -4,6 +4,7 @@ var ncbi = require('../../../lib/NCBI/ncbi.js');
 
 var dispatcher = require('../../utils').dispatcher;
 var emitter = require('../../utils').emitter;
+var notifier = require('../../utils').notifier;
 
 var Parent = require('./CitationStore.js');
 
@@ -23,7 +24,7 @@ function CitationStore() {
         }.bind(this)).then(function(data) {
           emitter.emit('CITATIONS_UPDATED');
         }).catch(function(err) {
-          console.log(err);
+          notifier.create('lostPubmed');
         });
         break;
 

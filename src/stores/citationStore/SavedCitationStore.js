@@ -3,6 +3,7 @@ var popsicle = require('popsicle');
 
 var dispatcher = require('../../utils').dispatcher;
 var emitter = require('../../utils').emitter;
+var notifier = require('../../utils').notifier;
 
 var Parent = require('./CitationStore.js');
 
@@ -24,7 +25,7 @@ function CitationStore() {
         }).then(function() {
           emitter.emit('CITATIONS_UPDATED');
         }).catch(function() {
-          console.log('error retrieving citations from database');
+          notifier.create('lostBackend');
         });
         break;
 

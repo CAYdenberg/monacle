@@ -25,7 +25,7 @@ function CitationStore() {
         }).then(function(res) {
           utils.notifier.create('addedToFolder');
         }, function(err) {
-          console.log(err);
+          utils.notifier.create('lostBackend');
         });
         break;
       default:

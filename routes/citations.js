@@ -11,7 +11,7 @@ router.get('/:folder', function(req, res, next) {
   }).then(function(data) {
     res.json(data);
   }, function(err) {
-    console.log('Error occured while searching for that folder');
+    res.status(500).json({});
   });
 });
 
@@ -23,7 +23,7 @@ router.post('/:folder/:pmid', function(req, res, next) {
   collection.save(citationData, folder, user).then(function(record) {
     next();
   }, function(err) {
-    console.log('Error occurred while trying to save the paper');
+    res.status(500).json({});
   });
 });
 
@@ -39,7 +39,6 @@ router.all('/:folder/:pmid', function(req, res, next) {
   }).then(function(record) {
     res.json(record);
   }, function(err) {
-    console.log('Citation not found');
     res.status(404).json({});
   });
 });

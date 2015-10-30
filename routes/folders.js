@@ -8,7 +8,7 @@ router.post('/new', function(req, res, next) {
   collection.insertByName(name, req.user).then(function(response) {
     next();
   }, function(error) {
-    console.log(error);
+    res.status(500).json({});
   });
 });
 
@@ -22,7 +22,7 @@ router.all('/*', function(req, res, next) {
     if (!err) {
       res.json(folders);
     } else {
-      console.log(error);
+      res.status(500).json({});
     }
   });
 });
