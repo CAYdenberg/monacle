@@ -10,7 +10,6 @@ function CitationStore() {
   this.items = [];
   this.index = [];
   this.total = 0;
-  this.endOfResults = false;
   this.apiUrlBase = '/citations/';
 
   var o = this;

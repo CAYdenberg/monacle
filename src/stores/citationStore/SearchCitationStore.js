@@ -1,6 +1,6 @@
 var _ = require('underscore');
 
-var ncbi = require('../../../lib/NCBI/ncbi.js');
+var ncbi = require('node-ncbi');
 
 var dispatcher = require('../../utils').dispatcher;
 var emitter = require('../../utils').emitter;
@@ -17,11 +17,11 @@ function CitationStore() {
     switch (payload.type) {
 
       case 'NEW_SEARCH':
-        var search = ncbi.pubmedSearch(payload.content.queryString);
-        search.then(function(data) {
-          this.total = data.total;
-          this.importItems(data.papers);
-        }.bind(this)).then(function(data) {
+        var search = ncbi.pubmedSearch(payload.content.queryString).then(function(data) {
+          o.total = data.count;
+          o.importItems(data.papers);
+          console.log(o);
+        }).then(function(data) {
           emitter.emit('CITATIONS_UPDATED');
         }).catch(function(err) {
           notifier.create('lostPubmed');
@@ -29,14 +29,13 @@ function CitationStore() {
         break;
 
       case 'LOAD_MORE':
-        if ( this.items.length < this.total ) {
+        if ( o.items.length < o.total ) {
           var search = ncbi.pubmedSearch(payload.content.queryString, {
-            start: this.items.length,
-            end: this.items.length + 10
-          });
-          search.then(function(data) {
-            this.importItems(data.papers);
-          }.bind(this)).then(function() {
+            start: o.items.length,
+            end: o.items.length + 10
+          }).then(function(data) {
+            o.importItems(data.papers);
+          }).then(function() {
             emitter.emit('CITATIONS_UPDATED')
           });
         }
@@ -44,14 +43,14 @@ function CitationStore() {
 
       case 'GET_DETAILS':
         ncbi.getAbstract(payload.content.pmid).then(function(data) {
-          this.updateItems(payload.content.pmid, {abstract : data});
-        }.bind(this)).then(function() {
+          o.updateItems(payload.content.pmid, {abstract : data});
+        }).then(function() {
           emitter.emit('CITATIONS_UPDATED');
         });
         break;
 
     }
-  }.bind(this));
+  });
 }
 
 CitationStore.prototype = Object.create(Parent.prototype);

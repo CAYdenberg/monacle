@@ -11,27 +11,12 @@ var minifyCSS = require('gulp-minify-css');
 var concat = require('gulp-concat');
 var sourcemaps = require('gulp-sourcemaps');
 var gutil = require('gulp-util');
+
 //dev-dependencies
-var mocha = require('gulp-mocha');
 var browserSync = require('browser-sync');
 var nodemon = require('gulp-nodemon');
 
 var config = require('./config.js');
-
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-* RUN TESTS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-gulp.task('test', function() {
-	return gulp.src(['test/*.js'], { read: false })
-		.pipe(mocha({ reporter: 'list' }))
-		.on('error', gutil.log);
-});
-
-gulp.task('test-watch', function() {
-	gulp.watch(['lib/**', 'test/**', 'src/**', 'routes/**'], ['test']);
-});
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
