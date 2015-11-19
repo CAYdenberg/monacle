@@ -23,7 +23,24 @@ var config = require('./config.js');
 * BUILD VENDOR FILES AND SEND TO DIST FOLDER
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-gulp.task('vendor-js', function(){
+gulp.task('vendor-lens-css', function() {
+	var file = './bower_components/lens-starter/lens.css';
+	return gulp.src(file)
+		.pipe(gulp.dest('./dist/css/'));
+});
+
+gulp.task('vendor-lens-js', function() {
+	var dir = './bower_components/';
+	var files = ['jquery/dist/jquery.js', 'lens-starter/lens.js'];
+	var paths = files.map(function(file) {
+		return dir + file;
+	});
+	return gulp.src(paths)
+		.pipe(concat('lens.js'))
+		.pipe(gulp.dest('./dist/js/'));
+});
+
+gulp.task('vendor-app-js', function(){
 	var dir = './bower_components/';
 	var files = ['jquery/dist/jquery.js', 'bootstrap/dist/js/bootstrap.js', 'jasny-bootstrap/dist/js/jasny-bootstrap.js'];
 	var paths = files.map(function(file) {
@@ -35,7 +52,7 @@ gulp.task('vendor-js', function(){
 		.pipe(gulp.dest('./dist/js/'))
 });
 
-gulp.task('vendor', ['vendor-js']);
+gulp.task('vendor', ['vendor-lens-css', 'vendor-lens-js', 'vendor-app-js']);
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -9,9 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
-    <link href='lens.css' rel='stylesheet' type='text/css'/>
-
-    <script src="lib/jquery-2.0.3.min.js"></script>
+    <link href='/css/lens.css' rel='stylesheet' type='text/css'/>
 
     <!-- MathJax -->
     <script type="text/x-mathjax-config">
@@ -23,7 +21,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 
-    <script src='/lens/lens.js'></script>
+    <script src='/js/lens.js'></script>
 
     <script>
 
@@ -131,7 +129,7 @@
 
 
       // PLOS Bio example
-      var documentURL = "data/pbio_1001749/index.xml";
+      // var documentURL = "data/pbio_1001749/index.xml";
 
 
       // Create a new Lens app instance
@@ -145,6 +143,8 @@
       var pmcId = document.URL.match(reg)[0];
 
       var document_url = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&id=" + pmcId.replace("PMC", "");
+
+      console.log(document_url);
 
       var app = new Lens({
         document_url : document_url
