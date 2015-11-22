@@ -20,11 +20,11 @@ function CitationStore() {
         var search = ncbi.pubmedSearch(payload.content.queryString).then(function(data) {
           o.total = data.count;
           o.importItems(data.papers);
-          console.log(o);
+        }, function(err) {
+          notifier.create('lostPubmed');
         }).then(function(data) {
           emitter.emit('CITATIONS_UPDATED');
-        }).catch(function(err) {
-          notifier.create('lostPubmed');
+          console.log(o);
         });
         break;
 
@@ -58,25 +58,24 @@ CitationStore.prototype = Object.create(Parent.prototype);
 CitationStore.prototype.importItem = function(pubmedRecord) {
   //copy the article ids into the top-level of the object
   //change "pubmed" (which is very generic) to "pmid"
-  _.each(pubmedRecord.articleids, function(idObject) {
-    if (idObject.idtype === 'pubmed') {
-      pubmedRecord['pmid'] = idObject.value;
-    }
-    if ( ['doi', 'pmc', 'pubmed'].indexOf(idObject.idtype) !== -1 ) {
-      pubmedRecord[idObject.idtype] = idObject.value;
-    }
-  });
-  //set all unique identifiers to null if they dont exist.
-  //Note the change from "pubmed" to "pmid"
-  var item = _.extend({
+  var item = {
+    pubmedSummary: pubmedRecord,
     pmid : null,
-    pubmed: null,
     pmc : null,
     doi : null,
     abstract : null,
     fulltext : null,
-    extras : null
-  }, pubmedRecord);
+    userData : null,
+  };
+  //copy out the article ids;
+  _.each(pubmedRecord.articleids, function(idObject) {
+    if (idObject.idtype === 'pubmed') {
+      item['pmid'] = idObject.value;
+    }
+    if ( ['doi', 'pmc', 'pubmed'].indexOf(idObject.idtype) !== -1 ) {
+      item[idObject.idtype] = idObject.value;
+    }
+  });
   this.items.push(item);
 }
 

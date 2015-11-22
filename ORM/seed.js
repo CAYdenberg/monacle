@@ -16,3 +16,6 @@ folders.insertByName('Folder the IIIrd', 'ydenberg@gmail.com');
 var users = orm.users();
 users.remove({});
 users.createIfUnique('ydenberg@gmail.com', 'test');
+
+var citations = orm.citations();
+citations.remove({});

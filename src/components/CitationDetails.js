@@ -17,9 +17,9 @@ module.exports = function(store, folderStore) {
       } else {
         return (
           <div className="citation-details">
-            <h5><span className="year">{utils.formatYear(this.props.data.pubdate)}</span></h5>
-            <h4>{this.props.data.title}</h4>
-            <h5 className="author-list">{utils.formatAuthorList(this.props.data.authors)}</h5>
+            <h5><span className="year">{utils.formatYear(this.props.data.pubmedSummary.pubdate)}</span></h5>
+            <h4>{this.props.data.pubmedSummary.title}</h4>
+            <h5 className="author-list">{utils.formatAuthorList(this.props.data.pubmedSummary.authors)}</h5>
             <div className="abstract">{this.props.data.abstract}</div>
             <LensLink link={this.props.data.pmc} />
             <div className="margin-vertical">
@@ -76,7 +76,7 @@ module.exports = function(store, folderStore) {
       });
       dispatcher.dispatch({
         type: 'SAVE_TO_FOLDER',
-        content: { folder: newFolder, pmid: o.props.pmid, data: this.props.data }
+        content: { folder: newFolder, pmid: this.props.pmid, data: this.props.data }
       });
     },
     render: function() {

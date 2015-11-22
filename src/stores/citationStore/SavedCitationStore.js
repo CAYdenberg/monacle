@@ -21,11 +21,13 @@ function CitationStore() {
         }).then(function(res) {
           if (res.status === 200) {
             o.importItems(res.body);
+            o.total = res.body.count;
           }
+        }, function(err) {
+          notifier.create('lostBackend');
         }).then(function() {
           emitter.emit('CITATIONS_UPDATED');
-        }).catch(function() {
-          notifier.create('lostBackend');
+          console.log(o);
         });
         break;
 
@@ -38,12 +40,5 @@ function CitationStore() {
 }
 
 CitationStore.prototype = Object.create(Parent.prototype);
-
-CitationStore.prototype.importItems = function(items) {
-  _.each(items, function(item) {
-    this.importItem(item.data);
-  }.bind(this));
-  this.sortItems();
-}
 
 module.exports = CitationStore;

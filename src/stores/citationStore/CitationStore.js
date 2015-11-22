@@ -34,7 +34,7 @@ function CitationStore() {
 }
 
 CitationStore.prototype.createIndex = function() {
-  this.index = _.pluck(this.items, 'pubmed');
+  this.index = _.pluck(this.items, 'pmid');
 }
 
 CitationStore.prototype.sortItems = function(sortingFunction) {
@@ -43,8 +43,8 @@ CitationStore.prototype.sortItems = function(sortingFunction) {
   } else {
     //default sorting function: reverse chronological
     this.items.sort(function(a, b) {
-      aNumericDate = a.sortpubdate.replace(/\D/g,'');
-      bNumericDate = b.sortpubdate.replace(/\D/g,'');
+      aNumericDate = a.pubmedSummary.sortpubdate.replace(/\D/g,'');
+      bNumericDate = b.pubmedSummary.sortpubdate.replace(/\D/g,'');
       return bNumericDate - aNumericDate;
     });
   }
@@ -55,9 +55,9 @@ CitationStore.prototype.importItem = function(item) {
   this.items.push(item);
 }
 
-CitationStore.prototype.importItems = function(data) {
-  _.each(data, function(pubmedRecord) {
-    this.importItem(pubmedRecord);
+CitationStore.prototype.importItems = function(items) {
+  _.each(items, function(item) {
+    this.importItem(item);
   }.bind(this));
   this.sortItems();
 }

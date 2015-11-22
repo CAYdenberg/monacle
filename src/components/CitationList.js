@@ -27,7 +27,7 @@ module.exports = function(store, folderStore) {
         <div className="panel-group" id="accordion">
           {
             this.state.items.map(function(item) {
-              return ( <Citation data={item} key={item.uid} /> );
+              return ( <Citation key={item.pmid} data={item} /> );
             })
           }
           <LoadMoreButton nMore={this.state.nMore} />
@@ -42,23 +42,23 @@ module.exports = function(store, folderStore) {
       React.unmountComponentAtNode(document.getElementById('single-citation'));
       if ( !this.props.data.abstract ) {
         //... then lets go get it
-        dispatcher.dispatch({ type : 'GET_DETAILS', content : {pmid : this.props.data.pubmed} });
+        dispatcher.dispatch({ type : 'GET_DETAILS', content : {pmid : this.props.data.pmid} });
       }
       React.render(<SingleCitation data={this.props.data} />, document.getElementById('single-citation'));
     },
     render: function() {
-      var headingId = "heading-PMID" + this.props.data.pubmed;
-      var collapseId = "collapse-PMID" + this.props.data.pubmed;
+      var headingId = "heading-PMID" + this.props.data.pmid;
+      var collapseId = "collapse-PMID" + this.props.data.pmid;
       return (
         <div className="panel panel-info">
           <a href="#" onClick={this.toggleDetails} data-toggle="collapse" data-parent="#accordion" data-target={"#" + collapseId}>
             <div className="panel-heading" id={headingId}>
               <h4>
-                  {this.props.data.title}
+                {this.props.data.pubmedSummary.title}
               </h4>
               <h5 className="author-list">
-                {utils.formatAuthorList(this.props.data.authors)},
-                &nbsp;<span className="year">{utils.formatYear(this.props.data.pubdate)}</span>
+                {utils.formatAuthorList(this.props.data.pubmedSummary.authors)},
+                &nbsp;<span className="year">{utils.formatYear(this.props.data.pubmedSummary.pubdate)}</span>
               </h5>
             </div>
           </a>
