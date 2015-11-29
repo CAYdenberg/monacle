@@ -24,7 +24,6 @@ function CitationStore() {
           notifier.create('lostPubmed');
         }).then(function(data) {
           emitter.emit('CITATIONS_UPDATED');
-          console.log(o);
         });
         break;
 
