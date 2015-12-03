@@ -41,5 +41,9 @@
     "validate-email": "^1.0.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "devDependencies": {
+    "gulp-mocha": "^2.2.0",
+    "supertest": "^1.1.0"
   }
 }

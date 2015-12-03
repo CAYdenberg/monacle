@@ -16,6 +16,8 @@ var gutil = require('gulp-util');
 var browserSync = require('browser-sync');
 var nodemon = require('gulp-nodemon');
 
+var mocha = require('gulp-mocha');
+
 var config = require('./config.js');
 
 
@@ -155,4 +157,19 @@ gulp.task('watch', ['nodemon'], function () {
 	gulp.watch(['src/**/*.js', 'lib/**/*.js'], ['js']);
 	gulp.watch(['src/**/*.less'], ['css']);
 	gulp.watch(['views/**/*.hbs']).on('change', browserSync.reload);
+});
+
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~
+* TESTS
+~~~~~~~~~~~~~~~~~~~~~~~ */
+
+gulp.task('test', function() {
+	return gulp.src(['test/*.js'], { read: false })
+		.pipe(mocha({ reporter: 'list' }))
+		.on('error', gutil.log);
+});
+
+gulp.task('test-watch', function() {
+	gulp.watch(['./**/*.js'], ['test']);
 });
