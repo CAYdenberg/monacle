@@ -22,9 +22,9 @@ passport.use('signin', new LocalStrategy({
 		users.validate(email, password).then(function(user) {
       done(null, user);
     }, function(err) {
-      req.logout();
+      // req.logout();
       done(err, false);
-    })
+    });
 	}
 ));
 
@@ -65,9 +65,10 @@ router.post('/signup', passport.authenticate('signup'), function(err, req, res, 
 router.post('/signin', passport.authenticate('signin'), function(err, req, res, next) {
 	if (err) {
     res.status(401);
+  } else {
+    collection = req.orm.folders();
+    collection.insertByName();
   }
-  collection = req.orm.folders();
-  collection.insertByName()
   next();
 });
 
