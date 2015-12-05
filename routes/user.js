@@ -19,9 +19,9 @@ passport.use('signin', new LocalStrategy({
 		passwordField : 'password'
   }, function(req, email, password, done) {
     var users = req.orm.users();
-		users.validate(email, password).then(function(user) {
+    users.validate(email, password).then(function(user) {
       done(null, user);
-    }, function(err) {
+    }).catch(function(err) {
       // req.logout();
       done(err, false);
     });
@@ -37,13 +37,14 @@ passport.use('signup', new LocalStrategy({
   function(req, email, password, done) {
     var users = req.orm.users();
     var folders = req.orm.folders();
-		var findOrCreateUser = function() {
+    var user;
+    var findOrCreateUser = function() {
       users.createIfUnique(email, password).then(function(user) {
         //when user is succesfully created, create one starting folder for them
-        folders.insertByName('My Papers', user.email).then(function() {
-          done(null, user);
-        });
-      }, function(err) {
+        return folders.insertByName('My Papers', user.email);
+      }).then(function(user) {
+        done(null, user);
+      }).catch(function(err) {
         done(err, false);
       });
     }
@@ -63,13 +64,13 @@ router.post('/signup', passport.authenticate('signup'), function(err, req, res, 
 });
 
 router.post('/signin', passport.authenticate('signin'), function(err, req, res, next) {
-	if (err) {
+  if (err) {
     res.status(401);
   } else {
     collection = req.orm.folders();
     collection.insertByName();
+    next();
   }
-  next();
 });
 
 router.get('/logout', function(req, res, next) {

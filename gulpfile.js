@@ -164,12 +164,12 @@ gulp.task('watch', ['nodemon'], function () {
 * TESTS
 ~~~~~~~~~~~~~~~~~~~~~~~ */
 
-gulp.task('test', function() {
+gulp.task('test', function(done) {
 	return gulp.src(['test/*.js'], { read: false })
 		.pipe(mocha({ reporter: 'list' }))
 		.on('error', gutil.log);
 });
 
 gulp.task('test-watch', function() {
-	gulp.watch(['./**/*.js'], ['test']);
+	gulp.watch(['**/*.js'], ['test']);
 });
