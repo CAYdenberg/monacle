@@ -81,7 +81,7 @@ module.exports = function(store, folderStore) {
     },
     render: function() {
       if (this.state.folders.length) {
-
+        console.log(this.props.data);
         return (
           <div className="margin-vertical">
             <label htmlFor="save-to-folder">Save to:</label>

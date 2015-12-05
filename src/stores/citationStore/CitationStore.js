@@ -5,6 +5,19 @@ var utils = require('../../utils');
 var dispatcher = utils.dispatcher;
 var emitter = utils.emitter;
 
+/**
+ * How a single paper is represented in the store:
+ {
+   pmid : unique ID,
+   pubmed: {Object - data returned from pubmed},
+   pmc : unique ID,
+   doi : unique ID,
+   abstract : String,
+   fulltext : String,
+   userData : {Object - data set for this record by the user}
+ }
+ */
+
 function CitationStore() {
 
   this.items = [];

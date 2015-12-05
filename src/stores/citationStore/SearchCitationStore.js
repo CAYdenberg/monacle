@@ -41,6 +41,7 @@ function CitationStore() {
         break;
 
       case 'GET_DETAILS':
+
         ncbi.getAbstract(payload.content.pmid).then(function(data) {
           o.updateItems(payload.content.pmid, {abstract : data});
         }).then(function() {
