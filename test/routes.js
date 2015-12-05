@@ -78,8 +78,10 @@ describe('Users API', function(){
   it('it should log a user out', function(done) {
     agent
       .get('/user/logout')
-      .expect(200, {loggedIn: false, email: '' })
+      .expect(200, {loggedIn: false, email: ''})
       .end(done);
   });
+
+  it('should not be able to log in if the password is wrong');
 
 });

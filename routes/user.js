@@ -39,10 +39,11 @@ passport.use('signup', new LocalStrategy({
     var folders = req.orm.folders();
     var user;
     var findOrCreateUser = function() {
-      users.createIfUnique(email, password).then(function(user) {
+      users.createIfUnique(email, password).then(function(newUser) {
         //when user is succesfully created, create one starting folder for them
+        user = newUser;
         return folders.insertByName('My Papers', user.email);
-      }).then(function(user) {
+      }).then(function() {
         done(null, user);
       }).catch(function(err) {
         done(err, false);
