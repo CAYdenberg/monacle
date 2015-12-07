@@ -16,8 +16,6 @@ function clearDb() {
   ]).then(function() {
     return users.createIfUnique('user@gmail.com', 'password');
   }).then(function() {
-    return folders.insertByName('My Papers', 'user@gmail.com');
-  }).then(function() {
     return citations.save({pmid: '999999'}, 'my-papers', 'user@gmail.com');
   });
 }
@@ -33,7 +31,7 @@ describe('Users API', function(){
 
   it('should return 401 if the user already exists', function(done) {
     request(app)
-      .post('/user/signup')
+      .post('/user/signup/')
       .send({email: 'user@gmail.com', password: 'whatever' })
       .expect(401)
       .end(done);
@@ -41,7 +39,7 @@ describe('Users API', function(){
 
   it('should create a user and log them in', function(done) {
     request(app)
-      .post('/user/signup')
+      .post('/user/signup/')
       .send({email: 'newuser@hotmail.com', password: 'whatever' })
       .expect(200, {loggedIn: true, email: 'newuser@hotmail.com' })
       .expect('set-cookie', /[.]+/)
@@ -68,7 +66,7 @@ describe('Users API', function(){
 
   it('should log a user in and set a cookie', function(done) {
     agent
-      .post('/user/signin')
+      .post('/user/signin/')
       .send({email: 'user@gmail.com', password: 'password'})
       .expect(200, {loggedIn: true, email: 'user@gmail.com'})
       .expect('set-cookie', /[.]+/)
@@ -77,21 +75,21 @@ describe('Users API', function(){
 
   it('should send a cookie on subsequent requests', function(done) {
     agent
-      .get('/user')
+      .get('/user/')
       .expect(200)
       .end(done);
   });
 
   it('it should log a user out', function(done) {
     agent
-      .get('/user/logout')
+      .get('/user/logout/')
       .expect(200, {loggedIn: false, email: ''})
       .end(done);
   });
 
   it('should not be able to log in if the password is wrong', function(done) {
     request(app)
-      .post('/user/signin')
+      .post('/user/signin/')
       .send({email: 'user@gmail.com', password: 'wrong'})
       .expect(401)
       .end(done);
@@ -112,15 +110,42 @@ describe('Folders API', function() {
     });
   });
 
-  it('should return 401 if the user is not logged in');
+  it('should return 401 if the user is not logged in', function(done) {
+    request(app)
+      .get('/folders/')
+      .expect(401)
+      .end(done);
+  });
 
-  it('should be able to add a folder');
+  it('should be able to add a folder', function(done) {
+    agent
+      .post('/folders/')
+      .send({name: 'New Folder'})
+      .expect(200, [{name: 'My Papers', slug: 'my-papers'}, {name: 'New Folder', slug: 'new-folder'}])
+      .end(done);
+  });
 
-  it('should be able to delete a folder');
+  it('should not add a folder if the folder is does not have a unique name/slug', function(done) {
+    agent
+      .post('/folders/')
+      .send({name: 'My Papers'}) //set when the user is created
+      .expect(400, [{name: 'My Papers', slug: 'my-papers'}])
+      .end(done);
+  });
 
-  it('should not add a folder if the folder is does not have a unique name/slug');
+  it('should be able to delete a folder', function(done) {
+    agent
+      .delete('/folders/my-papers/')
+      .expect(200, [])
+      .end(done);
+  });
 
-  it('should show us a list of folders');
+  it('should show us a list of folders', function(done) {
+    agent
+      .get('/folders/')
+      .expect(200, [{name: 'My Papers', slug: 'my-papers'}])
+      .end(done);
+  });
 
   it('should be able to add a citation to a folder');
 
