@@ -8,11 +8,18 @@ var orm = new ORM(config.dbConnect);
 function clearDb() {
   var users = orm.users();
   var folders = orm.folders();
-  return users.remove({}).then(function() {
+  var citations = orm.citations();
+  return Promise.all([
+    users.remove({}),
+    folders.remove({}),
+    citations.remove({})
+  ]).then(function() {
     return users.createIfUnique('user@gmail.com', 'password');
   }).then(function() {
-    return folders.remove({});
-  })
+    return folders.insertByName('My Papers', 'user@gmail.com');
+  }).then(function() {
+    return citations.save({pmid: '999999'}, 'my-papers', 'user@gmail.com');
+  });
 }
 
 describe('Users API', function(){
@@ -82,6 +89,69 @@ describe('Users API', function(){
       .end(done);
   });
 
-  it('should not be able to log in if the password is wrong');
+  it('should not be able to log in if the password is wrong', function(done) {
+    request(app)
+      .post('/user/signin')
+      .send({email: 'user@gmail.com', password: 'wrong'})
+      .expect(401)
+      .end(done);
+  });
 
+});
+
+describe('Folders API', function() {
+  this.timeout(10000);
+
+  var agent = request.agent(app);
+  before(function(done) {
+    clearDb().then(function() {
+      agent
+        .post('/user/signin')
+        .send({email: 'user@gmail.com', password: 'password'})
+        .end(done);
+    });
+  });
+
+  it('should return 401 if the user is not logged in');
+
+  it('should be able to add a folder');
+
+  it('should be able to delete a folder');
+
+  it('should not add a folder if the folder is does not have a unique name/slug');
+
+  it('should show us a list of folders');
+
+  it('should be able to add a citation to a folder');
+
+  it('should not add a citation to a folder if the citaion is already present');
+
+  it('should be able to delete a citation from a folder');
+
+  it('should show us the contents of a folder');
+
+  it('should return 404 if the folder does not exist');
+
+});
+
+describe('Citations API', function() {
+  this.timeout(10000);
+
+  var agent = request.agent(app);
+  before(function(done) {
+    clearDb().then(function() {
+      agent
+        .post('/user/signin')
+        .send({email: 'user@gmail.com', password: 'password'})
+        .end(done);
+    });
+  });
+
+  it('should return 401 if the user is not logged in');
+
+  it('should retrieve the details of a citation');
+
+  it('should return 404 if the citation does not exist');
+
+  it('should be able to add or modify user data for a citation');
 });

@@ -44,7 +44,7 @@ var router = express.Router();
   data : the object above
   pmid : copy of data.pmid - stored at top level as a unique identifier
   user : current user's email address, used as a unique identifier
-  folder : the folder in which this citation is stored
+  folders : the folders in which this citation is stored
 }
  */
 

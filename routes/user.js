@@ -70,8 +70,8 @@ router.post('/signin', passport.authenticate('signin'), function(err, req, res, 
   } else {
     collection = req.orm.folders();
     collection.insertByName();
-    next();
   }
+  next();
 });
 
 router.get('/logout', function(req, res, next) {
