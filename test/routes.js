@@ -16,7 +16,7 @@ function clearDb() {
   ]).then(function() {
     return users.createIfUnique('user@gmail.com', 'password');
   }).then(function() {
-    return citations.save({pmid: '999999'}, 'my-papers', 'user@gmail.com');
+    return citations.save({pmid: 999999}, 'my-papers', 'user@gmail.com');
   });
 }
 
@@ -133,13 +133,6 @@ describe('Folders API', function() {
       .end(done);
   });
 
-  it('should be able to delete a folder', function(done) {
-    agent
-      .delete('/folders/my-papers/')
-      .expect(200, [])
-      .end(done);
-  });
-
   it('should show us a list of folders', function(done) {
     agent
       .get('/folders/')
@@ -147,15 +140,45 @@ describe('Folders API', function() {
       .end(done);
   });
 
-  it('should be able to add a citation to a folder');
+  it('should be able to delete a folder', function(done) {
+    agent
+      .delete('/folders/my-papers/')
+      .expect(200)
+      .end(done);
+  });
 
-  it('should not add a citation to a folder if the citaion is already present');
+  it('should be able to add a citation to a folder', function(done) {
+    agent
+      .post('/folders/my-papers/')
+      .send({pmid: 111111})
+      .expect(200, [
+        {pmid: 999999},
+        {pmid: 111111}
+      ])
+      .end(done);
+  });
 
-  it('should be able to delete a citation from a folder');
+  it('should not add a citation to a folder if the citaion is already present', function(done) {
+    agent
+      .post('/folders/my-papers/')
+      .send({pmid: 999999})
+      .expect(400, [{pmid: 999999}])
+      end(done);
+  });
 
-  it('should show us the contents of a folder');
+  it('should show us the contents of a folder', function(done) {
+    agent
+      .get('/folders/my-papers/')
+      .expect(200, [{pmid: 999999}])
+      .end(done);
+  });
 
-  it('should return 404 if the folder does not exist');
+  it('should return 404 if the folder does not exist', function(done) {
+    agent
+      .get('/folders/non-existant-folder/')
+      .expect(404)
+      .end(done);
+  });
 
 });
 
@@ -172,11 +195,48 @@ describe('Citations API', function() {
     });
   });
 
-  it('should return 401 if the user is not logged in');
+  it('should return 401 if the user is not logged in', function(done) {
+    request(app)
+      .get('/citations/999999/')
+      .expect(401)
+      .end(done);
+  });
 
-  it('should retrieve the details of a citation');
+  it('should retrieve the details of a citation', function(done) {
+    agent
+      .get('/citations/999999/')
+      .expect(200, {pmid: 999999})
+      .end(done);
+  });
 
-  it('should return 404 if the citation does not exist');
+  it('should return 404 if the citation does not exist', function(done) {
+    agent
+      .get('/citations/111111')
+      .expect(404)
+      .end(done);
+  });
 
-  it('should be able to add or modify user data for a citation');
+  it('should be able to add or modify user data for a citation', function(done) {
+    agent
+      .put('/citations/999999/')
+      .send({userData: {rating: 5}})
+      .expect(200, {pmid: 999999})
+      .end(done);
+  });
+
+  it('should be able to move a citation from one folder to another', function(done) {
+    agent
+      .put('/citations/999999/')
+      .send({addFolder: 'empty-folder', removeFolder: 'my-papers'})
+      .expect(200, {pmid: 999999})
+      .end(done);
+  });
+
+  it('should be able to delete a citation completely from the database', function(done) {
+    agent
+      .delete('/citations/999999/')
+      .expect(200)
+      .end(done);
+  });
+
 });
