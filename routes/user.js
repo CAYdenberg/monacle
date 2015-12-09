@@ -22,7 +22,6 @@ passport.use('signin', new LocalStrategy({
     users.validate(email, password).then(function(user) {
       done(null, user);
     }).catch(function(err) {
-      // req.logout();
       done(err, false);
     });
 	}

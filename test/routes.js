@@ -16,6 +16,8 @@ function clearDb() {
   ]).then(function() {
     return users.createIfUnique('user@gmail.com', 'password');
   }).then(function() {
+    return folders.insertByName('My Papers', 'user@gmail.com');
+  }).then(function() {
     return citations.save({pmid: 999999}, 'my-papers', 'user@gmail.com');
   });
 }
@@ -104,7 +106,7 @@ describe('Folders API', function() {
   before(function(done) {
     clearDb().then(function() {
       agent
-        .post('/user/signin')
+        .post('/user/signin/')
         .send({email: 'user@gmail.com', password: 'password'})
         .end(done);
     });
@@ -114,6 +116,13 @@ describe('Folders API', function() {
     request(app)
       .get('/folders/')
       .expect(401)
+      .end(done);
+  });
+
+  it('should show us a list of folders', function(done) {
+    agent
+      .get('/folders/')
+      .expect(200, [{name: 'My Papers', slug: 'my-papers'}])
       .end(done);
   });
 
@@ -129,21 +138,22 @@ describe('Folders API', function() {
     agent
       .post('/folders/')
       .send({name: 'My Papers'}) //set when the user is created
-      .expect(400, [{name: 'My Papers', slug: 'my-papers'}])
-      .end(done);
-  });
-
-  it('should show us a list of folders', function(done) {
-    agent
-      .get('/folders/')
-      .expect(200, [{name: 'My Papers', slug: 'my-papers'}])
+      .expect(400)
       .end(done);
   });
 
   it('should be able to delete a folder', function(done) {
     agent
-      .delete('/folders/my-papers/')
+      .delete('/folders/new-folder/')
       .expect(200)
+      .end(done);
+  });
+
+
+  it('should show us the contents of a folder', function(done) {
+    agent
+      .get('/folders/my-papers/')
+      .expect(200, [{pmid: 999999}])
       .end(done);
   });
 
@@ -164,13 +174,6 @@ describe('Folders API', function() {
       .send({pmid: 999999})
       .expect(400, [{pmid: 999999}])
       end(done);
-  });
-
-  it('should show us the contents of a folder', function(done) {
-    agent
-      .get('/folders/my-papers/')
-      .expect(200, [{pmid: 999999}])
-      .end(done);
   });
 
   it('should return 404 if the folder does not exist', function(done) {

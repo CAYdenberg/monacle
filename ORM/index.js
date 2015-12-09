@@ -79,13 +79,13 @@ ORM.prototype.folders = function() {
   var operations = {
 
     insertByName: function(name, user) {
-      var slug = slugify(name);
-      return new Promise( function(resolve, reject) {
+      var slug = slugify(name).toLowerCase();
+      return new Promise(function(resolve, reject) {
         collection.find({slug: slug, user: user}, function(err, res) {
           if (err) {
             reject(err);
           } else if (res.length) {
-            reject(Error('Folder with that name already exists'));
+            reject(Error('NotUniqueFolderSlug'));
           } else {
             collection.insert({
               user : user,
@@ -98,6 +98,18 @@ ORM.prototype.folders = function() {
                 resolve(res);
               }
             })
+          }
+        });
+      });
+    },
+
+    findAllForUser: function(user) {
+      return new Promise(function(resolve, reject) {
+        collection.find({user: user}, function(err, res) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(res);
           }
         });
       });
