@@ -20,10 +20,9 @@ module.exports = function(config) {
   config = config || require('./config');
 
   // Make our db accessible to our router
-  var ORM = require('./ORM');
-  var orm = new ORM(config.dbConnect);
+  var db = require('./db')(config.dbConnect);
   app.use(function(req, res, next){
-    req.orm = orm;
+    req.db = db;
     next();
   });
 

@@ -1,14 +1,12 @@
 var request = require('supertest');
 var config = require('./config');
 var app = require('../App')(config);
-var ORM = require('../ORM');
-var orm = new ORM(config.dbConnect);
-
 
 function clearDb() {
-  var users = orm.users();
-  var folders = orm.folders();
-  var citations = orm.citations();
+  var db = require('../db')(config.dbConnect);
+  var users = db.users;
+  var folders = db.folders;
+  var citations = db.citations;
   return Promise.all([
     users.remove({}),
     folders.remove({}),
@@ -29,6 +27,10 @@ describe('Users API', function(){
     clearDb().then(function() {
       done();
     });
+  });
+
+  it('should do nothing', function(done) {
+    done();
   });
 
   it('should return 401 if the user already exists', function(done) {

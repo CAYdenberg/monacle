@@ -28,7 +28,7 @@ var router = express.Router();
  * Remove a citation from a folder
  * Return the new citation, or 500 on failure
 
- * Returned data structure (JSON format):
+ * Returned data structure (JSON fdbat):
 {
   pmid : unique ID,
   pubmed: {Object - data returned from pubmed},
@@ -50,7 +50,7 @@ var router = express.Router();
 
 router.get('/:folder', function(req, res, next) {
   var folder = req.params.folder;
-  var collection = req.orm.citations();
+  var collection = req.db.citations();
   var user = req.user;
   collection.find({
     folder: folder,
@@ -68,7 +68,7 @@ router.post('/:folder/:pmid', function(req, res, next) {
   var folder = req.params.folder;
   var citationData = req.body.data;
   var user = req.user;
-  var collection = req.orm.citations();
+  var collection = req.db.citations();
   collection.save(citationData, folder, user).then(function(record) {
     next();
   }, function(err) {
@@ -79,7 +79,7 @@ router.post('/:folder/:pmid', function(req, res, next) {
 router.all('/:folder/:pmid', function(req, res, next) {
   var pmid = req.params.pmid;
   var folder = req.params.folder;
-  var collection = req.orm.citations();
+  var collection = req.db.citations();
   var user = req.user;
   collection.findOne({
     pmid: pmid,

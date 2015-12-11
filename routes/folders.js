@@ -12,7 +12,7 @@ router.all('/*', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
   var name = req.body.name;
-  var collection = req.orm.folders();
+  var collection = req.db.folders();
   //check if unique before or during insert
   collection.insertByName(name, req.user).then(function() {
     next();
@@ -28,7 +28,7 @@ router.post('/', function(req, res, next) {
 });
 
 router.all('/', function(req, res, next) {
-  var collection = req.orm.folders();
+  var collection = req.db.folders();
   collection.findAllForUser(req.user).then(function(folders) {
     res.json(_.map(folders, function(folder) {
       return {
@@ -43,7 +43,7 @@ router.all('/', function(req, res, next) {
 });
 
 router.all('/:folder', function(req, res, next) {
-  var collection = req.orm.citations();
+  var collection = req.db.citations();
   var user = req.user;
   collection.getFolderContents(req.params.folder, folder).then(function (contents) {
     if (!folder) {
