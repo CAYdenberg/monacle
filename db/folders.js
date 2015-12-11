@@ -1,5 +1,12 @@
 var slugify = require('slug');
 
+/**
+ * FOLDERS SCHEMA:
+ ** Name: String
+ ** Slug: String (slug)
+ ** User: String (=User email address)
+ */
+
 module.exports = function(db) {
   var collection = db.get('folders');
 

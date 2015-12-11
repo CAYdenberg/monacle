@@ -29,10 +29,6 @@ describe('Users API', function(){
     });
   });
 
-  it('should do nothing', function(done) {
-    done();
-  });
-
   it('should return 401 if the user already exists', function(done) {
     request(app)
       .post('/user/signup/')

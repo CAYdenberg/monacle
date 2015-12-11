@@ -1,4 +1,13 @@
 
+/**
+ * CITATIONS SCHEMA:
+ ** pmid: Integer,
+ ** data: Object | imported directly from NCBI,
+ ** folders: Array | folders that this item is in (each= Folder slug)
+ ** user: String (= User email address)
+ */
+
+
 module.exports = function(db) {
   var collection = db.get('users');
 
@@ -6,7 +15,7 @@ module.exports = function(db) {
     return collection.insert({
       pmid: data.pmid,
       data: data,
-      folder: folder,
+      folders: [folder],
       user: user
     });
   };
