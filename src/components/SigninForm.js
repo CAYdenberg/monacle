@@ -14,18 +14,30 @@ module.exports = function(store) {
       return ({
         email: '',
         password: '',
-        loginError: ''
+        loginError: '',
+        waiting: false
       });
     },
+
     componentWillMount: function() {
       emitter.on('ERR_LOGIN', function() {
         this.setState({
-          loginError: store.loginError
+          loginError: store.loginError,
+          waiting: false
+        })
+      }.bind(this));
+      emitter.on('CLOSE_MODALS', function() {
+        this.setState({
+          waiting: false
         })
       }.bind(this));
     },
+
     submit: function(e) {
       e.preventDefault();
+      this.setState({
+        waiting: true
+      });
       dispatcher.dispatch({
         type: 'LOG_IN',
         content: {
@@ -34,9 +46,10 @@ module.exports = function(store) {
         }
       });
     },
+
     render: function() {
       return (
-        <form>
+        <form className={this.state.waiting ? 'waiting' : ''}>
           <div className="form-group">
             <label htmlFor="si-email">Email address</label>
             <input type="email" className="form-control" id="si-email" name="email" value={this.state.email} onChange={createTypingCallback('email', this)} />

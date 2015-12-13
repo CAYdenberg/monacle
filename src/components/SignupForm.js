@@ -19,8 +19,23 @@ module.exports = function(store) {
         password2: '',
         emailErr: '',
         password1Err: '',
-        password2Err: ''
+        password2Err: '',
+        waiting: false
       });
+    },
+
+    componentWillMount: function() {
+      emitter.on('ERR_LOGIN', function() {
+        this.setState({
+          loginError: store.loginError,
+          waiting: false
+        })
+      }.bind(this));
+      emitter.on('CLOSE_MODALS', function() {
+        this.setState({
+          waiting: false
+        })
+      }.bind(this));
     },
 
     //validation functions
@@ -79,6 +94,9 @@ module.exports = function(store) {
       e.preventDefault();
       //check that passwords match
       if (this.isEmailValid() && this.isPasswordValid() && this.checkPasswordsMatch()) {
+        this.setState({
+          waiting: true
+        });
         dispatcher.dispatch({
           type: 'CREATE_USER',
           content: {
@@ -113,7 +131,7 @@ module.exports = function(store) {
 
     render: function() {
       return (
-        <form>
+        <form className={this.state.waiting ? 'waiting' : ''}>
           <div className="form-group">
             <label htmlFor="su-email">Email address</label>
             <input type="email" className="form-control" id="su-email" name="email" value={this.state.email}
@@ -141,9 +159,9 @@ module.exports = function(store) {
             />
             <ErrorMsg message={this.state.password2Err} type="warning" />
           </div>
-          <input type="submit" value="Submit" className="btn btn-success"
-            onClick={this.submit}
-          />
+          <div className="form-group">
+            <button className="btn btn-success" onClick={this.submit}>Submit</button>
+          </div>
         </form>
       )
     }
