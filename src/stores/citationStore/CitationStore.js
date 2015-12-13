@@ -22,7 +22,7 @@ function CitationStore() {
 
   this.items = [];
   this.index = [];
-  this.total = 0;
+  this.total = null;
   this.apiUrlBase = '/citations/';
 
   var o = this;
@@ -73,6 +73,7 @@ CitationStore.prototype.importItems = function(items) {
     this.importItem(item);
   }.bind(this));
   this.sortItems();
+  console.log(this);
 }
 
 CitationStore.prototype.getItem = function(pmid) {
