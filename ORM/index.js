@@ -31,14 +31,13 @@ ORM.prototype.users = function() {
         collection.findOne({ 'email' :  email }, function(err, user) {
           if (err) {
             reject(err);
-          }
-          if (!user) {
+          } else if (!user) {
             reject(new Error('User does not exist'));
-          }
-          if (!isValidPassword(user, password)) {
+          } else if (!isValidPassword(user, password)) {
             reject(new Error('Password is invalid'));
-          };
-          resolve(user);
+          } else {
+            resolve(user);
+          }
         });
       });
     },
