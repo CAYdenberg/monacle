@@ -65,7 +65,7 @@ router.delete('/:folder', function(req, res, next) {
     slug: req.params.folder,
     user: req.user
   }).then(function() {
-    res.status(200).json({});
+    next();
   });
 });
 
@@ -76,15 +76,26 @@ router.delete('/:folder', function(req, res, next) {
 
 router.post('/:folder', function(req, res, next) {
   var collection = req.db.citations;
-  collection.findOne({
-
-  }).then(function(record) {
-    if (record) {
-      //push the folder slug into the folders array
+  //check that a pmid is supplied
+  if (!req.body.pmid) {
+    res.status(400);
+    res.next();
+  }
+  //check that the pmid, folder, and user together are unique;
+  collection.find({
+    pmid: req.body.pmid,
+    folders: {$all: [req.params.folder]},
+    user: req.user
+  }).then(function(contents) {
+    if (contents.length) {
+      res.status(400);
+      next();
     } else {
-      //create a new Citation record with the folder slug
+      collection.create(req.body, req.params.folder, req.user).then(function() {
+        next();
+      });
     }
-  })
+  });
 });
 
 router.all('/:folder', function(req, res, next) {
@@ -92,7 +103,7 @@ router.all('/:folder', function(req, res, next) {
   collection.find({
     user: req.user,
     folders: {$all: [req.params.folder] }
-  }).then(function (contents) {
+  }).then(function(contents) {
     res.json(_.map(contents, function(item) {
       return item.data;
     }));

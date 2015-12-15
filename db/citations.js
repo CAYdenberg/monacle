@@ -11,14 +11,45 @@
 module.exports = function(db) {
   var collection = db.get('users');
 
-  collection.save = function(data, folder, user, userData) {
-    return collection.insert({
-      pmid: data.pmid,
-      data: data,
-      folders: [folder],
-      user: user
+  collection.create = function(data, folder, user, userData) {
+    return new Promise(function(resolve, reject) {
+
+      collection.insert({
+        pmid: data.pmid,
+        data: data,
+        folders: [folder],
+        user: user
+      }, function(err, result) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+
     });
   };
+
+  collection.addToFolder = function(pmid, user, folder) {
+    return new Promise(function(resolve, reject) {
+
+      collection.update(
+        {
+          pmid: pmid,
+          user: user
+        },
+        {folders: {$addToSet: folder}},
+        function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        }
+      );
+
+    });
+  }
 
   return collection;
 };

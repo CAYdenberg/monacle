@@ -16,7 +16,7 @@ function clearDb() {
   }).then(function() {
     return folders.insertByName('My Papers', 'user@gmail.com');
   }).then(function() {
-    return citations.save({pmid: 999999}, 'my-papers', 'user@gmail.com');
+    return citations.create({pmid: 999999}, 'my-papers', 'user@gmail.com');
   });
 }
 
@@ -166,12 +166,12 @@ describe('Folders API', function() {
       .end(done);
   });
 
-  it('should not add a citation to a folder if the citaion is already present', function(done) {
+  it('should not add a citation to a folder if the citaion is already present in that folder', function(done) {
     agent
       .post('/folders/my-papers/')
       .send({pmid: 999999})
-      .expect(400, [{pmid: 999999}])
-      end(done);
+      .expect(400, [{pmid: 999999}, {pmid: 111111}])
+      .end(done);
   });
 
   it('should return 404 if the folder does not exist', function(done) {
