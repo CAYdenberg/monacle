@@ -9,6 +9,33 @@ router.all('/*', function(req, res, next) {
   }
 });
 
+//preliminary route to make sure a record exists before we work on it
+router.all('/:pmid', function(req, res, next) {
+  var collection = req.db.citations;
+  var pmid = parseInt(req.params.pmid, 10);
+  collection.findOne({
+    user: req.user,
+    pmid: pmid
+  }).then(function(result) {
+    if (!result) {
+      res.status(404).json({});
+    } else {
+      next();
+    }
+  });
+});
+
+router.delete('/:pmid', function(req, res, next) {
+  var collection = req.db.citations;
+  var pmid = parseInt(req.params.pmid, 10);
+  collection.remove({
+    user: req.user,
+    pmid: pmid
+  }, function(err, record) {
+    res.json({});
+  });
+});
+
 router.put('/:pmid', function(req, res, next) {
   var collection = req.db.citations;
   var pmid = parseInt(req.params.pmid, 10);
@@ -31,15 +58,11 @@ router.all('/:pmid', function(req, res) {
     user: req.user,
     pmid: pmid
   }).then(function(result) {
-    if (!result) {
-      res.status(404).json({});
-    } else {
-      res.json({
-        data: result.data,
-        userData: result.userData,
-        folders: result.folders
-      });
-    }
+    res.json({
+      data: result.data,
+      userData: result.userData,
+      folders: result.folders
+    });
   });
 });
 

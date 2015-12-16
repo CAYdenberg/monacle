@@ -241,7 +241,10 @@ describe('Citations API', function() {
   });
 
   it('should not be able to delete a citation if the citation does not exist', function(done) {
-    
+    agent
+      .delete('/citations/999999/')
+      .expect(404)
+      .end(done);
   });
 
 });
