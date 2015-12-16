@@ -9,7 +9,7 @@
 
 
 module.exports = function(db) {
-  var collection = db.get('users');
+  var collection = db.get('citations');
 
   collection.create = function(data, folder, user, userData) {
     return new Promise(function(resolve, reject) {
@@ -18,7 +18,8 @@ module.exports = function(db) {
         pmid: data.pmid,
         data: data,
         folders: [folder],
-        user: user
+        user: user,
+        userData: (userData || {})
       }, function(err, result) {
         if (err) {
           reject(err);
@@ -30,7 +31,7 @@ module.exports = function(db) {
     });
   };
 
-  collection.addToFolder = function(pmid, user, folder) {
+  collection.modify = function(pmid, user, modification) {
     return new Promise(function(resolve, reject) {
 
       collection.update(
@@ -38,7 +39,7 @@ module.exports = function(db) {
           pmid: pmid,
           user: user
         },
-        {folders: {$addToSet: folder}},
+        modification,
         function(err) {
           if (err) {
             reject(err);
@@ -49,7 +50,15 @@ module.exports = function(db) {
       );
 
     });
-  }
+  };
+
+  collection.addToFolder = function(pmid, user, folder) {
+    return collection.modify(pmid, user, {$addToSet: {folders: folder} });
+  };
+
+  collection.removeFromFolder = function(pmid, user, folder) {
+    return collection.modify(pmid, user, {$pull: {folders: folder} });
+  };
 
   return collection;
 };

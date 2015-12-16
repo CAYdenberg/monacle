@@ -13,6 +13,7 @@ module.exports = function(db) {
   collection.insertByName = function(name, user) {
     var slug = slugify(name).toLowerCase();
     return new Promise(function(resolve, reject) {
+
       collection.find({slug: slug, user: user}, function(err, res) {
         if (err) {
           reject(err);
@@ -32,6 +33,7 @@ module.exports = function(db) {
           })
         }
       });
+
     });
   };
 

@@ -206,7 +206,11 @@ describe('Citations API', function() {
   it('should retrieve the details of a citation', function(done) {
     agent
       .get('/citations/999999/')
-      .expect(200, {pmid: 999999})
+      .expect(200, {
+        data: {pmid: 999999},
+        userData: {},
+        folders: ['my-papers']
+      })
       .end(done);
   });
 
@@ -217,19 +221,15 @@ describe('Citations API', function() {
       .end(done);
   });
 
-  it('should be able to add or modify user data for a citation', function(done) {
-    agent
-      .put('/citations/999999/')
-      .send({userData: {rating: 5}})
-      .expect(200, {pmid: 999999})
-      .end(done);
-  });
-
   it('should be able to move a citation from one folder to another', function(done) {
     agent
       .put('/citations/999999/')
       .send({addFolder: 'empty-folder', removeFolder: 'my-papers'})
-      .expect(200, {pmid: 999999})
+      .expect(200, {
+        data: {pmid: 999999},
+        userData: {},
+        folders: ['empty-folder']
+      })
       .end(done);
   });
 
@@ -238,6 +238,10 @@ describe('Citations API', function() {
       .delete('/citations/999999/')
       .expect(200)
       .end(done);
+  });
+
+  it('should not be able to delete a citation if the citation does not exist', function(done) {
+    
   });
 
 });
