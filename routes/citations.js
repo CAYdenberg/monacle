@@ -31,7 +31,7 @@ router.delete('/:pmid', function(req, res, next) {
   collection.remove({
     user: req.user,
     pmid: pmid
-  }, function(err, record) {
+  }).then(function() {
     res.json({});
   });
 });
