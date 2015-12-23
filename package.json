@@ -41,5 +41,10 @@
     "validate-email": "^1.0.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^1.10.3",
+    "eslint-plugin-react": "^3.12.0",
+    "gulp-eslint": "^1.1.1"
   }
 }
