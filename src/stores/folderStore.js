@@ -1,12 +1,12 @@
 var _ = require('underscore');
 var utils = require('../utils');
-var dispatcher = utils.dispatcher;
-var emitter = utils.emitter;
-
+var EE = require('event-emitter');
 var popsicle = require('popsicle');
 
+var dispatcher = utils.dispatcher;
+
 function FolderStore() {
-  var o = this;
+  EE.call(this);
 
   this.folders = [];
   this.apiUrlBase = "/folders/";
@@ -28,16 +28,18 @@ function FolderStore() {
   }.bind(this));
 }
 
+FolderStore.prototype = Object.create(EE.prototype);
+
 FolderStore.prototype.getFolders = function(args) {
   var o = this,
     defaults = {
       method : 'GET',
-      url : o.apiUrlBase,
+      url : o.apiUrlBase
     },
     settings = _.extend(defaults, args);
   popsicle(settings).then(function(res) {
     o.folders = res.body;
-    emitter.emit('FOLDERS_UPDATED');
+    this.emit('FOLDERS_UPDATED');
   });
 }
 
@@ -52,6 +54,4 @@ FolderStore.prototype.addFolder = function(folderName) {
   });
 }
 
-module.exports = function() {
-  return new FolderStore();
-}
+module.exports = new FolderStore();

@@ -1,9 +1,9 @@
 var _ = require('underscore');
 var popsicle = require('popsicle');
-
 var utils = require('../../utils');
+var EE = require('event-emitter');
+
 var dispatcher = utils.dispatcher;
-var emitter = utils.emitter;
 
 /**
  * How a single paper is represented in the store:
@@ -19,32 +19,39 @@ var emitter = utils.emitter;
  */
 
 function CitationStore() {
+  EE.call(this);
 
   this.items = [];
   this.index = [];
-  this.total = null;
+  this.total = null; //this is different from this.items.length as it is agnostic whether all items are loaded
   this.apiUrlBase = '/citations/';
 
   var o = this;
 
   dispatcher.register(function(payload) {
     switch (payload.type) {
+
       case 'SAVE_TO_FOLDER':
         popsicle({
           method: 'POST',
           url: o.apiUrlBase + payload.content.folder + '/' + payload.content.pmid,
           body: {data: payload.content.data}
-        }).then(function(res) {
+        }).then(function() {
           utils.notifier.create('addedToFolder');
         }, function(err) {
           utils.notifier.create('lostBackend');
+          console.log(err);
         });
         break;
+
       default:
         return true;
+
     }
   }.bind(this));
 }
+
+CitationStore.prototype = Object.create(EE.prototype);
 
 CitationStore.prototype.createIndex = function() {
   this.index = _.pluck(this.items, 'pmid');
@@ -56,8 +63,8 @@ CitationStore.prototype.sortItems = function(sortingFunction) {
   } else {
     //default sorting function: reverse chronological
     this.items.sort(function(a, b) {
-      aNumericDate = a.pubmedSummary.sortpubdate.replace(/\D/g,'');
-      bNumericDate = b.pubmedSummary.sortpubdate.replace(/\D/g,'');
+      var aNumericDate = a.pubmedSummary.sortpubdate.replace(/\D/g,'');
+      var bNumericDate = b.pubmedSummary.sortpubdate.replace(/\D/g,'');
       return bNumericDate - aNumericDate;
     });
   }
@@ -97,4 +104,4 @@ CitationStore.prototype.updateItems = function(pmid, updates) {
   return item;
 }
 
-module.exports = CitationStore;
+module.exports = new CitationStore();

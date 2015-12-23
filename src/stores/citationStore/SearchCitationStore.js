@@ -1,41 +1,41 @@
 var _ = require('underscore');
-
 var ncbi = require('node-ncbi');
+var utils = require('../utils');
 
-var dispatcher = require('../../utils').dispatcher;
-var emitter = require('../../utils').emitter;
-var notifier = require('../../utils').notifier;
+var dispatcher = utils.dispatcher;
+var notifier = utils.notifier;
 
-var Parent = require('./CitationStore.js');
+var Parent = require('./citationStore.js');
 
 function CitationStore() {
 
-  Parent.call(this);
+  Parent.constructor.call(this);
   var o = this;
 
   dispatcher.register(function(payload) {
     switch (payload.type) {
 
       case 'NEW_SEARCH':
-        var search = ncbi.pubmedSearch(payload.content.queryString).then(function(data) {
+        ncbi.pubmedSearch(payload.content.queryString).then(function(data) {
           o.total = parseInt(data.count, 10);
           o.importItems(data.papers);
         }, function(err) {
           notifier.create('lostPubmed');
-        }).then(function(data) {
-          emitter.emit('CITATIONS_UPDATED');
+          console.log(err);
+        }).then(function() {
+          this.emit('CITATIONS_UPDATED');
         });
         break;
 
       case 'LOAD_MORE':
         if ( o.items.length < o.total ) {
-          var search = ncbi.pubmedSearch(payload.content.queryString, {
+          ncbi.pubmedSearch(payload.content.queryString, {
             start: o.items.length,
             end: o.items.length + 10
           }).then(function(data) {
             o.importItems(data.papers);
           }).then(function() {
-            emitter.emit('CITATIONS_UPDATED')
+            this.emit('CITATIONS_UPDATED')
           });
         }
         break;
@@ -45,7 +45,7 @@ function CitationStore() {
         ncbi.getAbstract(payload.content.pmid).then(function(data) {
           o.updateItems(payload.content.pmid, {abstract : data});
         }).then(function() {
-          emitter.emit('CITATIONS_UPDATED');
+          this.emit('CITATIONS_UPDATED');
         });
         break;
 
@@ -65,7 +65,7 @@ CitationStore.prototype.importItem = function(pubmedRecord) {
     doi : null,
     abstract : null,
     fulltext : null,
-    userData : null,
+    userData : null
   };
   //copy out the article ids;
   _.each(pubmedRecord.articleids, function(idObject) {
@@ -79,4 +79,4 @@ CitationStore.prototype.importItem = function(pubmedRecord) {
   this.items.push(item);
 }
 
-module.exports = CitationStore;
+module.exports = new CitationStore();

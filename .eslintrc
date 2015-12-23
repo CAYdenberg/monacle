@@ -15,7 +15,8 @@
     "describe": true,
     "before": true,
     "it": true,
-    "beforeAll": true
+    "beforeAll": true,
+    "globals": true
   },
   "extends": "eslint:recommended",
   "rules": {

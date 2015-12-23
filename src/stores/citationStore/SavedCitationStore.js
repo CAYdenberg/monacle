@@ -1,15 +1,14 @@
-var _ = require('underscore');
 var popsicle = require('popsicle');
+var utils = require('../../utils');
 
-var dispatcher = require('../../utils').dispatcher;
-var emitter = require('../../utils').emitter;
-var notifier = require('../../utils').notifier;
+var dispatcher = utils.dispatcher;
+var notifier = utils.notifier;
 
-var Parent = require('./CitationStore.js');
+var Parent = require('./citationStore.js');
 
 function CitationStore() {
 
-  Parent.call(this);
+  Parent.constructor.call(this);
   var o = this;
 
   dispatcher.register(function(payload) {
@@ -25,8 +24,9 @@ function CitationStore() {
           }
         }, function(err) {
           notifier.create('lostBackend');
+          console.log(err);
         }).then(function() {
-          emitter.emit('CITATIONS_UPDATED');
+          this.emit('CITATIONS_UPDATED');
         });
         break;
 
@@ -40,4 +40,4 @@ function CitationStore() {
 
 CitationStore.prototype = Object.create(Parent.prototype);
 
-module.exports = CitationStore;
+module.exports = new CitationStore();

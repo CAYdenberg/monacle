@@ -1,16 +1,13 @@
-var _ = require('underscore');
 var utils = require('../utils');
-var dispatcher = utils.dispatcher;
-var emitter = utils.emitter;
-
+var EE = require('event-emitter');
 var popsicle = require('popsicle');
 
-function UserStore(userEmail) {
+var dispatcher = utils.dispatcher;
+
+function UserStore() {
+  EE.call(this);
 
   this.apiUrlBase = '/user/';
-
-  //set up
-  this.update(userEmail);
 
   dispatcher.register(function(payload) {
     switch (payload.type) {
@@ -31,8 +28,9 @@ function UserStore(userEmail) {
         break;
     }
   }.bind(this));
-
 }
+
+UserStore.prototype = Object.create(EE.prototype);
 
 UserStore.prototype.update = function(email) {
   this.createUserError = false;
@@ -44,8 +42,8 @@ UserStore.prototype.update = function(email) {
     this.userEmail = '';
     this.loggedIn = false;
   }
-  emitter.emit('USER_CHANGE');
-  emitter.emit('CLOSE_MODALS');
+  this.emit('USER_CHANGE');
+  this.emit('CLOSE_MODALS');
 }
 
 UserStore.prototype.login = function(email, password) {
@@ -59,7 +57,7 @@ UserStore.prototype.login = function(email, password) {
       o.update(res.body.email);
     } else {
       o.loginError = "Email address and password do not match";
-      emitter.emit('ERR_LOGIN');
+      this.emit('ERR_LOGIN');
     }
   });
 }
@@ -89,6 +87,4 @@ UserStore.prototype.logout = function() {
   });
 }
 
-module.exports = function(user) {
-  return new UserStore(user);
-}
+module.exports = new UserStore();

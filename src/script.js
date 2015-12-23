@@ -8,8 +8,9 @@ $(document).ready(function() {
   var user = $('#account-area').data('user');
 
   //create stores
-  var folderStore = require('./stores/folderStore.js')();
-  var userStore = require('./stores/userStore.js')( user );
+  var folderStore = require('./stores/folderStore.js')(),
+    userStore = require('./stores/userStore.js')(user),
+    citationStore;
 
   //get React classes and bind them to their stores
   var Folders = require('./components/Folders.js')(folderStore, userStore);
@@ -29,13 +30,13 @@ $(document).ready(function() {
 
   if ( $('body').hasClass('search') ) {
     //stuff specific to the search page
-    var citationStore = require('./stores/citationStore')();
+    citationStore = require('./stores/citationStore')();
     utils.dispatcher.dispatch({ type : 'NEW_SEARCH', content : { queryString : globals.query } });
     $('input[name=query]').val(globals.query);
   } else if ( $('body').hasClass('saved') ) {
-    var citationStore = require('./stores/citationStore')('SAVED');
+    citationStore = require('./stores/citationStore')('SAVED');
     utils.dispatcher.dispatch({ type : 'GET_FOLDER_CONTENTS', content: {folder: globals.currentFolder} });
-  };
+  }
 
   var CitationList = require('./components/CitationList.js')(citationStore, folderStore);
   React.render(<CitationList />, document.getElementById('citations'));
@@ -50,8 +51,5 @@ $(document).ready(function() {
   utils.emitter.on('CLOSE_MODALS', function() {
     $('.modal').modal('hide');
   });
-
-
-  //var notification = utils.notifier.create('loginFailed');
 
 });

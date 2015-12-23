@@ -1,9 +1,7 @@
-var flux = require('flux');
-var EE = require('event-emitter');
+var dispatcher = require('flux').dispatcher;
 var _ = require('underscore');
 
-var emitter = new EE();
-var notifier = require('./notifier')(emitter);
+var notifier = require('./notifier');
 
 var formatAuthorList = function(authors) {
   var authArr,
@@ -23,15 +21,14 @@ var formatYear = function(pubdate) {
 
 var createTypingCallback = function(stateDefKey, reactClass) {
   return function(e) {
-    stateDef = {};
+    var stateDef = {};
     stateDef[stateDefKey] = e.target.value;
     reactClass.setState(stateDef);
   };
 }
 
 module.exports = {
-  dispatcher : new flux.Dispatcher(),
-  emitter : emitter,
+  dispatcher : dispatcher,
   notifier : notifier,
   formatAuthorList : formatAuthorList,
   formatYear : formatYear,

@@ -1,6 +1,4 @@
-var React = require('react');
-
-var emitter;
+var EE = require('event-emitter');
 
 var alerts = {
   loginFailed: {
@@ -25,13 +23,16 @@ var alerts = {
 };
 
 function Notifier() {
+  EE.call(this);
   this.notifications = [];
 }
 
-Notifier.prototype.create = function(alertName, payload) {
+Notifier.prototype = Object.create(EE.prototype);
+
+notifier.prototype.create = function(alertName, payload) {
   var notification = new Notification(alertName, payload);
   this.notifications.push(notification);
-  emitter.emit('NOTIFICATION');
+  this.emit('NOTIFICATION');
   if ( notification.alert.autodismiss ) {
     setTimeout(function() {
       notification.dismiss();
@@ -49,10 +50,7 @@ function Notification(alertName, payload) {
 
 Notification.prototype.dismiss = function() {
   notifier.notifications.splice(notifier.notifications.indexOf(this), 1);
-  emitter.emit('NOTIFICATION');
+  this.emit('NOTIFICATION');
 }
 
-module.exports = function(appEmitter) {
-  emitter = appEmitter;
-  return notifier;
-}
+module.exports = new Notifier();
