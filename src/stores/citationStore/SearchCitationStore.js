@@ -18,7 +18,7 @@ function CitationStore() {
 
       case 'NEW_SEARCH':
         var search = ncbi.pubmedSearch(payload.content.queryString).then(function(data) {
-          o.total = data.count;
+          o.total = parseInt(data.count, 10);
           o.importItems(data.papers);
         }, function(err) {
           notifier.create('lostPubmed');
@@ -41,6 +41,7 @@ function CitationStore() {
         break;
 
       case 'GET_DETAILS':
+
         ncbi.getAbstract(payload.content.pmid).then(function(data) {
           o.updateItems(payload.content.pmid, {abstract : data});
         }).then(function() {

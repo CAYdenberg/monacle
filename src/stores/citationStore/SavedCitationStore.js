@@ -27,7 +27,6 @@ function CitationStore() {
           notifier.create('lostBackend');
         }).then(function() {
           emitter.emit('CITATIONS_UPDATED');
-          console.log(o);
         });
         break;
 

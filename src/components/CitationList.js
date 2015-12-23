@@ -23,16 +23,22 @@ module.exports = function(store, folderStore) {
       }.bind(this));
     },
     render : function() {
-      return (
-        <div className="panel-group" id="accordion">
-          {
-            this.state.items.map(function(item) {
-              return ( <Citation key={item.pmid} data={item} /> );
-            })
-          }
-          <LoadMoreButton nMore={this.state.nMore} />
-        </div>
-      );
+      if (store.total === 0) {
+        return (
+          <h2 className="nothing-found">No papers found</h2>
+        );
+      } else {
+        return (
+          <div className="panel-group" id="accordion">
+            {
+              this.state.items.map(function(item) {
+                return ( <Citation key={item.pmid} data={item} /> );
+              })
+            }
+            <LoadMoreButton nMore={this.state.nMore} />
+          </div>
+        );
+      }
     }
   });
 

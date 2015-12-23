@@ -5,11 +5,24 @@ var utils = require('../../utils');
 var dispatcher = utils.dispatcher;
 var emitter = utils.emitter;
 
+/**
+ * How a single paper is represented in the store:
+ {
+   pmid : unique ID,
+   pubmed: {Object - data returned from pubmed},
+   pmc : unique ID,
+   doi : unique ID,
+   abstract : String,
+   fulltext : String,
+   userData : {Object - data set for this record by the user}
+ }
+ */
+
 function CitationStore() {
 
   this.items = [];
   this.index = [];
-  this.total = 0;
+  this.total = null;
   this.apiUrlBase = '/citations/';
 
   var o = this;
@@ -60,6 +73,7 @@ CitationStore.prototype.importItems = function(items) {
     this.importItem(item);
   }.bind(this));
   this.sortItems();
+  console.log(this);
 }
 
 CitationStore.prototype.getItem = function(pmid) {
