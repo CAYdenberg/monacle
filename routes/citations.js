@@ -48,7 +48,7 @@ var router = express.Router();
 }
  */
 
-router.get('/:folder', function(req, res, next) {
+router.get('/:folder', function(req, res) {
   var folder = req.params.folder;
   var collection = req.orm.citations();
   var user = req.user;
@@ -59,8 +59,6 @@ router.get('/:folder', function(req, res, next) {
     res.json(citations.map(function(citation) {
       return citation.data;
     }));
-  }, function(err) {
-    res.status(500).json({});
   });
 });
 
@@ -69,14 +67,12 @@ router.post('/:folder/:pmid', function(req, res, next) {
   var citationData = req.body.data;
   var user = req.user;
   var collection = req.orm.citations();
-  collection.save(citationData, folder, user).then(function(record) {
+  collection.save(citationData, folder, user).then(function() {
     next();
-  }, function(err) {
-    res.status(500).json({});
   });
 });
 
-router.all('/:folder/:pmid', function(req, res, next) {
+router.all('/:folder/:pmid', function(req, res) {
   var pmid = req.params.pmid;
   var folder = req.params.folder;
   var collection = req.orm.citations();
@@ -87,7 +83,7 @@ router.all('/:folder/:pmid', function(req, res, next) {
     user: user
   }).then(function(record) {
     res.json(record.data);
-  }, function(err) {
+  }, function() {
     res.status(404).json({});
   });
 });

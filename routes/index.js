@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-var env = require('../config.js').env;
-
 router.get('/lens/*', function(req, res) {
   res.render('lens');
 });

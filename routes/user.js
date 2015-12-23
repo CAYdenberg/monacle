@@ -63,7 +63,8 @@ router.post('/signup', passport.authenticate('signup'), function(err, req, res, 
 });
 
 router.post('/signin', passport.authenticate('signin'), function(err, req, res, next) {
-	if (err) {
+  var collection;
+  if (err) {
     res.status(401);
   } else {
     collection = req.orm.folders();
@@ -77,7 +78,7 @@ router.get('/logout', function(req, res, next) {
   next();
 });
 
-router.get('/exists/:email', function(req, res, next) {
+router.get('/exists/:email', function(req, res) {
   var users = req.orm.users();
   users.findOne({'email' : req.params.email}, function(err, found) {
     if (found) {

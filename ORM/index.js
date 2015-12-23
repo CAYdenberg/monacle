@@ -7,8 +7,8 @@ function ORM(connection) {
   this.db = monk(connection);
 }
 
-ORM.prototype.get = function(collection) {
-  var collection = this.db.get(collection);
+ORM.prototype.get = function(collectionName) {
+  var collection = this.db.get(collectionName);
   return collection;
 }
 
@@ -116,20 +116,9 @@ ORM.prototype.citations = function() {
         pmid: data.pmid,
         data: data,
         folder: folder,
-        user: user
+        user: user,
+        userData: userData
       });
-    },
-
-    move: function(pmid, newFolder, user) {
-      return;
-    },
-
-    copy: function(pmid, newFolder, user) {
-      return;
-    },
-
-    delete: function(pmid, newFolder, user) {
-
     }
 
   }

@@ -5,14 +5,12 @@ router.post('/new', function(req, res, next) {
   var name = req.body.name;
   var collection = req.orm.folders();
   //check if unique before or during insert
-  collection.insertByName(name, req.user).then(function(response) {
+  collection.insertByName(name, req.user).then(function() {
     next();
-  }, function(error) {
-    res.status(500).json({});
   });
 });
 
-router.all('/*', function(req, res, next) {
+router.all('/*', function(req, res) {
   var collection = req.orm.folders();
   if (!req.user) {
     res.json([]);
