@@ -1,90 +1,68 @@
 var express = require('express');
 var router = express.Router();
 
-/**
- * CITATIONS API.
+router.all('/*', function(req, res, next) {
+  if (!req.user) {
+    res.status(401).json({});
+  } else {
+    next();
+  }
+});
 
- * GET /citations/:folder
- * Return all of the citations (as an array) in this folder for the current user
-
- * GET /citations/:folder/:pmid
- * Return the requested citation, identified by it's pmid
-
- * POST /citations/:folder/:pmid
- * Add a citation to a particular folder. The complete record (see below) for
- * the citation must be provided in the request body.
- * Return the new citation, or 500 on failure
-
- * TODO:
- * PUT /citations/:folder/:pmid
- * Add a citation to a particular folder. The complete modified record (see below) for
- * the citation must be provided in the request body.
- * If {moveTo : folder} is added to the record, delete it from the old folder
- * and move it to the one specified by moveTo.
- * Return the new citation, or 500 on failure
-
- * TODO:
- * DELETE /citations/:folder/:pmid
- * Remove a citation from a folder
- * Return the new citation, or 500 on failure
-
- * Returned data structure (JSON format):
-{
-  pmid : unique ID,
-  pubmed: {Object - data returned from pubmed},
-  pmc : unique ID,
-  doi : unique ID,
-  abstract : String,
-  fulltext : String,
-  userData : {Object - data set for this record by the user}
-}
-
-  * However, citation objects are stored in the database as follows:
-{
-  data : the object above
-  pmid : copy of data.pmid - stored at top level as a unique identifier
-  user : current user's email address, used as a unique identifier
-  folder : the folder in which this citation is stored
-}
- */
-
-router.get('/:folder', function(req, res) {
-  var folder = req.params.folder;
-  var collection = req.orm.citations();
-  var user = req.user;
-  collection.find({
-    folder: folder,
-    user: user
-  }).then(function(citations) {
-    res.json(citations.map(function(citation) {
-      return citation.data;
-    }));
+//preliminary route to make sure a record exists before we work on it
+router.all('/:pmid', function(req, res, next) {
+  var collection = req.db.citations;
+  var pmid = parseInt(req.params.pmid, 10);
+  collection.findOne({
+    user: req.user,
+    pmid: pmid
+  }).then(function(result) {
+    if (!result) {
+      res.status(404).json({});
+    } else {
+      next();
+    }
   });
 });
 
-router.post('/:folder/:pmid', function(req, res, next) {
-  var folder = req.params.folder;
-  var citationData = req.body.data;
-  var user = req.user;
-  var collection = req.orm.citations();
-  collection.save(citationData, folder, user).then(function() {
+router.delete('/:pmid', function(req, res) {
+  var collection = req.db.citations;
+  var pmid = parseInt(req.params.pmid, 10);
+  collection.remove({
+    user: req.user,
+    pmid: pmid
+  }).then(function() {
+    res.json({});
+  });
+});
+
+router.put('/:pmid', function(req, res, next) {
+  var collection = req.db.citations;
+  var pmid = parseInt(req.params.pmid, 10);
+  var operations = [];
+  if (req.body.addFolder) {
+    operations.push(collection.addToFolder(pmid, req.user, req.body.addFolder));
+  }
+  if (req.body.removeFolder) {
+    operations.push(collection.removeFromFolder(pmid, req.user, req.body.removeFolder));
+  }
+  Promise.all(operations).then(function() {
     next();
   });
 });
 
-router.all('/:folder/:pmid', function(req, res) {
-  var pmid = req.params.pmid;
-  var folder = req.params.folder;
-  var collection = req.orm.citations();
-  var user = req.user;
+router.all('/:pmid', function(req, res) {
+  var collection = req.db.citations;
+  var pmid = parseInt(req.params.pmid, 10);
   collection.findOne({
-    pmid: pmid,
-    folder: folder,
-    user: user
-  }).then(function(record) {
-    res.json(record.data);
-  }, function() {
-    res.status(404).json({});
+    user: req.user,
+    pmid: pmid
+  }).then(function(result) {
+    res.json({
+      data: result.data,
+      userData: result.userData,
+      folders: result.folders
+    });
   });
 });
 

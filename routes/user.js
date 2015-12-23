@@ -18,11 +18,10 @@ passport.use('signin', new LocalStrategy({
 		usernameField : 'email',
 		passwordField : 'password'
   }, function(req, email, password, done) {
-    var users = req.orm.users();
-		users.validate(email, password).then(function(user) {
+    var users = req.db.users;
+    users.validate(email, password).then(function(user) {
       done(null, user);
-    }, function(err) {
-      // req.logout();
+    }).catch(function(err) {
       done(err, false);
     });
 	}
@@ -35,15 +34,17 @@ passport.use('signup', new LocalStrategy({
 		passwordField : 'password'
   },
   function(req, email, password, done) {
-    var users = req.orm.users();
-    var folders = req.orm.folders();
-		var findOrCreateUser = function() {
-      users.createIfUnique(email, password).then(function(user) {
+    var users = req.db.users;
+    var folders = req.db.folders;
+    var user;
+    var findOrCreateUser = function() {
+      users.createIfUnique(email, password).then(function(newUser) {
         //when user is succesfully created, create one starting folder for them
-        folders.insertByName('My Papers', user.email).then(function() {
-          done(null, user);
-        });
-      }, function(err) {
+        user = newUser;
+        return folders.insertByName('My Papers', user.email);
+      }).then(function() {
+        done(null, user);
+      }).catch(function(err) {
         done(err, false);
       });
     }
@@ -63,12 +64,8 @@ router.post('/signup', passport.authenticate('signup'), function(err, req, res, 
 });
 
 router.post('/signin', passport.authenticate('signin'), function(err, req, res, next) {
-  var collection;
   if (err) {
     res.status(401);
-  } else {
-    collection = req.orm.folders();
-    collection.insertByName();
   }
   next();
 });
@@ -78,13 +75,14 @@ router.get('/logout', function(req, res, next) {
   next();
 });
 
+
 router.get('/exists/:email', function(req, res) {
-  var users = req.orm.users();
-  users.findOne({'email' : req.params.email}, function(err, found) {
+  var users = req.db.users;
+  users.findOne({'email' : req.params.email}).then(function(found) {
     if (found) {
-      res.json({userExists : true})
+      return res.json({userExists : true});
     } else {
-      res.json({userExists : false})
+      return res.json({userExists : false});
     }
   });
 });
