@@ -11,7 +11,11 @@
   },
   "globals": {
     "jQuery": false,
-    "$": true
+    "$": true,
+    "describe": true,
+    "before": true,
+    "it": true,
+    "beforeAll": true
   },
   "extends": "eslint:recommended",
   "rules": {

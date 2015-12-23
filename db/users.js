@@ -1,4 +1,3 @@
-var _ = require('underscore');
 var bCrypt = require('bcrypt-nodejs');
 
 //Generates hash using bCrypt
