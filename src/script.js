@@ -31,10 +31,14 @@
   //   $('.modal').modal('hide');
   // });
 
-
-//var React = require('react');
+var _ = require('underscore');
+var React = require('react');
 var utils = require('./utils');
-var EE = require('event-emitter');
+
+var inject = function(componentName, stores, domId) {
+  var component = require('./components' + componentName)(stores);
+  React.render(component, document.getElementById(domId));
+}
 
 //create stores
 var folderStore = require('./stores/folderStore.js'),
@@ -42,7 +46,7 @@ var folderStore = require('./stores/folderStore.js'),
   searchCitationStore = require('./stores/citationStore/searchCitationStore'),
   savedCitationStore = require('./stores/citationStore/savedCitationStore');
 
-var appEmitter = new EE();
+
 
 (function($) {
 
