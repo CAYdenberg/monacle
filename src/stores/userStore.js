@@ -4,8 +4,9 @@ var popsicle = require('popsicle');
 
 var dispatcher = utils.dispatcher;
 
+var emitter = EE({});
+
 function UserStore() {
-  EE.call(this);
 
   this.apiUrlBase = '/user/';
 
@@ -30,7 +31,9 @@ function UserStore() {
   }.bind(this));
 }
 
-UserStore.prototype = Object.create(EE.prototype);
+UserStore.prototype.onUpdate = function(callback) {
+  emitter.on('UPDATE', callback);
+}
 
 UserStore.prototype.update = function(email) {
   this.createUserError = false;
@@ -42,8 +45,7 @@ UserStore.prototype.update = function(email) {
     this.userEmail = '';
     this.loggedIn = false;
   }
-  this.emit('USER_CHANGE');
-  this.emit('CLOSE_MODALS');
+  emitter.emit('UPDATE');
 }
 
 UserStore.prototype.login = function(email, password) {

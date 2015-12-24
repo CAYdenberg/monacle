@@ -5,8 +5,9 @@ var popsicle = require('popsicle');
 
 var dispatcher = utils.dispatcher;
 
+var emitter = EE({});
+
 function FolderStore() {
-  EE.call(this);
 
   this.folders = [];
   this.apiUrlBase = "/folders/";
@@ -28,7 +29,9 @@ function FolderStore() {
   }.bind(this));
 }
 
-FolderStore.prototype = Object.create(EE.prototype);
+FolderStore.prototype.onUpdate = function(callback) {
+  emitter.on('UPDATE', callback);
+}
 
 FolderStore.prototype.getFolders = function(args) {
   var o = this,
@@ -39,7 +42,7 @@ FolderStore.prototype.getFolders = function(args) {
     settings = _.extend(defaults, args);
   popsicle(settings).then(function(res) {
     o.folders = res.body;
-    this.emit('FOLDERS_UPDATED');
+    emitter.emit('UPDATE');
   });
 }
 

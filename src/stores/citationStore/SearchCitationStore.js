@@ -1,6 +1,6 @@
 var _ = require('underscore');
 var ncbi = require('node-ncbi');
-var utils = require('../utils');
+var utils = require('../../utils');
 
 var dispatcher = utils.dispatcher;
 var notifier = utils.notifier;
@@ -22,8 +22,6 @@ function CitationStore() {
         }, function(err) {
           notifier.create('lostPubmed');
           console.log(err);
-        }).then(function() {
-          this.emit('CITATIONS_UPDATED');
         });
         break;
 
@@ -34,8 +32,6 @@ function CitationStore() {
             end: o.items.length + 10
           }).then(function(data) {
             o.importItems(data.papers);
-          }).then(function() {
-            this.emit('CITATIONS_UPDATED')
           });
         }
         break;
@@ -44,8 +40,6 @@ function CitationStore() {
 
         ncbi.getAbstract(payload.content.pmid).then(function(data) {
           o.updateItems(payload.content.pmid, {abstract : data});
-        }).then(function() {
-          this.emit('CITATIONS_UPDATED');
         });
         break;
 
@@ -53,7 +47,7 @@ function CitationStore() {
   });
 }
 
-CitationStore.prototype = Object.create(Parent.prototype);
+CitationStore.prototype = Object.create(Parent.constructor.prototype);
 
 CitationStore.prototype.importItem = function(pubmedRecord) {
   //copy the article ids into the top-level of the object
@@ -67,12 +61,13 @@ CitationStore.prototype.importItem = function(pubmedRecord) {
     fulltext : null,
     userData : null
   };
-  //copy out the article ids;
+  //loop through the article ids, copying to the top-level.
+  //Change pubmed to pmid.
   _.each(pubmedRecord.articleids, function(idObject) {
     if (idObject.idtype === 'pubmed') {
-      item['pmid'] = idObject.value;
+      item.pmid = idObject.value;
     }
-    if ( ['doi', 'pmc', 'pubmed'].indexOf(idObject.idtype) !== -1 ) {
+    if (['doi', 'pmc'].indexOf(idObject.idtype) !== -1 ) {
       item[idObject.idtype] = idObject.value;
     }
   });

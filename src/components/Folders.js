@@ -1,8 +1,6 @@
 var React = require('react');
-var _ = require('underscore');
 
 var utils = require('../utils');
-var emitter = utils.emitter;
 var dispatcher = utils.dispatcher;
 var createTypingCallback = utils.createTypingCallback;
 
@@ -18,12 +16,12 @@ module.exports = function(store, userStore) {
     },
 
     componentWillMount : function() {
-      emitter.on('FOLDERS_UPDATED', function() {
+      store.onUpdate(function() {
         this.setState({
           folders: store.folders
         });
       }.bind(this));
-      emitter.on('USER_CHANGE', function() {
+      userStore.onUpdate(function() {
         this.setState({
           loggedIn: userStore.loggedIn
         });

@@ -1,4 +1,4 @@
-var dispatcher = require('flux').dispatcher;
+var flux = require('flux');
 var _ = require('underscore');
 
 var notifier = require('./notifier');
@@ -28,7 +28,7 @@ var createTypingCallback = function(stateDefKey, reactClass) {
 }
 
 module.exports = {
-  dispatcher : dispatcher,
+  dispatcher : new flux.Dispatcher(),
   notifier : notifier,
   formatAuthorList : formatAuthorList,
   formatYear : formatYear,

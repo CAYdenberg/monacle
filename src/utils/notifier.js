@@ -29,7 +29,7 @@ function Notifier() {
 
 Notifier.prototype = Object.create(EE.prototype);
 
-notifier.prototype.create = function(alertName, payload) {
+Notifier.prototype.create = function(alertName, payload) {
   var notification = new Notification(alertName, payload);
   this.notifications.push(notification);
   this.emit('NOTIFICATION');

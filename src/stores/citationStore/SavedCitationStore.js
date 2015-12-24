@@ -13,6 +13,7 @@ function CitationStore() {
 
   dispatcher.register(function(payload) {
     switch (payload.type) {
+
       case 'GET_FOLDER_CONTENTS':
         popsicle({
           method: 'GET',
@@ -25,8 +26,6 @@ function CitationStore() {
         }, function(err) {
           notifier.create('lostBackend');
           console.log(err);
-        }).then(function() {
-          this.emit('CITATIONS_UPDATED');
         });
         break;
 
@@ -38,6 +37,6 @@ function CitationStore() {
 
 }
 
-CitationStore.prototype = Object.create(Parent.prototype);
+CitationStore.prototype = Object.create(Parent.constructor.prototype);
 
 module.exports = new CitationStore();

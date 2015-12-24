@@ -3,6 +3,8 @@ var popsicle = require('popsicle');
 var utils = require('../../utils');
 var EE = require('event-emitter');
 
+var emitter = EE({});
+
 var dispatcher = utils.dispatcher;
 
 /**
@@ -19,7 +21,6 @@ var dispatcher = utils.dispatcher;
  */
 
 function CitationStore() {
-  EE.call(this);
 
   this.items = [];
   this.index = [];
@@ -51,7 +52,9 @@ function CitationStore() {
   }.bind(this));
 }
 
-CitationStore.prototype = Object.create(EE.prototype);
+CitationStore.prototype.onUpdate = function(callback) {
+  emitter.on('UPDATE', callback);
+}
 
 CitationStore.prototype.createIndex = function() {
   this.index = _.pluck(this.items, 'pmid');
@@ -80,7 +83,7 @@ CitationStore.prototype.importItems = function(items) {
     this.importItem(item);
   }.bind(this));
   this.sortItems();
-  console.log(this);
+  emitter.emit('UPDATE');
 }
 
 CitationStore.prototype.getItem = function(pmid) {
@@ -94,13 +97,14 @@ CitationStore.prototype.setItem = function(pmid, item) {
   return item;
 }
 
-CitationStore.prototype.updateItems = function(pmid, updates) {
+CitationStore.prototype.updateItem = function(pmid, updates) {
   //find the item
   var item = this.getItem(pmid);
   //update it
   item = _.extend(item, updates);
   //put it back into this.items
   this.setItem(pmid, item);
+  emitter.emit('UPDATE');
   return item;
 }
 
