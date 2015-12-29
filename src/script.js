@@ -31,14 +31,8 @@
   //   $('.modal').modal('hide');
   // });
 
-var _ = require('underscore');
 var React = require('react');
 var utils = require('./utils');
-
-var inject = function(componentName, stores, domId) {
-  var component = require('./components' + componentName)(stores);
-  React.render(component, document.getElementById(domId));
-}
 
 //create stores
 var folderStore = require('./stores/folderStore.js'),
@@ -46,7 +40,7 @@ var folderStore = require('./stores/folderStore.js'),
   searchCitationStore = require('./stores/citationStore/searchCitationStore'),
   savedCitationStore = require('./stores/citationStore/savedCitationStore');
 
-
+var CitationList = require('./components/CitationList');
 
 (function($) {
 
@@ -62,9 +56,10 @@ var folderStore = require('./stores/folderStore.js'),
         // JavaScript to be fired on all pages, after page specific JS is fired
       }
     },
-    // Home page
+
     'search': {
       init: function() {
+        React.render(<CitationList citationStore={searchCitationStore} folderStore={folderStore} />, document.getElementById('citations'));
         //Send search query off to the dispatcher
         utils.dispatcher.dispatch({
           type: 'NEW_SEARCH',
@@ -77,7 +72,7 @@ var folderStore = require('./stores/folderStore.js'),
         // JavaScript to be fired on the home page, after the init JS
       }
     },
-    // About us page, note the change from about-us to about_us.
+
     'saved': {
       init: function() {
         utils.dispatcher.dispatch({
