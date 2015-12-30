@@ -56,6 +56,10 @@ CitationStore.prototype.onUpdate = function(callback) {
   emitter.on('UPDATE', callback);
 }
 
+CitationStore.prototype.offUpdate = function(callback) {
+  emitter.off('UPDATE', callback);
+}
+
 CitationStore.prototype.createIndex = function() {
   this.index = _.pluck(this.items, 'pmid');
 }
@@ -84,6 +88,7 @@ CitationStore.prototype.importItems = function(items) {
   }.bind(this));
   this.sortItems();
   emitter.emit('UPDATE');
+  console.log(this);
 }
 
 CitationStore.prototype.getItem = function(pmid) {

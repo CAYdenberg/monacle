@@ -1,35 +1,40 @@
 var React = require('react');
-var _ = require('underscore');
 
-var utils = require('../utils');
-var emitter = utils.emitter;
-var dispatcher = utils.dispatcher;
+//bind to stores
+var store = null;
+var folderStore = null;
 
-module.exports = function(store, folderStore) {
+//subcomponents
+var CitationDetails = require('./CitationDetails.js');
 
-  var SingleCitation = React.createClass({
-    getInitialState: function() {
-      return {
-        data : this.props.data
-      }
-    },
-    citationsUpdated: function() {
-      this.setState({ data : store.getItem(this.props.data.pubmed) });
-    },
-    componentWillMount: function() {
-      emitter.on('CITATIONS_UPDATED', this.citationsUpdated);
-    },
-    componentWillUnmount: function() {
-      emitter.off('CITATIONS_UPDATED', this.citationsUpdated);
-    },
-    render: function() {
-      return (
-        <CitationDetails data={this.state.data} />
-      )
+/**
+ * Rendered at #single-citation BY the Citation component.
+ * This components is RE-MOUNTED each time an item in the accordion is clicked.
+ * It has direct access to the citation store, where it grabs data for a particular
+ * citation, based on its pmid property.
+ */
+var SingleCitation = React.createClass({
+  getInitialState: function() {
+    store = this.props.store;
+    folderStore = this.props.folderStore;
+    return {
+      data: store.getItem(this.props.pmid)
     }
-  });
+  },
+  citationsUpdated: function() {
+    this.setState({data: store.getItem(this.props.pmid)});
+  },
+  componentWillMount: function() {
+    store.onUpdate(this.citationsUpdated);
+  },
+  componentWillUnmount: function() {
+    store.offUpdate(this.citationsUpdated);
+  },
+  render: function() {
+    return (
+      <CitationDetails data={this.state.data} folderStore={folderStore} />
+    )
+  }
+});
 
-  var CitationDetails = require('./CitationDetails.js')(store, folderStore);
-
-  return SingleCitation;
-}
+module.exports = SingleCitation;
