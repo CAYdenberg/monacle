@@ -51,7 +51,9 @@ $(document).ready(function() {
     $('.modal').modal('hide');
   });
 
-
+  $('.modal').on('shown.bs.modal', function() {
+    $('#main-nav').offcanvas('hide');
+  });
   //var notification = utils.notifier.create('loginFailed');
 
 });
