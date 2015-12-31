@@ -11,8 +11,7 @@
   // //Render React classes
   // React.render(<AccountArea />, document.getElementById('account-area'));
   // React.render(<AlertArea />, document.getElementById('alert-area'));
-  // React.render(<SigninForm />, document.getElementById('signin-form-wrapper'));
-  // React.render(<SignupForm />, document.getElementById('signup-form-wrapper'));
+
   // React.render(<Folders />, document.getElementById('folders'));
 
 
@@ -47,6 +46,8 @@ var folderStore = require('./stores/folderStore.js'),
 //get components
 var CitationList = require('./components/CitationList');
 var AccountArea = require('./components/AccountArea');
+var SigninForm = require('./components/SigninForm');
+var SignupForm = require('./components/SignupForm');
 
 (function($) {
 
@@ -57,8 +58,17 @@ var AccountArea = require('./components/AccountArea');
     'common': {
       init: function() {
         userStore.update(globals.user);
-        //render the account-area
+        userStore.onUpdate(function() {
+          //close the sign-in and sign-up forms when the user changes
+          $('.modal').modal('hide');
+        });
+
+        //render the account-area and interactive modals
         React.render(<AccountArea store={userStore} />, document.getElementById('account-area'));
+        React.render(<SigninForm  store={userStore} />, document.getElementById('signin-form-wrapper'));
+        React.render(<SignupForm  store={userStore} />, document.getElementById('signup-form-wrapper'));
+
+        //
       },
       finalize: function() {
         // JavaScript to be fired on all pages, after page specific JS is fired

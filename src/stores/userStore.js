@@ -35,6 +35,10 @@ UserStore.prototype.onUpdate = function(callback) {
   emitter.on('UPDATE', callback);
 }
 
+UserStore.prototype.onError = function(callback) {
+  emitter.on('ERROR', callback);
+}
+
 UserStore.prototype.update = function(email) {
   this.createUserError = false;
   this.loginError = false;
@@ -59,7 +63,7 @@ UserStore.prototype.login = function(email, password) {
       o.update(res.body.email);
     } else {
       o.loginError = "Email address and password do not match";
-      emitter.emit('ERR_LOGIN');
+      emitter.emit('ERROR');
     }
   });
 }
