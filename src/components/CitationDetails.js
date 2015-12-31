@@ -15,7 +15,7 @@ var ProgressBar = require('./partials/ProgressBar.js');
  * Sets the reference to the folder store so that it can be used to show the select.
  *
  * NOTE: This component is smart with respect to folders (imports the data directly from the store)
- * but dumb with respect to citations (only displays the data as properties).
+ * but dumb with respect to citations (passed the data from SingleCitation or Citation).
  */
 var CitationDetails = React.createClass({
   componentWillMount: function() {

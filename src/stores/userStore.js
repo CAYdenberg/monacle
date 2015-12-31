@@ -38,7 +38,7 @@ UserStore.prototype.onUpdate = function(callback) {
 UserStore.prototype.update = function(email) {
   this.createUserError = false;
   this.loginError = false;
-  if (email.length) {
+  if (email && email.length) {
     this.userEmail = email;
     this.loggedIn = true;
   } else {
@@ -59,7 +59,7 @@ UserStore.prototype.login = function(email, password) {
       o.update(res.body.email);
     } else {
       o.loginError = "Email address and password do not match";
-      this.emit('ERR_LOGIN');
+      emitter.emit('ERR_LOGIN');
     }
   });
 }

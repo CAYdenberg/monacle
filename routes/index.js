@@ -13,9 +13,9 @@ router.all('/*', function(req, res, next) {
   req.context.globals = {};
   var user = req.session.passport.user;
   if (user) {
-    req.context.user = user.email;
+    req.context.globals.user = user.email;
   } else {
-    req.context.user = '';
+    req.context.globals.user = null;
   }
 	next();
 });

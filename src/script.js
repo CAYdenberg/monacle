@@ -44,7 +44,9 @@ var folderStore = require('./stores/folderStore.js'),
   searchCitationStore = require('./stores/citationStore/searchCitationStore'),
   savedCitationStore = require('./stores/citationStore/savedCitationStore');
 
+//get components
 var CitationList = require('./components/CitationList');
+var AccountArea = require('./components/AccountArea');
 
 (function($) {
 
@@ -54,8 +56,9 @@ var CitationList = require('./components/CitationList');
     // All pages
     'common': {
       init: function() {
-        utils.dispatcher.dispatch({type: 'GET_FOLDERS'});
-
+        userStore.update(globals.user);
+        //render the account-area
+        React.render(<AccountArea store={userStore} />, document.getElementById('account-area'));
       },
       finalize: function() {
         // JavaScript to be fired on all pages, after page specific JS is fired
