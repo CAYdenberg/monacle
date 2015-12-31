@@ -31,6 +31,10 @@
   //   $('.modal').modal('hide');
   // });
 
+  // $('.modal').on('shown.bs.modal', function() {
+  //   $('#main-nav').offcanvas('hide');
+  // });
+
 var React = require('react');
 var utils = require('./utils');
 
@@ -51,6 +55,7 @@ var CitationList = require('./components/CitationList');
     'common': {
       init: function() {
         utils.dispatcher.dispatch({type: 'GET_FOLDERS'});
+
       },
       finalize: function() {
         // JavaScript to be fired on all pages, after page specific JS is fired
@@ -115,5 +120,4 @@ var CitationList = require('./components/CitationList');
 
   // Load Events
   $(document).ready(UTIL.loadEvents);
-
 })(jQuery); // Fully reference jQuery after this point.

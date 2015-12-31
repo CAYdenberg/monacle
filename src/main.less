@@ -139,10 +139,19 @@ Alert Area
 
 .mobile-nav {
 	width: @mobile-nav-width;
+	z-index: 100;
 }
 
 .navmenu {
 	padding: 15px;
+}
+
+.close-wrapper {
+	text-align: right;
+	margin-bottom: 15px;
+	@media (min-width: @screen-sm) {
+		display: none;
+	}
 }
 
 .account-area,
