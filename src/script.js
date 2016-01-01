@@ -1,39 +1,5 @@
 /** @jsx React.DOM */
 
-
-  // //get React classes and bind them to their stores
-  // var Folders = require('./components/Folders.js')(folderStore, userStore);
-  // var AlertArea = require('./components/AlertArea.js')();
-  // var AccountArea = require('./components/AccountArea.js')(userStore);
-  // var SigninForm = require('./components/SigninForm.js')(userStore);
-  // var SignupForm = require('./components/SignupForm.js')(userStore);
-  //
-  // //Render React classes
-  // React.render(<AccountArea />, document.getElementById('account-area'));
-  // React.render(<AlertArea />, document.getElementById('alert-area'));
-
-  // React.render(<Folders />, document.getElementById('folders'));
-
-
-
-  // var CitationList = require('./components/CitationList.js')(citationStore, folderStore);
-  // React.render(<CitationList />, document.getElementById('citations'));
-
-  // utils.emitter.on('USER_CHANGE', function() {
-  //   utils.dispatcher.dispatch({ type: 'GET_FOLDERS' });
-  // });
-  //
-  // //Register non-React stuff.
-  //
-  // //Convenient event to close all the modals
-  // utils.emitter.on('CLOSE_MODALS', function() {
-  //   $('.modal').modal('hide');
-  // });
-
-  // $('.modal').on('shown.bs.modal', function() {
-  //   $('#main-nav').offcanvas('hide');
-  // });
-
 var React = require('react');
 var utils = require('./utils');
 
@@ -48,6 +14,7 @@ var CitationList = require('./components/CitationList');
 var AccountArea = require('./components/AccountArea');
 var SigninForm = require('./components/SigninForm');
 var SignupForm = require('./components/SignupForm');
+var Folders = require('./components/Folders');
 
 (function($) {
 
@@ -57,18 +24,29 @@ var SignupForm = require('./components/SignupForm');
     // All pages
     'common': {
       init: function() {
-        userStore.update(globals.user);
         userStore.onUpdate(function() {
+
           //close the sign-in and sign-up forms when the user changes
           $('.modal').modal('hide');
+
+          //if a user is logged in, grab their folders
+          if (userStore.loggedIn) {
+            utils.dispatcher.dispatch({
+              type: 'GET_FOLDERS'
+            });
+          }
+
         });
 
-        //render the account-area and interactive modals
+        //set the initial user store with the user email passed from the backend
+        userStore.update(globals.user);
+
+        //render the account-area, modals, and folders
         React.render(<AccountArea store={userStore} />, document.getElementById('account-area'));
         React.render(<SigninForm  store={userStore} />, document.getElementById('signin-form-wrapper'));
         React.render(<SignupForm  store={userStore} />, document.getElementById('signup-form-wrapper'));
+        React.render(<Folders store={folderStore} userStore={userStore} />, document.getElementById('folders'));
 
-        //
       },
       finalize: function() {
         // JavaScript to be fired on all pages, after page specific JS is fired

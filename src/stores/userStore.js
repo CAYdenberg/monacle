@@ -46,7 +46,7 @@ UserStore.prototype.update = function(email) {
     this.userEmail = email;
     this.loggedIn = true;
   } else {
-    this.userEmail = '';
+    this.userEmail = null;
     this.loggedIn = false;
   }
   emitter.emit('UPDATE');
