@@ -35,11 +35,11 @@ var CitationDetails = React.createClass({
           <div className="abstract">{this.props.data.abstract}</div>
           <LensLink link={this.props.data.pmc} />
           <div className="margin-vertical">
-            <a href={"http://www.ncbi.nlm.nih.gov/pubmed/" + this.props.data.pubmed} className="btn btn-info" target="_blank">
+            <a href={"http://www.ncbi.nlm.nih.gov/pubmed/" + this.props.data.pmid} className="btn btn-info" target="_blank">
               <span className="icon-pubmed"></span> View on PubMed
             </a>
           </div>
-          <SaveMenu pmid={this.props.data.pubmed} data={this.props.data} />
+          <SaveMenu data={this.props.data} />
         </div>
       )
     }
@@ -91,9 +91,10 @@ var SaveMenu = React.createClass({
     this.setState({
       currentFolder: newFolder
     });
+    console.log(this.props);
     dispatcher.dispatch({
       type: 'SAVE_TO_FOLDER',
-      content: {folder: newFolder, pmid: this.props.pmid, data: this.props.data}
+      content: {folder: newFolder, pmid: this.props.data.pmid, data: this.props.data}
     });
   },
   render: function() {

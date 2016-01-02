@@ -11,7 +11,7 @@ var dispatcher = utils.dispatcher;
  * How a single paper is represented in the store:
  {
    pmid : unique ID,
-   pubmed: {Object - data returned from pubmed},
+   pubmedSummary: {Object - data returned from pubmed},
    pmc : unique ID,
    doi : unique ID,
    abstract : String,
@@ -37,11 +37,6 @@ function CitationStore() {
           method: 'POST',
           url: o.apiUrlBase + payload.content.folder + '/' + payload.content.pmid,
           body: {data: payload.content.data}
-        }).then(function() {
-          utils.notifier.create('addedToFolder');
-        }, function(err) {
-          utils.notifier.create('lostBackend');
-          console.log(err);
         });
         break;
 
