@@ -79,7 +79,7 @@ router.post('/:folder', function(req, res, next) {
   //check that a pmid is supplied
   if (!req.body.pmid) {
     res.status(400);
-    res.next();
+    next();
   }
   //check that the pmid, folder, and user together are unique;
   collection.find({

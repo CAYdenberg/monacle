@@ -91,10 +91,9 @@ var SaveMenu = React.createClass({
     this.setState({
       currentFolder: newFolder
     });
-    console.log(this.props);
     dispatcher.dispatch({
-      type: 'SAVE_TO_FOLDER',
-      content: {folder: newFolder, pmid: this.props.data.pmid, data: this.props.data}
+      type: 'SAVE_CITATION',
+      content: {folder: newFolder, data: this.props.data}
     });
   },
   render: function() {

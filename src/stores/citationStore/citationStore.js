@@ -1,5 +1,4 @@
 var _ = require('underscore');
-var popsicle = require('popsicle');
 var utils = require('../../utils');
 var EE = require('event-emitter');
 
@@ -27,18 +26,8 @@ function CitationStore() {
   this.total = null; //this is different from this.items.length as it is agnostic whether all items are loaded
   this.apiUrlBase = '/citations/';
 
-  var o = this;
-
   dispatcher.register(function(payload) {
     switch (payload.type) {
-
-      case 'SAVE_TO_FOLDER':
-        popsicle({
-          method: 'POST',
-          url: o.apiUrlBase + payload.content.folder + '/' + payload.content.pmid,
-          body: {data: payload.content.data}
-        });
-        break;
 
       default:
         return true;

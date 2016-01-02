@@ -17,7 +17,7 @@ function CitationStore() {
       case 'GET_FOLDER_CONTENTS':
         popsicle({
           method: 'GET',
-          url: o.apiUrlBase + '/' + payload.content.folder
+          url: '/folders/' + payload.content.folder
         }).then(function(res) {
           if (res.status === 200) {
             o.importItems(res.body);

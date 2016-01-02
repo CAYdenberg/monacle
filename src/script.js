@@ -71,6 +71,8 @@ var Folders = require('./components/Folders');
 
     'saved': {
       init: function() {
+        React.render(<CitationList citationStore={savedCitationStore} folderStore={folderStore} />, document.getElementById('citations'));
+        //grab folder contents
         utils.dispatcher.dispatch({
           type: 'GET_FOLDER_CONTENTS',
           content: {folder: globals.currentFolder}

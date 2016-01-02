@@ -9,6 +9,7 @@ var emitter = EE({});
 
 function FolderStore() {
 
+  var o = this;
   this.folders = [];
   this.apiUrlBase = "/folders/";
 
@@ -21,6 +22,16 @@ function FolderStore() {
 
       case 'ADD_FOLDER':
         this.addFolder(payload.content.name);
+        break;
+
+      case 'SAVE_CITATION':
+        popsicle({
+          method: 'POST',
+          url: o.apiUrlBase + payload.content.folder,
+          body: payload.content.data
+        }).then(function(response) {
+          alert(response);
+        });
         break;
 
       default:
