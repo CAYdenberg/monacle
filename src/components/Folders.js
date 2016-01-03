@@ -22,7 +22,8 @@ var Folders = React.createClass({
   componentWillMount: function() {
     store.onUpdate(function() {
       this.setState({
-        folders: store.folders
+        folders: store.folders,
+        newFolderName: ''
       });
     }.bind(this));
     userStore.onUpdate(function() {

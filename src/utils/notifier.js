@@ -42,7 +42,6 @@ Notifier.prototype.create = function(settings) {
 
   //append retry method
   notification.retry = function() {
-    console.log(this);
     if (notification.payload) {
       notifier.dispatcher.dispatch(this.payload);
       this.dismiss();
@@ -59,8 +58,6 @@ Notifier.prototype.create = function(settings) {
     }, 3000);
   }
 
-
-  console.log(notification);
   return notification;
 }
 

@@ -1,15 +1,14 @@
-var _ = require('underscore');
-var utils = require('../utils');
 var EE = require('event-emitter');
 var popsicle = require('popsicle');
+var utils = require('../utils');
 
 var dispatcher = utils.dispatcher;
+var notifier = utils.notifier;
 
 var emitter = EE({});
 
 function FolderStore() {
 
-  var o = this;
   this.folders = [];
   this.apiUrlBase = "/folders/";
 
@@ -21,17 +20,11 @@ function FolderStore() {
         break;
 
       case 'ADD_FOLDER':
-        this.addFolder(payload.content.name);
+        this.addFolder(payload);
         break;
 
       case 'SAVE_CITATION':
-        popsicle({
-          method: 'POST',
-          url: o.apiUrlBase + payload.content.folder,
-          body: payload.content.data
-        }).then(function(response) {
-          alert(response);
-        });
+        this.addCitationToFolder(payload);
         break;
 
       default:
@@ -44,27 +37,79 @@ FolderStore.prototype.onUpdate = function(callback) {
   emitter.on('UPDATE', callback);
 }
 
-FolderStore.prototype.getFolders = function(args) {
-  var o = this,
-    defaults = {
-      method : 'GET',
-      url : o.apiUrlBase
-    },
-    settings = _.extend(defaults, args);
-  popsicle(settings).then(function(res) {
+FolderStore.prototype.getFolders = function() {
+  var o = this;
+  popsicle({
+    method : 'GET',
+    url : o.apiUrlBase
+  }).then(function(res) {
     o.folders = res.body;
     emitter.emit('UPDATE');
   });
 }
 
-FolderStore.prototype.addFolder = function(folderName) {
+FolderStore.prototype.addFolder = function(payload) {
   var o = this;
-  this.getFolders({
+  popsicle({
     method : 'POST',
-    url: o.apiUrlBase + 'new/',
+    url: o.apiUrlBase,
     body : {
-      name : folderName
+      name : payload.content.name
     }
+  }).then(function(response) {
+
+    if (response.status === 200) {
+      o.folders = response.body;
+      emitter.emit('UPDATE');
+    } else if (response.status === 400) {
+      notifier.create({
+        class: 'warning',
+        message: 'A folder with that name already exists'
+      })
+    }
+
+  }).catch(function(err) {
+    notifier.create({
+      class: 'danger',
+      message: 'Cannot add folder at this time'
+    });
+    console.log(err);
+  });
+}
+
+FolderStore.prototype.addCitationToFolder = function(payload) {
+  var o = this;
+  popsicle({
+    method: 'POST',
+    url: o.apiUrlBase + payload.content.folder,
+    body: payload.content.data
+  }).then(function(response) {
+
+    if (response.status === 200) {
+      notifier.create({
+        class: 'success',
+        message: 'Paper added to library',
+        autodismiss: true
+      });
+    } else if (response.status === 400) {
+      notifier.create({
+        class: 'warning',
+        message: 'That paper is already in that folder'
+      });
+    } else if (response.status === 404) {
+      notifier.create({
+        class: 'danger',
+        message: 'Cannot add paper: Folder does not exist'
+      });
+    }
+
+  }).catch(function(err) {
+    notifier.create({
+      class: 'danger',
+      message: 'Cannot add paper at this time',
+      payload: payload
+    });
+    console.log(err);
   });
 }
 
