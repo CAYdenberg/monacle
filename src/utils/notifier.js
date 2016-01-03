@@ -1,10 +1,10 @@
 var _ = require('underscore');
 var EE = require('event-emitter');
 
-var dispatcher = require('../utils/').dispatcher;
 var emitter = EE({});
 
-function Notifier() {
+function Notifier(dispatcher) {
+  this.dispatcher = dispatcher;
   this.notifications = [];
 }
 
@@ -36,27 +36,31 @@ Notifier.prototype.create = function(settings) {
 
   //append dismiss method
   notification.dismiss = function() {
-    this.notifications.splice(notifier.notifications.indexOf(this), 1);
+    notifier.notifications.splice(notifier.notifications.indexOf(this), 1);
     emitter.emit('UPDATE');
-  };
+  }.bind(notification);
 
   //append retry method
   notification.retry = function() {
+    console.log(this);
     if (notification.payload) {
-      dispatcher.dispatch(this.payload);
+      notifier.dispatcher.dispatch(this.payload);
       this.dismiss();
     }
-  }
+  }.bind(notification);
 
   this.notifications.push(notification);
   emitter.emit('UPDATE');
 
-  //dismiss after 3 sec if autodismiss is set to true
+  //dismiss after 3 sec if autodismiss is true
   if (notification.autodismiss) {
     setTimeout(function() {
       notification.dismiss();
     }, 3000);
   }
+
+
+  console.log(notification);
   return notification;
 }
 
@@ -64,4 +68,6 @@ Notifier.prototype.onUpdate = function(callback) {
   emitter.on('UPDATE', callback);
 }
 
-module.exports = new Notifier();
+module.exports = function(dispatcher) {
+  return new Notifier(dispatcher);
+}

@@ -1,7 +1,9 @@
 var flux = require('flux');
 var _ = require('underscore');
 
-var notifier = require('./notifier');
+var dispatcher = new flux.Dispatcher();
+
+var notifier = require('./notifier')(dispatcher);
 
 var formatAuthorList = function(authors) {
   var authArr,
@@ -28,7 +30,7 @@ var createTypingCallback = function(stateDefKey, reactClass) {
 }
 
 module.exports = {
-  dispatcher : new flux.Dispatcher(),
+  dispatcher : dispatcher,
   notifier : notifier,
   formatAuthorList : formatAuthorList,
   formatYear : formatYear,

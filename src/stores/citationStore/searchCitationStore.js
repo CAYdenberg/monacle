@@ -19,8 +19,12 @@ function CitationStore() {
         ncbi.pubmedSearch(payload.content.queryString).then(function(data) {
           o.total = parseInt(data.count, 10);
           o.importItems(data.papers);
-        }, function(err) {
-          notifier.create('lostPubmed');
+        }).catch(function(err) {
+          notifier.create({
+            class: 'danger',
+            message: 'Cannot connect to NCBI',
+            payload: payload
+          });
           console.log(err);
         });
         break;

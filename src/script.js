@@ -15,6 +15,7 @@ var AccountArea = require('./components/AccountArea');
 var SigninForm = require('./components/SigninForm');
 var SignupForm = require('./components/SignupForm');
 var Folders = require('./components/Folders');
+var NotificationArea = require('./components/NotificationArea');
 
 (function($) {
 
@@ -46,6 +47,7 @@ var Folders = require('./components/Folders');
         React.render(<SigninForm  store={userStore} />, document.getElementById('signin-form-wrapper'));
         React.render(<SignupForm  store={userStore} />, document.getElementById('signup-form-wrapper'));
         React.render(<Folders store={folderStore} userStore={userStore} />, document.getElementById('folders'));
+        React.render(<NotificationArea />, document.getElementById('alert-area'));
 
       },
       finalize: function() {
