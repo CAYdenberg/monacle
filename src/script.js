@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var ReactDOM = require('react-dom');
 var utils = require('./utils');
 
 //create stores
@@ -25,6 +26,7 @@ var NotificationArea = require('./components/NotificationArea');
     // All pages
     'common': {
       init: function() {
+        
         userStore.onUpdate(function() {
 
           //close the sign-in and sign-up forms when the user changes
@@ -42,22 +44,26 @@ var NotificationArea = require('./components/NotificationArea');
         //set the initial user store with the user email passed from the backend
         userStore.update(globals.user);
 
-        //render the account-area, modals, and folders
-        React.render(<AccountArea store={userStore} />, document.getElementById('account-area'));
-        React.render(<SigninForm  store={userStore} />, document.getElementById('signin-form-wrapper'));
-        React.render(<SignupForm  store={userStore} />, document.getElementById('signup-form-wrapper'));
-        React.render(<Folders store={folderStore} userStore={userStore} />, document.getElementById('folders'));
-        React.render(<NotificationArea />, document.getElementById('alert-area'));
-
       },
       finalize: function() {
         // JavaScript to be fired on all pages, after page specific JS is fired
       }
     },
 
+    'app': {
+      init: function() {
+        //render the account-area, modals, and folders
+        ReactDOM.render(<AccountArea store={userStore} />, document.getElementById('account-area'));
+        ReactDOM.render(<SigninForm  store={userStore} />, document.getElementById('signin-form-wrapper'));
+        ReactDOM.render(<SignupForm  store={userStore} />, document.getElementById('signup-form-wrapper'));
+        ReactDOM.render(<Folders store={folderStore} userStore={userStore} />, document.getElementById('folders'));
+        ReactDOM.render(<NotificationArea />, document.getElementById('alert-area'));
+      }
+    },
+
     'search': {
       init: function() {
-        React.render(<CitationList citationStore={searchCitationStore} folderStore={folderStore} />, document.getElementById('citations'));
+        ReactDOM.render(<CitationList citationStore={searchCitationStore} folderStore={folderStore} />, document.getElementById('citations'));
         //Send search query off to the dispatcher
         utils.dispatcher.dispatch({
           type: 'NEW_SEARCH',
@@ -73,7 +79,7 @@ var NotificationArea = require('./components/NotificationArea');
 
     'saved': {
       init: function() {
-        React.render(<CitationList citationStore={savedCitationStore} folderStore={folderStore} />, document.getElementById('citations'));
+        ReactDOM.render(<CitationList citationStore={savedCitationStore} folderStore={folderStore} />, document.getElementById('citations'));
         //grab folder contents
         utils.dispatcher.dispatch({
           type: 'GET_FOLDER_CONTENTS',
