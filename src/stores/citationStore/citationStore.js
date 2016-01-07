@@ -75,6 +75,10 @@ CitationStore.prototype.importItems = function(items) {
   console.log(this);
 }
 
+CitationStore.prototype.setTotal = function(total) {
+  this.total = total;
+}
+
 CitationStore.prototype.getItem = function(pmid) {
   var index = this.index.indexOf(pmid);
   return this.items[index];

@@ -17,11 +17,11 @@ function CitationStore() {
       case 'GET_FOLDER_CONTENTS':
         popsicle({
           method: 'GET',
-          url: '/folders/' + payload.content.folder
+          url: '/folders/' + payload.content.folder + '/'
         }).then(function(res) {
           if (res.status === 200) {
+            o.total = res.body.length;
             o.importItems(res.body);
-            o.total = res.body.count;
           }
         }, function(err) {
           notifier.create('lostBackend');
