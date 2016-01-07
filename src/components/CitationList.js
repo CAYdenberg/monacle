@@ -1,4 +1,5 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 
 var utils = require('../utils');
 var dispatcher = utils.dispatcher;
@@ -65,8 +66,8 @@ var Citation = React.createClass({
   toggleDetails : function(e) {
     e.preventDefault();
     //kill and then re-render the single citation area
-    React.unmountComponentAtNode(document.getElementById('single-citation'));
-    React.render(<SingleCitation pmid={this.props.data.pmid} store={store} folderStore={folderStore} />, document.getElementById('single-citation'));
+    ReactDOM.unmountComponentAtNode(document.getElementById('single-citation'));
+    ReactDOM.render(<SingleCitation pmid={this.props.data.pmid} store={store} folderStore={folderStore} />, document.getElementById('single-citation'));
     if (!this.props.data.abstract) {
       //... then lets go get it
       dispatcher.dispatch({
