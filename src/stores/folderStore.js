@@ -10,6 +10,8 @@ var emitter = EE({});
 function FolderStore() {
 
   this.folders = [];
+  this.currentFolder = null;
+
   this.apiUrlBase = "/folders/";
 
   dispatcher.register(function(payload) {
@@ -23,10 +25,6 @@ function FolderStore() {
         this.addFolder(payload);
         break;
 
-      case 'SAVE_CITATION':
-        this.addCitationToFolder(payload);
-        break;
-
       default:
         break;
     }
@@ -35,6 +33,10 @@ function FolderStore() {
 
 FolderStore.prototype.onUpdate = function(callback) {
   emitter.on('UPDATE', callback);
+}
+
+FolderStore.prototype.setCurrentFolder = function(folderName) {
+  this.currentFolder = folderName;
 }
 
 FolderStore.prototype.getFolders = function() {
@@ -72,42 +74,6 @@ FolderStore.prototype.addFolder = function(payload) {
     notifier.create({
       class: 'danger',
       message: 'Cannot add folder at this time'
-    });
-    console.log(err);
-  });
-}
-
-FolderStore.prototype.addCitationToFolder = function(payload) {
-  var o = this;
-  popsicle({
-    method: 'POST',
-    url: o.apiUrlBase + payload.content.folder,
-    body: payload.content.data
-  }).then(function(response) {
-
-    if (response.status === 200) {
-      notifier.create({
-        class: 'success',
-        message: 'Paper added to library',
-        autodismiss: true
-      });
-    } else if (response.status === 400) {
-      notifier.create({
-        class: 'warning',
-        message: 'That paper is already in that folder'
-      });
-    } else if (response.status === 404) {
-      notifier.create({
-        class: 'danger',
-        message: 'Cannot add paper: Folder does not exist'
-      });
-    }
-
-  }).catch(function(err) {
-    notifier.create({
-      class: 'danger',
-      message: 'Cannot add paper at this time',
-      payload: payload
     });
     console.log(err);
   });

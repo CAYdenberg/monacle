@@ -26,7 +26,7 @@ var NotificationArea = require('./components/NotificationArea');
     // All pages
     'common': {
       init: function() {
-        
+
         userStore.onUpdate(function() {
 
           //close the sign-in and sign-up forms when the user changes
@@ -63,28 +63,31 @@ var NotificationArea = require('./components/NotificationArea');
 
     'search': {
       init: function() {
+
         ReactDOM.render(<CitationList citationStore={searchCitationStore} folderStore={folderStore} />, document.getElementById('citations'));
         //Send search query off to the dispatcher
         utils.dispatcher.dispatch({
           type: 'NEW_SEARCH',
           content: {queryString: globals.query}
         });
+
         //set the search box contents to the query string
         $('input[name=query]').val(globals.query);
-      },
-      finalize: function() {
-        // JavaScript to be fired on the home page, after the init JS
+
       }
     },
 
     'saved': {
       init: function() {
+        folderStore.setCurrentFolder(globals.currentFolder);
+
         ReactDOM.render(<CitationList citationStore={savedCitationStore} folderStore={folderStore} />, document.getElementById('citations'));
         //grab folder contents
         utils.dispatcher.dispatch({
           type: 'GET_FOLDER_CONTENTS',
           content: {folder: globals.currentFolder}
         });
+
       }
     }
   };

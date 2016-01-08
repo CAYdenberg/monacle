@@ -53,8 +53,7 @@ function CitationStore() {
 CitationStore.prototype = Object.create(Parent.constructor.prototype);
 
 CitationStore.prototype.importItem = function(pubmedRecord) {
-  //copy the article ids into the top-level of the object
-  //change "pubmed" (which is very generic) to "pmid"
+  //define an Item
   var item = {
     pubmedSummary: pubmedRecord,
     pmid : null,

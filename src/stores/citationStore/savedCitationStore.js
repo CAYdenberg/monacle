@@ -29,6 +29,21 @@ function CitationStore() {
         });
         break;
 
+      case 'SAVE_CITATION_TO_FOLDER':
+        popsicle({
+          method: 'GET',
+          url: '/folders/' + payload.content.folderSlug + '/'
+        }).then(function(res) {
+          //alert that action was successful (getting proper name of folder)
+          //alert may be different depending on whether this is a save or a move action
+
+          //if a move action, remove from this Store and trigger UPDATE
+        }, function(err) {
+          //notifier.create whatever
+          console.log(err);
+        });
+        break;
+
       default:
         break;
 
@@ -38,5 +53,41 @@ function CitationStore() {
 }
 
 CitationStore.prototype = Object.create(Parent.constructor.prototype);
+
+CitationStore.prototype.addCitationToFolder = function(payload) {
+  var o = this;
+  popsicle({
+    method: 'POST',
+    url: o.apiUrlBase + payload.content.folder,
+    body: payload.content.data
+  }).then(function(response) {
+
+    if (response.status === 200) {
+      notifier.create({
+        class: 'success',
+        message: 'Paper added to library',
+        autodismiss: true
+      });
+    } else if (response.status === 400) {
+      notifier.create({
+        class: 'warning',
+        message: 'That paper is already in that folder'
+      });
+    } else if (response.status === 404) {
+      notifier.create({
+        class: 'danger',
+        message: 'Cannot add paper: Folder does not exist'
+      });
+    }
+
+  }).catch(function(err) {
+    notifier.create({
+      class: 'danger',
+      message: 'Cannot add paper at this time',
+      payload: payload
+    });
+    console.log(err);
+  });
+}
 
 module.exports = new CitationStore();

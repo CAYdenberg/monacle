@@ -15,7 +15,7 @@ var ProgressBar = require('./partials/ProgressBar.js');
  * Sets the reference to the folder store so that it can be used to show the select.
  *
  * NOTE: This component is smart with respect to folders (imports the data directly from the store)
- * but dumb with respect to citations (passed the data from SingleCitation or Citation).
+ * but dumb with respect to citations (passed the data from SingleCitation or CitationList/Citation).
  */
 var CitationDetails = React.createClass({
   componentWillMount: function() {
@@ -73,32 +73,31 @@ var SaveMenu = React.createClass({
   getInitialState: function() {
     return ({
       folders: folderStore.folders,
-      currentFolder: ''
+      currentFolder: folderStore.currentFolder
     });
   },
   componentWillMount: function() {
     folderStore.onUpdate(function() {
       this.setState({
-        folders: folderStore.folders
+        folders: folderStore.folders,
+        currentFolder: folderStore.currentFolder
       });
     }.bind(this));
   },
   saveCitation: function(e) {
     var newFolder = e.target.value;
-    this.setState({
-      currentFolder: newFolder
-    });
     dispatcher.dispatch({
       type: 'SAVE_CITATION',
-      content: {folder: newFolder, data: this.props.data}
+      content: {folderSlug: newFolder, data: this.props.data}
     });
   },
   render: function() {
+    console.log(this.state);
     if (this.state.folders.length) {
       return (
         <div className="margin-vertical">
           <label htmlFor="save-to-folder">Save to:</label>
-          <select id="save-to-folder" className="form-control" onChange={this.saveCitation} value={this.currentFolder}>
+          <select id="save-to-folder" className="form-control" onChange={this.saveCitation} value={this.state.currentFolder}>
             <option value=""></option>
             {
               this.state.folders.map(function(item) {
