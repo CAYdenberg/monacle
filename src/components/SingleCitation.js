@@ -1,5 +1,7 @@
 var React = require('react');
 
+var utils = require('../utils');
+
 //bind to stores
 var store = null;
 var folderStore = null;
@@ -32,7 +34,12 @@ var SingleCitation = React.createClass({
   },
   render: function() {
     return (
-      <CitationDetails data={this.state.data} folderStore={folderStore} />
+      <div>
+        <h5><span className="year">{utils.formatYear(this.state.data.pubmedSummary.pubdate)}</span></h5>
+        <h4>{this.state.data.pubmedSummary.title}</h4>
+        <h5 className="author-list">{utils.formatAuthorList(this.state.data.pubmedSummary.authors)}</h5>
+        <CitationDetails data={this.state.data} folderStore={folderStore} />
+      </div>
     )
   }
 });

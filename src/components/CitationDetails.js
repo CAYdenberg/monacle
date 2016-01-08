@@ -29,9 +29,6 @@ var CitationDetails = React.createClass({
     } else {
       return (
         <div className="citation-details">
-          <h5><span className="year">{utils.formatYear(this.props.data.pubmedSummary.pubdate)}</span></h5>
-          <h4>{this.props.data.pubmedSummary.title}</h4>
-          <h5 className="author-list">{utils.formatAuthorList(this.props.data.pubmedSummary.authors)}</h5>
           <div className="abstract">{this.props.data.abstract}</div>
           <LensLink link={this.props.data.pmc} />
           <div className="margin-vertical">
