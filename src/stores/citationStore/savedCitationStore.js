@@ -24,23 +24,49 @@ function CitationStore() {
             o.importItems(res.body);
           }
         }, function(err) {
-          notifier.create('lostBackend');
           console.log(err);
+          notifier.create({
+            class: 'danger',
+            message: 'Cannot retrieve papers at this time',
+            payload: payload
+          });
         });
         break;
 
-      case 'SAVE_CITATION_TO_FOLDER':
+      case 'SAVE_CITATION':
         popsicle({
-          method: 'GET',
-          url: '/folders/' + payload.content.folderSlug + '/'
+          method: 'POST',
+          url: '/folders/' + payload.content.folder + '/',
+          body: payload.content.data
         }).then(function(res) {
-          //alert that action was successful (getting proper name of folder)
-          //alert may be different depending on whether this is a save or a move action
-
-          //if a move action, remove from this Store and trigger UPDATE
+          o.saveCitation(res);
         }, function(err) {
-          //notifier.create whatever
           console.log(err);
+          notifier.create({
+            class: 'danger',
+            message: 'Cannot add paper at this time',
+            payload: payload
+          });
+        })
+        break;
+
+      case 'MOVE_CITATION':
+        popsicle({
+          method: 'PUT',
+          url: o.apiUrlBase + payload.content.data.pmid + '/',
+          body: {
+            addFolder: payload.content.newFolder,
+            removeFolder: payload.content.oldFolder
+          }
+        }).then(function(res) {
+          o.saveCitation(res);
+        }, function(err) {
+          console.log(err);
+          notifier.create({
+            class: 'danger',
+            message: 'Cannot add paper at this time',
+            payload: payload
+          });
         });
         break;
 
@@ -54,40 +80,31 @@ function CitationStore() {
 
 CitationStore.prototype = Object.create(Parent.constructor.prototype);
 
-CitationStore.prototype.addCitationToFolder = function(payload) {
-  var o = this;
-  popsicle({
-    method: 'POST',
-    url: o.apiUrlBase + payload.content.folder,
-    body: payload.content.data
-  }).then(function(response) {
-
-    if (response.status === 200) {
+CitationStore.prototype.saveCitation = function(res) {
+  switch (res.status) {
+    case 200:
       notifier.create({
         class: 'success',
-        message: 'Paper added to library',
+        message: 'Paper added to folder',
         autodismiss: true
       });
-    } else if (response.status === 400) {
+      break;
+
+    case 400:
       notifier.create({
         class: 'warning',
         message: 'That paper is already in that folder'
       });
-    } else if (response.status === 404) {
+      break;
+
+    case 404:
       notifier.create({
         class: 'danger',
-        message: 'Cannot add paper: Folder does not exist'
+        message: 'Cannot complete action'
       });
-    }
+      break;
 
-  }).catch(function(err) {
-    notifier.create({
-      class: 'danger',
-      message: 'Cannot add paper at this time',
-      payload: payload
-    });
-    console.log(err);
-  });
+  }
 }
 
 module.exports = new CitationStore();

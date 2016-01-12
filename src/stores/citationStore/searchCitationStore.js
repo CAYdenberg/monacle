@@ -64,13 +64,16 @@ CitationStore.prototype.importItem = function(pubmedRecord) {
     userData : null
   };
   //loop through the article ids, copying to the top-level.
-  //Change pubmed to pmid.
   _.each(pubmedRecord.articleids, function(idObject) {
     if (idObject.idtype === 'pubmed') {
-      item.pmid = idObject.value;
-    }
-    if (['doi', 'pmc'].indexOf(idObject.idtype) !== -1 ) {
-      item[idObject.idtype] = idObject.value;
+      //Change pubmed to pmid. Make sure it's an integer.
+      item.pmid = parseInt(idObject.value, 10);
+    } else if (idObject.idtype === 'pmc') {
+      //Remove PMC from the beginning of the string and make sure it's an integer.
+      item.pmc = parseInt(idObject.value.replace("PMC", ""));
+    } else if (idObject.idtype === 'doi') {
+      //Move DOI to the top level
+      item.doi = idObject.value;
     }
   });
   this.items.push(item);

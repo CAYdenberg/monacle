@@ -203,6 +203,8 @@ describe('Citations API', function() {
       .end(done);
   });
 
+  //NOTE: To create a new citation, use the folders API
+
   it('should retrieve the details of a citation', function(done) {
     agent
       .get('/citations/999999/')

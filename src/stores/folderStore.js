@@ -55,8 +55,8 @@ FolderStore.prototype.addFolder = function(payload) {
   popsicle({
     method : 'POST',
     url: o.apiUrlBase,
-    body : {
-      name : payload.content.name
+    body: {
+      name: payload.content.name
     }
   }).then(function(response) {
 
