@@ -13,7 +13,6 @@ router.all('/*', function(req, res, next) {
 router.all('/:pmid', function(req, res, next) {
   var collection = req.db.citations;
   var pmid = parseInt(req.params.pmid, 10);
-  console.log(req.user);
   collection.findOne({
     user: req.user,
     pmid: pmid

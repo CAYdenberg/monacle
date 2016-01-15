@@ -101,4 +101,11 @@ CitationStore.prototype.updateItem = function(pmid, updates) {
   return item;
 }
 
+CitationStore.prototype.deleteItem = function(pmid) {
+  var index = this.index.indexOf(pmid);
+  this.items.splice(index, 1);
+  this.createIndex();
+  emitter.emit('UPDATE');
+}
+
 module.exports = new CitationStore();

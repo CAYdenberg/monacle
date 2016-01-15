@@ -80,6 +80,11 @@ var MoveMenu = React.createClass({
 });
 
 var SaveMenu = React.createClass({
+  getInitialState: function() {
+    return ({
+      currentFolder: ''
+    });
+  },
   saveCitation: function(e) {
     var targetFolder = e.target.value;
     dispatcher.dispatch({
@@ -89,12 +94,15 @@ var SaveMenu = React.createClass({
         data: this.props.data
       }
     });
+    this.setState({
+      currentFolder: e.target.value
+    });
   },
   render: function() {
     return (
       <div className="margin-vertical">
         <label htmlFor="save-to-folder">Save to:</label>
-        <select id="save-to-folder" className="form-control" onChange={this.saveCitation} value="">
+        <select id="save-to-folder" className="form-control" onChange={this.saveCitation} value={this.state.currentFolder}>
           <option value=""></option>
           {
             this.props.folders.map(function(item) {

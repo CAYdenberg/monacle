@@ -20,7 +20,6 @@ function CitationStore() {
           url: '/folders/' + payload.content.folder + '/'
         }).then(function(res) {
           if (res.status === 200) {
-            o.total = res.body.length;
             o.importItems(res.body);
           }
         }, function(err) {
@@ -39,7 +38,7 @@ function CitationStore() {
           url: '/folders/' + payload.content.folder + '/',
           body: payload.content.data
         }).then(function(res) {
-          o.saveCitation(res);
+          o.saveCitationNotice(res);
         }, function(err) {
           console.log(err);
           notifier.create({
@@ -59,7 +58,8 @@ function CitationStore() {
             removeFolder: payload.content.oldFolder
           }
         }).then(function(res) {
-          o.saveCitation(res);
+          o.saveCitationNotice(res);
+          o.deleteItem(payload.content.data.pmid);
         }, function(err) {
           console.log(err);
           notifier.create({
@@ -80,7 +80,12 @@ function CitationStore() {
 
 CitationStore.prototype = Object.create(Parent.constructor.prototype);
 
-CitationStore.prototype.saveCitation = function(res) {
+CitationStore.prototype.createIndex = function() {
+  Parent.createIndex.call(this);
+  this.total = this.items.length;
+}
+
+CitationStore.prototype.saveCitationNotice = function(res) {
   switch (res.status) {
     case 200:
       notifier.create({
