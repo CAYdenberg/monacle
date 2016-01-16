@@ -1,41 +1,6 @@
 {{!< default}}
 
-<div id="main-nav" class="navmenu navmenu-inverse navmenu-fixed-left offcanvas-xs main-nav" role="navigation">
-  <div class="nav navmenu-nav">
-
-    <div class="close-wrapper">
-      <button type="button" class="btn btn-info btn-close" data-toggle="offcanvas" data-target="#main-nav">
-        Close
-      </button>
-    </div>
-
-    <div id="account-area" class="account-area"></div>
-
-    <form role="search" method="GET" action="/search">
-      <div class="form-group">
-        <input type="text" class="form-control" name="query" placeholder="Search">
-      </div>
-      <div class="form-group">
-        <button type="submit" class="btn btn-success"><span class="icon-pubmed"></span></button>
-      </div>
-    </form>
-
-    <div id="folders" class="folders"></div>
-
-  </div>
-
-  <footer class="navbar-footer">
-    {{>footer}}
-  </footer>
-</div>
-
-<div id="mobile-nav" class="navmenu navmenu-inverse navmenu-fixed-left visible-xs mobile-nav" data-toggle="offcanvas" data-target="#main-nav">
-  <button type="button" class="navbar-toggle">
-    <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-  </button>
-</div>
+{{> nav}}
 
 <div class="container-fluid">
   <div class="row">

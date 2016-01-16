@@ -89,6 +89,25 @@ var NotificationArea = require('./components/NotificationArea');
         });
 
       }
+    },
+
+    'profile': {
+      init: function() {
+        $('.delete-folder').click(function() {
+          var $element = $(this);
+          var slug = $element.data('delete');
+          $.ajax({
+            method: "DELETE",
+            url: "/folders/" + slug,
+            success: function(res) {
+              if (res) {
+                $element.parents('li').remove();
+              }
+            }
+          });
+        });
+
+      }
     }
   };
 

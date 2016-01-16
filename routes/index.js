@@ -1,4 +1,6 @@
 var express = require('express');
+var _ = require('underscore');
+
 var router = express.Router();
 
 router.get('/lens/*', function(req, res) {
@@ -35,6 +37,20 @@ router.get('/search', function(req, res) {
   req.context.pagename = 'app search';
   req.context.globals.query = req.query.query;
   res.render('app', req.context);
+});
+
+router.get('/profile', function(req, res) {
+  var folderCollection = req.db.folders;
+  req.context.pagename = 'app profile';
+  folderCollection.find({user: req.user}).then(function(folders) {
+    req.context.folders = _.map(folders, function(folder) {
+      return {
+        name: folder.name,
+        slug: folder.slug
+      }
+    });
+    res.render('profile', req.context);
+  })
 });
 
 router.get('/library/:folder', function(req, res) {

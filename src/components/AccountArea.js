@@ -39,7 +39,7 @@ var AccountArea = React.createClass({
           <li className="dropdown">
             <a href="#" className="dropdown-toggle" data-toggle="dropdown">{this.state.currentUser}</a>
             <ul className="dropdown-menu navmenu-nav" role="menu">
-              <li><a href="#">Profile</a></li>
+              <li><a href="/profile/">Profile</a></li>
               <li><a href="/users/logout/" onClick={this.logout}>Logout</a></li>
             </ul>
           </li>
