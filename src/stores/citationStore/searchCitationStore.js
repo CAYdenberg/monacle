@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var ncbi = require('node-ncbi');
+var ncbi = require('../../../../node-ncbi');
 var utils = require('../../utils');
 
 var dispatcher = utils.dispatcher;
@@ -11,14 +11,16 @@ function CitationStore() {
 
   Parent.constructor.call(this);
   var o = this;
+  var search = null;
 
   dispatcher.register(function(payload) {
     switch (payload.type) {
 
       case 'NEW_SEARCH':
-        ncbi.pubmedSearch(payload.content.queryString).then(function(data) {
-          o.total = parseInt(data.count, 10);
-          o.importItems(data.papers);
+        search = ncbi.createSearch(payload.content.queryString);
+        search.getPage().then(function(papers) {
+          o.total = parseInt(search.count());
+          o.importItems(papers);
         }).catch(function(err) {
           notifier.create({
             class: 'danger',
@@ -31,18 +33,15 @@ function CitationStore() {
 
       case 'LOAD_MORE':
         if ( o.items.length < o.total ) {
-          ncbi.pubmedSearch(payload.content.queryString, {
-            start: o.items.length,
-            end: o.items.length + 10
-          }).then(function(data) {
-            o.importItems(data.papers);
+          search.nextPage().then(function(papers) {
+            o.importItems(papers);
           });
         }
         break;
 
       case 'GET_DETAILS':
-        ncbi.getAbstract(payload.content.pmid).then(function(data) {
-          o.updateItem(payload.content.pmid, {abstract: data});
+        ncbi.createCitation(payload.content.pmid).abstract().then(function(abstract) {
+          o.updateItem(payload.content.pmid, {abstract: abstract});
         });
         break;
 
