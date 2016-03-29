@@ -27,36 +27,20 @@ if (config.env === 'development') {
 * BUILD VENDOR FILES AND SEND TO DIST FOLDER
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-gulp.task('vendor-lens-css', function() {
-  var file = './bower_components/lens-starter/lens.css';
+gulp.task('lens-css', function() {
+  var file = './node_modules/lens-starter/lens.css';
   return gulp.src(file)
     .pipe(gulp.dest('./dist/css/'));
 });
 
-gulp.task('vendor-lens-js', function() {
-  var dir = './bower_components/';
-  var files = ['jquery/dist/jquery.js', 'lens-starter/lens.js'];
-  var paths = files.map(function(file) {
-    return dir + file;
-  });
-  return gulp.src(paths)
+gulp.task('lens-js', function() {
+  var files = ['./node_modules/lens-starter/lens.js'];
+  return gulp.src(files)
     .pipe(concat('lens.js'))
     .pipe(gulp.dest('./dist/js/'));
 });
 
-gulp.task('vendor-app-js', function(){
-  var dir = './bower_components/';
-  var files = ['jquery/dist/jquery.js', 'bootstrap/dist/js/bootstrap.js', 'jasny-bootstrap/dist/js/jasny-bootstrap.js'];
-  var paths = files.map(function(file) {
-    return dir + file;
-  });
-  return gulp.src(paths)
-    .pipe(concat('vendor.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest('./dist/js/'))
-});
-
-gulp.task('vendor', ['vendor-lens-css', 'vendor-lens-js', 'vendor-app-js']);
+gulp.task('lens', ['lens-css', 'lens-js']);
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,7 +49,7 @@ gulp.task('vendor', ['vendor-lens-css', 'vendor-lens-js', 'vendor-app-js']);
 
 gulp.task('lint', function() {
   if (config.env === 'development') {
-    return gulp.src(['**/*.js','!node_modules/**', '!bower_components/**', '!dist/**'])
+    return gulp.src(['**/*.js','!node_modules/**', '!dist/**'])
       // eslint() attaches the lint output to the "eslint" property
       // of the file object so it can be used by other modules.
       .pipe(eslint())
