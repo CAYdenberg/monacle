@@ -11,7 +11,7 @@ router.get('/lens/*', function(req, res) {
 router.all('/*', function(req, res, next) {
   req.context = {};
 	req.context.stylesheets = ['style.css'];
-	req.context.scripts = ['vendor.js', 'script.js'];
+	req.context.scripts = ['script.js'];
   req.context.globals = {};
   var user = req.session.passport.user;
   if (user) {
