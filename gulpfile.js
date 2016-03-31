@@ -61,13 +61,12 @@ gulp.task('lint', function() {
   }
 })
 
-gulp.task('js', ['lint'], function () {
+gulp.task('js', function () {
   // set up the browserify instance on a task basis
   var b = browserify({
     entries: ['./src/script.js'],
-    transform: ['reactify'],
     debug: true
-  });
+  }).transform("babelify", {presets: ['es2015', 'react']});
 
   if (config.env === 'development') {
     return b.bundle()
@@ -106,10 +105,10 @@ gulp.task('css', function() {
 });
 
 //do everything
-gulp.task('build', ['js', 'css', 'vendor-js']);
+gulp.task('build', ['lint', 'js', 'css', 'vendor-js']);
 
 //default. Just the primary (non-vendor) CSS and JS
-gulp.task('default', ['js', 'css']);
+gulp.task('default', ['lint', 'js', 'css']);
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~
