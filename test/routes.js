@@ -1,3 +1,5 @@
+/*eslint-env mocha */
+
 var request = require('supertest');
 var config = require('./config');
 var app = require('../App')(config);

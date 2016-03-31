@@ -6,13 +6,16 @@ var dispatcher = utils.dispatcher;
 
 var emitter = EE({});
 
+
+
+
 function UserStore() {
 
   this.apiUrlBase = '/user/';
+  this.loginError = '';
 
-  dispatcher.register(function(payload) {
+  dispatcher.register((payload) => {
     switch (payload.type) {
-
       case 'LOG_IN':
         this.login(payload.content.email, payload.content.password);
         break;
@@ -28,7 +31,7 @@ function UserStore() {
       default:
         break;
     }
-  }.bind(this));
+  });
 }
 
 UserStore.prototype.onUpdate = function(callback) {
