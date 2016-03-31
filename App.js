@@ -8,6 +8,8 @@ var hbs = require('express-hbs');
 var passport = require('passport');
 var expressSession = require('express-session');
 
+require('node-jsx').install();
+
 var routes = require('./routes/index');
 var user = require('./routes/user');
 var folders = require('./routes/folders');

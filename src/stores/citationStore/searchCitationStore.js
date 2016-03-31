@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var ncbi = require('../../../../node-ncbi');
+var ncbi = require('node-ncbi');
 var utils = require('../../utils');
 
 var dispatcher = utils.dispatcher;

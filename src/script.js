@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var React = require('react');
 var ReactDOM = require('react-dom');
 var utils = require('./utils');
@@ -17,6 +15,8 @@ var SigninForm = require('./components/SigninForm');
 var SignupForm = require('./components/SignupForm');
 var Folders = require('./components/Folders');
 var NotificationArea = require('./components/NotificationArea');
+
+
 
 (function($) {
 
@@ -111,36 +111,4 @@ var NotificationArea = require('./components/NotificationArea');
     }
   };
 
-  // The routing fires all common scripts, followed by the page specific scripts.
-  // Add additional events for more control over timing e.g. a finalize event
-  var UTIL = {
-    fire: function(func, funcname, args) {
-      var fire;
-      var namespace = Monocle;
-      funcname = (funcname === undefined) ? 'init' : funcname;
-      fire = func !== '';
-      fire = fire && namespace[func];
-      fire = fire && typeof namespace[func][funcname] === 'function';
-
-      if (fire) {
-        namespace[func][funcname](args);
-      }
-    },
-    loadEvents: function() {
-      // Fire common init JS
-      UTIL.fire('common');
-
-      // Fire page-specific init JS, and then finalize JS
-      $.each(document.body.className.replace(/-/g, '_').split(/\s+/), function(i, classnm) {
-        UTIL.fire(classnm);
-        UTIL.fire(classnm, 'finalize');
-      });
-
-      // Fire common finalize JS
-      UTIL.fire('common', 'finalize');
-    }
-  };
-
-  // Load Events
-  $(document).ready(UTIL.loadEvents);
-})(jQuery); // Fully reference jQuery after this point.
+});

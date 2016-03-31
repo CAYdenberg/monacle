@@ -1,7 +1,10 @@
 var express = require('express');
 var _ = require('underscore');
+var React = require('react');
 
 var router = express.Router();
+
+var ReactBase = require('../src/components/Base.js');
 
 router.get('/lens/*', function(req, res) {
   res.render('lens');
@@ -34,8 +37,7 @@ router.get('/about', function(req, res) {
 });
 
 router.get('/search', function(req, res) {
-  req.context.pagename = 'app search';
-  req.context.globals.query = req.query.query;
+  req.context.reactHtml = React.renderToString(<ReactBase />);
   res.render('app', req.context);
 });
 
