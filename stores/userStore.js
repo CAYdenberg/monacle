@@ -1,4 +1,4 @@
-var utils = require('../utils');
+var utils = require('../lib');
 var EE = require('event-emitter');
 var popsicle = require('popsicle');
 
@@ -7,93 +7,90 @@ var dispatcher = utils.dispatcher;
 var emitter = EE({});
 
 
+var userStore = {
 
+  apiUrlBase: '/user/',
 
-function UserStore() {
+  loginError: '',
 
-  this.apiUrlBase = '/user/';
-  this.loginError = '';
+  onUpdate: function(callback) {
+    emitter.on('UPDATE', callback);
+  },
 
-  dispatcher.register((payload) => {
-    switch (payload.type) {
-      case 'LOG_IN':
-        this.login(payload.content.email, payload.content.password);
-        break;
+  onError: function(callback) {
+    emitter.on('ERROR', callback);
+  },
 
-      case 'LOG_OUT':
-        this.logout();
-        break;
-
-      case 'CREATE_USER':
-        this.create(payload.content.email, payload.content.password);
-        break;
-
-      default:
-        break;
+  update: function(email) {
+    this.createUserError = false;
+    this.loginError = false;
+    if (email && email.length) {
+      this.userEmail = email;
+      this.loggedIn = true;
+    } else {
+      this.userEmail = null;
+      this.loggedIn = false;
     }
-  });
-}
+    emitter.emit('UPDATE');
+  },
 
-UserStore.prototype.onUpdate = function(callback) {
-  emitter.on('UPDATE', callback);
-}
+  login: function(email, password) {
+    popsicle({
+      method: 'POST',
+      body: {email: email, password: password},
+      url: userStore.apiUrlBase + 'signin/'
+    }).then((res) => {
+      if (res.status === 200) {
+        this.update(res.body.email);
+      } else {
+        this.loginError = "Email address and password do not match";
+        emitter.emit('ERROR');
+      }
+    });
+  },
 
-UserStore.prototype.onError = function(callback) {
-  emitter.on('ERROR', callback);
-}
+  create: function(email, password) {
+    popsicle({
+      method: 'POST',
+      body: {email: email, password: password},
+      url: userStore.apiUrlBase + 'signup/'
+    }).then((res) => {
+      if (res.status === 200) {
+        this.update(res.body.email);
+      } else {
+        //create an error
+      }
+    });
+  },
 
-UserStore.prototype.update = function(email) {
-  this.createUserError = false;
-  this.loginError = false;
-  if (email && email.length) {
-    this.userEmail = email;
-    this.loggedIn = true;
-  } else {
-    this.userEmail = null;
-    this.loggedIn = false;
+  logout: function() {
+    popsicle({
+      method: 'GET',
+      url: userStore.apiUrlBase + '/logout/'
+    }).then((res) => {
+      this.update(res.body.email);
+    });
   }
-  emitter.emit('UPDATE');
+
 }
 
-UserStore.prototype.login = function(email, password) {
-  var o = this;
-  popsicle({
-    method: 'POST',
-    body: {email: email, password: password},
-    url: o.apiUrlBase + 'signin/'
-  }).then(function(res) {
-    if (res.status === 200) {
-      o.update(res.body.email);
-    } else {
-      o.loginError = "Email address and password do not match";
-      emitter.emit('ERROR');
-    }
-  });
-}
+dispatcher.register((payload) => {
+  switch (payload.type) {
+    case 'LOG_IN':
+      userStore.login(payload.content.email, payload.content.password);
+      break;
 
-UserStore.prototype.create = function(email, password) {
-  var o = this;
-  popsicle({
-    method: 'POST',
-    body: {email: email, password: password},
-    url: o.apiUrlBase + 'signup/'
-  }).then(function(res) {
-    if (res.status === 200) {
-      o.update(res.body.email);
-    } else {
-      //create an error
-    }
-  });
-}
+    case 'LOG_OUT':
+      userStore.logout();
+      break;
 
-UserStore.prototype.logout = function() {
-  var o = this;
-  popsicle({
-    method: 'GET',
-    url: o.apiUrlBase + '/logout/'
-  }).then(function(res) {
-    o.update(res.body.email);
-  });
-}
+    case 'CREATE_USER':
+      userStore.create(payload.content.email, payload.content.password);
+      break;
 
-module.exports = new UserStore();
+    default:
+      break;
+  }
+});
+
+module.exports = userStore;

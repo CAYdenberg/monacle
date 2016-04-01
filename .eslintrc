@@ -11,7 +11,8 @@
     "commonjs": true
   },
   "globals": {
-    "globals": true
+    "globals": true,
+    "console": true
   },
   "extends": "eslint:recommended",
   "rules": {
