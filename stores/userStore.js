@@ -13,6 +13,8 @@ var userStore = {
 
   loginError: '',
 
+  userEmail: null,
+
   onUpdate: function(callback) {
     emitter.on('UPDATE', callback);
   },
@@ -26,10 +28,8 @@ var userStore = {
     this.loginError = false;
     if (email && email.length) {
       this.userEmail = email;
-      this.loggedIn = true;
     } else {
       this.userEmail = null;
-      this.loggedIn = false;
     }
     emitter.emit('UPDATE');
   },

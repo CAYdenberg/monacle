@@ -1,5 +1,7 @@
 var React = require('react');
 
+var Folders = require('./Folders');
+
 var Base = React.createClass({
   render: function() {
     return (
@@ -26,7 +28,7 @@ var Base = React.createClass({
               </div>
             </form>
 
-            <div id="folders" className="folders"></div>
+            <Folders />
 
           </div>
 

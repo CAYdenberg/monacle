@@ -1,10 +1,13 @@
 var express = require('express');
 var _ = require('underscore');
 var React = require('react');
+var ReactDOMServer = require('react-dom/server');
 
 var router = express.Router();
 
-var ReactBase = require('../src/components/Base.js');
+var userStore = require('../stores/userStore');
+
+var ReactBase = require('../components/Base');
 
 router.get('/lens/*', function(req, res) {
   res.render('lens');
@@ -17,8 +20,13 @@ router.all('/*', function(req, res, next) {
 	req.context.scripts = ['script.js'];
   req.context.globals = {};
   var user = req.session.passport.user;
+
+  //hack and pretend we have a valid user
+  user = 'ydenberg@gmail.com';
+
   if (user) {
     req.context.globals.user = user.email;
+    userStore.update(user.email);
   } else {
     req.context.globals.user = null;
   }
@@ -37,7 +45,7 @@ router.get('/about', function(req, res) {
 });
 
 router.get('/search', function(req, res) {
-  req.context.reactHtml = React.renderToString(<ReactBase />);
+  req.context.reactHtml = ReactDOMServer.renderToString(<ReactBase />);
   res.render('app', req.context);
 });
 
