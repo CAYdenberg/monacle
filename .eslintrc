@@ -12,7 +12,8 @@
   },
   "globals": {
     "globals": true,
-    "console": true
+    "console": true,
+    "process": true
   },
   "extends": "eslint:recommended",
   "rules": {

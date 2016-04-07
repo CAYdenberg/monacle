@@ -1,11 +1,11 @@
-var React = require('react');
+const React = require('react');
 
-var utils = require('../../lib');
-var dispatcher = utils.dispatcher;
-var createTypingCallback = utils.createTypingCallback;
+const lib = require(process.env.ROOT+'/lib');
+const dispatcher = lib.dispatcher;
+const createTypingCallback = lib.createTypingCallback;
 
-var store = require('../../stores/folderStore');
-var userStore = require('../../stores/userStore');
+var store = require(process.env.ROOT+'/stores/folderStore');
+var userStore = require(process.env.ROOT+'/stores/userStore');
 
 var Folders = React.createClass({
 

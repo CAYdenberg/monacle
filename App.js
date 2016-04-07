@@ -1,3 +1,9 @@
+//set environment variables
+require('dotenv').config();
+
+//allow JSX in node
+require('node-jsx').install();
+
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -8,9 +14,8 @@ var hbs = require('express-hbs');
 var passport = require('passport');
 var expressSession = require('express-session');
 
-require('node-jsx').install();
 
-var routes = require('./routes/index');
+var routes = require(process.env.ROOT+'/routes/index');
 var user = require('./routes/user');
 var folders = require('./routes/folders');
 var citations = require('./routes/citations');

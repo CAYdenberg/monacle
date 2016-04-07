@@ -1,13 +1,9 @@
-var _ = require('underscore');
-var utils = require('../utils');
-var EE = require('event-emitter');
-var ncbi = require('node-ncbi');
-var popsicle = require('popsicle');
+const _ = require('underscore');
+const ncbi = require('node-ncbi');
+const popsicle = require('popsicle');
 
-var emitter = EE({});
-
-var dispatcher = utils.dispatcher;
-var notifier = utils.notifier;
+const emitter = require('event-emitter')({});
+const {dispatcher, notifier} = require(process.env.ROOT+'/lib');
 
 /**
  * How a single paper is represented in the store:

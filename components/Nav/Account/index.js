@@ -1,7 +1,10 @@
-var React = require('react');
-var dispatcher = require('../utils').dispatcher;
+const React = require('react');
+const dispatcher = require(process.env.ROOT+'/lib').dispatcher;
 
-var store = null;
+var store = require(process.env.ROOT+'/stores/userStore');
+
+const SigninForm = require(process.env.ROOT+'/components/Nav/Account/SigninForm');
+const SignupForm = require(process.env.ROOT+'/components/Nav/Account/SignupForm');
 
 /**
  * Account area. This either renders the links to open modals for sign-in/sign-up,
@@ -9,7 +12,7 @@ var store = null;
  * Rendered at #account-area.
  * Should be bound with the userStore.
  */
-var AccountArea = React.createClass({
+module.exports = React.createClass({
   getInitialState: function() {
     store = this.props.store;
     return ({
@@ -48,12 +51,14 @@ var AccountArea = React.createClass({
     } else {
       return (
         <ul className="horizontal-list">
-          <li><a href="#" data-toggle="modal" data-target="#modal-signin-form">Sign-in</a></li>
-          <li><a href="#" data-toggle="modal" data-target="#modal-signup-form">Create an account</a></li>
+          <li><a href="#" data-toggle="modal" data-target="#modal-signin-form">Sign-in</a>
+            <SigninForm />
+          </li>
+          <li><a href="#" data-toggle="modal" data-target="#modal-signup-form">Create an account</a>
+            <SignupForm />
+          </li>
         </ul>
       )
     }
   }
 });
-
-module.exports = AccountArea;

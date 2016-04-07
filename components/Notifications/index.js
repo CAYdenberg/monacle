@@ -1,7 +1,7 @@
-var React = require('react');
-var notifier = require('../utils').notifier;
+const React = require('react');
+const notifier = require(process.env.ROOT+'/lib').notifier;
 
-var NotificationArea = React.createClass({
+const NotificationArea = React.createClass({
   getInitialState: function() {
     return ({
       notifications: []
@@ -27,7 +27,7 @@ var NotificationArea = React.createClass({
   }
 });
 
-var Notification = React.createClass({
+const Notification = React.createClass({
   dismiss: function(e) {
     e.preventDefault();
     this.props.item.dismiss();
@@ -47,7 +47,7 @@ var Notification = React.createClass({
   }
 });
 
-var Retry = React.createClass({
+const Retry = React.createClass({
   retry: function(e) {
     e.preventDefault();
     this.props.item.retry();

@@ -1,11 +1,10 @@
-var EE = require('event-emitter');
-var popsicle = require('popsicle');
-var utils = require('../lib');
+const popsicle = require('popsicle');
 
-var dispatcher = utils.dispatcher;
-var notifier = utils.notifier;
+const emitter = require('event-emitter')({});
 
-var emitter = EE({});
+const lib = require(process.env.ROOT+'/lib');
+const dispatcher = lib.dispatcher;
+const notifier = lib.notifier;
 
 var folderStore = {
   folders: [],
