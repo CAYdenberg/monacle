@@ -1,13 +1,13 @@
-var React = require('react');
+const React = require('react');
 
-var utils = require('../utils');
-var dispatcher = utils.dispatcher;
-var createTypingCallback = utils.createTypingCallback;
+const utils = require('../lib');
+const dispatcher = utils.dispatcher;
+const createTypingCallback = utils.createTypingCallback;
 
 var store = null;
 var userStore = null;
 
-var Folders = React.createClass({
+const Folders = React.createClass({
 
   getInitialState: function() {
     store = this.props.store;
@@ -20,17 +20,17 @@ var Folders = React.createClass({
   },
 
   componentWillMount: function() {
-    store.onUpdate(function() {
+    store.onUpdate(() => {
       this.setState({
         folders: store.folders,
         newFolderName: ''
       });
-    }.bind(this));
-    userStore.onUpdate(function() {
+    });
+    userStore.onUpdate(() => {
       this.setState({
         loggedIn: userStore.loggedIn
       });
-    }.bind(this));
+    });
   },
 
   add: function(e) {
@@ -66,7 +66,7 @@ var Folders = React.createClass({
   }
 });
 
-var Folder = React.createClass({
+const Folder = React.createClass({
   render: function() {
     return (
       <li><a href={'/library/'+this.props.data.slug+'/'}>{this.props.data.name}</a></li>
