@@ -17,7 +17,8 @@ passport.use('signin', new LocalStrategy({
     passReqToCallback : true,
 		usernameField : 'email',
 		passwordField : 'password'
-  }, function(req, email, password, done) {
+  },
+  function(req, email, password, done) {
     var users = req.db.users;
     users.validate(email, password).then(function(user) {
       done(null, user);

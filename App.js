@@ -55,8 +55,13 @@ module.exports = function(config) {
     } else {
       req.user = null;
     }
+
+    // TEMPORARY: MOCK OVER THE USER VARIABLE SO WE CAN TEST THIS FUCKING THING
+    req.user = 'ydenberg@gmail.com';
+
     next();
   });
+
 
   app.use('/', routes);
   app.use('/user', user);

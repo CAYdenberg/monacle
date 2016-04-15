@@ -98,10 +98,6 @@ var citationStore = {
     this.items.splice(index, 1);
     this.createIndex();
     emitter.emit('UPDATE');
-  },
-
-  saveCitationNotice: function(res) {
-
   }
 
 }
