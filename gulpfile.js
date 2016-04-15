@@ -14,7 +14,7 @@ var gutil = require('gulp-util');
 
 var config = require('./config.js');
 
-//dev-dependencies
+//load dev dependencies
 if (config.env === 'development') {
   var browserSync = require('browser-sync');
   var nodemon = require('gulp-nodemon');
@@ -73,6 +73,7 @@ gulp.task('js', function () {
       .pipe(source('script.js'))
       .pipe(buffer())
       .pipe(sourcemaps.init({loadMaps: true}))
+      .on('error', gutil.log)
       .pipe(gulp.dest('./dist/js'))
       .pipe(browserSync.stream());
   } else {
@@ -105,7 +106,7 @@ gulp.task('css', function() {
 });
 
 //do everything
-gulp.task('build', ['lint', 'js', 'css', 'vendor-js']);
+gulp.task('build', ['lint', 'js', 'css', 'lens-js']);
 
 //default. Just the primary (non-vendor) CSS and JS
 gulp.task('default', ['lint', 'js', 'css']);
@@ -125,7 +126,7 @@ gulp.task('nodemon', function (cb) {
     // nodemon our expressjs server
     script: 'bin/www',
     // watch core server file(s) that require server restart on change
-    watch: ['routes/**.js']
+    watch: ['routes/**/*.js', 'db/**/*.js']
   })
   .once('start', cb)
   .on('restart', function onRestart() {
@@ -153,7 +154,7 @@ gulp.task('watch', ['nodemon'], function () {
 
   });
 
-  gulp.watch(['src/**/*.js', 'lib/**/*.js'], ['js']);
+  gulp.watch(['src/**/*.js', 'components/**/*.js', 'stores/**/*.js', 'lib/**/*.js'], ['js']);
   gulp.watch(['src/**/*.less'], ['css']);
   gulp.watch(['views/**/*.hbs']).on('change', browserSync.reload);
 });

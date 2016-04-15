@@ -13,12 +13,7 @@ router.all('/*', function(req, res, next) {
 	req.context.stylesheets = ['style.css'];
 	req.context.scripts = ['script.js'];
   req.context.globals = {};
-  var user = req.session.passport.user;
-  if (user) {
-    req.context.globals.user = user.email;
-  } else {
-    req.context.globals.user = null;
-  }
+  req.context.globals.user = req.user;
 	next();
 });
 
@@ -36,7 +31,19 @@ router.get('/about', function(req, res) {
 router.get('/search', function(req, res) {
   req.context.pagename = 'app search';
   req.context.globals.query = req.query.query;
-  res.render('app', req.context);
+  var folderCollection = req.db.folders;
+  var folderStore = Object.create(require('../stores/folderStore'));
+  folderCollection.find({user: req.user}).then(function(folders) {
+    req.context.folders = _.map(folders, function(folder) {
+      return {
+        name: folder.name,
+        slug: folder.slug
+      }
+    });
+    folderStore.setAll(req.context.folders);
+    console.log(folderStore);
+    res.render('app', req.context);
+  });
 });
 
 router.get('/profile', function(req, res) {
@@ -50,7 +57,7 @@ router.get('/profile', function(req, res) {
       }
     });
     res.render('profile', req.context);
-  })
+  });
 });
 
 router.get('/library/:folder', function(req, res) {

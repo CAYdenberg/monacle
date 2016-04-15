@@ -42,7 +42,13 @@ const Folders = React.createClass({
   },
 
   render: function() {
-    if (this.state.loggedIn) {
+
+
+
+    if (true) {
+
+
+
       return (
         <div>
           <ul className="folder-list">

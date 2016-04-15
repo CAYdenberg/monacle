@@ -3,7 +3,6 @@ const ncbi = require('node-ncbi');
 const popsicle = require('popsicle');
 
 const emitter = require('event-emitter')({});
-const {dispatcher, notifier} = require(process.env.ROOT+'/lib');
 
 /**
  * How a single paper is represented in the store:

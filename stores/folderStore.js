@@ -2,7 +2,7 @@ const popsicle = require('popsicle');
 
 const emitter = require('event-emitter')({});
 
-const lib = require(process.env.ROOT+'/lib');
+const lib = require('../lib');
 const dispatcher = lib.dispatcher;
 const notifier = lib.notifier;
 
@@ -21,42 +21,9 @@ var folderStore = {
     this.currentFolder = folderName;
   },
 
-  getFolders: function() {
-    popsicle({
-      method : 'GET',
-      url : folderStore.apiUrlBase
-    }).then((res) => {
-      this.folders = res.body;
-      emitter.emit('UPDATE');
-    });
-  },
-
-  addFolder: function(payload) {
-    popsicle({
-      method : 'POST',
-      url: folderStore.apiUrlBase,
-      body: {
-        name: payload.content.name
-      }
-    }).then((response) => {
-
-      if (response.status === 200) {
-        this.folders = response.body;
-        emitter.emit('UPDATE');
-      } else if (response.status === 400) {
-        notifier.create({
-          class: 'warning',
-          message: 'A folder with that name already exists'
-        })
-      }
-
-    }).catch(function(err) {
-      notifier.create({
-        class: 'danger',
-        message: 'Cannot add folder at this time'
-      });
-      console.log(err);
-    });
+  setAll: function(folders) {
+    this.folders = folders;
+    emitter.emit('UPDATE');
   }
 
 }
@@ -65,11 +32,37 @@ dispatcher.register(function(payload) {
   switch (payload.type) {
 
     case 'GET_FOLDERS':
-      folderStore.getFolders();
+      popsicle({
+        method : 'GET',
+        url : folderStore.apiUrlBase
+      }).then((res) => {
+        folderStore.setAll(res.body);
+      });
       break;
 
     case 'ADD_FOLDER':
-      folderStore.addFolder(payload);
+      popsicle({
+        method : 'POST',
+        url: folderStore.apiUrlBase,
+        body: {
+          name: payload.content.name
+        }
+      }).then((res) => {
+        if (res.status === 200) {
+          folderStore.setAll(res.body);
+        } else if (res.status === 400) {
+          notifier.create({
+            class: 'warning',
+            message: 'A folder with that name already exists'
+          })
+        }
+      }).catch(function(err) {
+        notifier.create({
+          class: 'danger',
+          message: 'Cannot add folder at this time'
+        });
+        console.log(err);
+      });
       break;
 
     default:

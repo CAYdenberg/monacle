@@ -6,8 +6,8 @@ const utils = require('../lib');
 
 //create stores
 const folderStore = require('../stores/folderStore'),
-  userStore = require('../stores/userStore'),
-  citationStore = require('../stores/citationStore');
+  userStore = require('../stores/userStore');
+  // citationStore = require('../stores/citationStore');
 
 //get container components
 // const CitationList = require('../components/CitationList');
@@ -24,17 +24,20 @@ if (bodyClasses.contains('app')) {
   // ReactDOM.render(<SigninForm  store={userStore} />, document.getElementById('signin-form-wrapper'));
   // ReactDOM.render(<SignupForm  store={userStore} />, document.getElementById('signup-form-wrapper'));
   ReactDOM.render(<Folders store={folderStore} userStore={userStore} />, document.getElementById('folders'));
+  utils.dispatcher.dispatch({
+    type: 'GET_FOLDERS'
+  });
+
   // ReactDOM.render(<CitationList citationStore={citationStore} folderStore={folderStore} />, document.getElementById('citations'));
 }
-if (bodyClasses.contains('search')) {
-  utils.dispatcher.dispatch({
-    type: 'NEW_SEARCH',
-    content: {queryString: globals.query}
-  });
-}
-if (bodyClasses.contains('saved')) {
-  utils.dispatcher.dispatch({
-    type: 'GET_FOLDER_CONTENTS',
-    content: {folder: globals.currentFolder}
-  });
-}
+// if (bodyClasses.contains('search')) {
+//   utils.dispatcher.dispatch({
+//     type: 'NEW_SEARCH',
+//     content: {queryString: globals.query}
+//   });
+// }
+// if (bodyClasses.contains('saved')) {
+//   utils.dispatcher.dispatch({
+//     type: 'GET_FOLDER_CONTENTS',
+//     content: {folder: globals.currentFolder}
+//   });

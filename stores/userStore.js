@@ -2,9 +2,8 @@ const popsicle = require('popsicle');
 
 const emitter = require('event-emitter')({});
 
-const lib = require(process.env.ROOT+'/lib');
+const lib = require('../lib');
 const dispatcher = lib.dispatcher;
-const notifier = lib.notifier;
 
 var userStore = {
 

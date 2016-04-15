@@ -1,5 +1,5 @@
-var React = require('react');
-var dispatcher = require('../utils').dispatcher;
+const React = require('react');
+const dispatcher = require('../utils').dispatcher;
 
 var store = null;
 
@@ -9,7 +9,7 @@ var store = null;
  * Rendered at #account-area.
  * Should be bound with the userStore.
  */
-var AccountArea = React.createClass({
+const AccountArea = React.createClass({
   getInitialState: function() {
     store = this.props.store;
     return ({
@@ -19,12 +19,12 @@ var AccountArea = React.createClass({
   },
 
   componentWillMount: function() {
-    store.onUpdate(function() {
+    store.onUpdate(() => {
       this.setState({
         loggedIn: store.loggedIn,
         currentUser: store.userEmail
       });
-    }.bind(this));
+    });
   },
 
   logout: function(e) {
@@ -48,8 +48,14 @@ var AccountArea = React.createClass({
     } else {
       return (
         <ul className="horizontal-list">
-          <li><a href="#" data-toggle="modal" data-target="#modal-signin-form">Sign-in</a></li>
-          <li><a href="#" data-toggle="modal" data-target="#modal-signup-form">Create an account</a></li>
+          <li>
+            <a href="#" data-toggle="modal" data-target="#modal-signin-form">Sign-in</a>
+            <SigninForm />
+          </li>
+          <li>
+            <a href="#" data-toggle="modal" data-target="#modal-signup-form">Create an account</a>
+            <SignupForm />
+          </li>
         </ul>
       )
     }
