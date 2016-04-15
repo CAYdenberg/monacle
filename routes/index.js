@@ -1,6 +1,9 @@
 var express = require('express');
 var _ = require('underscore');
 
+const React = require('react');
+const reactRenderToString = require('react-dom/server').renderToString;
+
 var router = express.Router();
 
 router.get('/lens/*', function(req, res) {
@@ -41,6 +44,7 @@ router.get('/search', function(req, res) {
       }
     });
     folderStore.setAll(req.context.folders);
+    req.context.foldersHtml = reactRenderToString(<Folders store={folderStore} />);
     console.log(folderStore);
     res.render('app', req.context);
   });
