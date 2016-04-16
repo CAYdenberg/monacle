@@ -13,12 +13,28 @@ router.get('/lens/*', function(req, res) {
 
 /* GET other pages. */
 router.all('/*', function(req, res, next) {
+  req.folderStore = Object.create(require('../stores/folderStore'));
+  req.userStore = Object.create(require('../stores/userStore'));
+
   req.context = {};
 	req.context.stylesheets = ['style.css'];
 	req.context.scripts = ['script.js'];
-  req.context.globals = {};
-  req.context.globals.user = req.user;
-	next();
+
+  req.context.state = {
+    user: req.user
+  };
+  req.userStore.update(req.context.state.user);
+
+  req.db.folders.find({user: req.user}).then(function(folders) {
+    req.context.state.folders = _.map(folders, function(folder) {
+      return {
+        name: folder.name,
+        slug: folder.slug
+      }
+    });
+    req.folderStore.setAll(req.context.state.folders);
+    next();
+  });
 });
 
 router.get('/', function(req, res) {
@@ -33,25 +49,10 @@ router.get('/about', function(req, res) {
 });
 
 router.get('/search', function(req, res) {
-
-  var folderStore = Object.create(require('../stores/folderStore'));
-  var userStore = Object.create(require('../stores/userStore'));
-
   req.context.pagename = 'app search';
-  req.context.globals.query = req.query.query;
-  var folderCollection = req.db.folders;
-  folderCollection.find({user: req.user}).then(function(folders) {
-    req.context.globals.folders = _.map(folders, function(folder) {
-      return {
-        name: folder.name,
-        slug: folder.slug
-      }
-    });
-    folderStore.setAll(req.context.globals.folders);
-    userStore.update(req.user);
-    req.context.foldersHtml = ReactDOMServer.renderToString(<Folders store={folderStore} userStore={userStore} />);
-    res.render('app', req.context);
-  });
+  req.context.foldersHtml = ReactDOMServer.renderToString(<Folders store={req.folderStore} userStore={req.userStore} />);
+
+  res.render('app', req.context);
 });
 
 router.get('/profile', function(req, res) {
