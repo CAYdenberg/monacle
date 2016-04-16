@@ -4,31 +4,34 @@ const utils = require('../lib');
 const dispatcher = utils.dispatcher;
 const createTypingCallback = utils.createTypingCallback;
 
-var store = null;
-var userStore = null;
+// var store = null;
+// var userStore = null;
 
 const Folders = React.createClass({
 
+  userStore: null,
+  store: null,
+
   getInitialState: function() {
-    store = this.props.store;
-    userStore = this.props.userStore;
+    this.store = this.props.store;
+    this.userStore = this.props.userStore;
     return {
-      folders: [],
+      folders: this.store.folders,
       newFolderName: '',
-      loggedIn: userStore.loggedIn
+      loggedIn: this.userStore.loggedIn
     }
   },
 
-  componentWillMount: function() {
-    store.onUpdate(() => {
+  componentDidMount: function() {
+    this.store.onUpdate(() => {
       this.setState({
-        folders: store.folders,
+        folders: this.store.folders,
         newFolderName: ''
       });
     });
-    userStore.onUpdate(() => {
+    this.userStore.onUpdate(() => {
       this.setState({
-        loggedIn: userStore.loggedIn
+        loggedIn: this.userStore.loggedIn
       });
     });
   },

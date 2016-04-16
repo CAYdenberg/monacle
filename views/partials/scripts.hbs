@@ -1,7 +1,8 @@
-{{#each scripts}}
-	<script type="text/javascript" src="/js/{{this}}"></script>
-{{/each}}
 
 <script type="text/javascript">
 	window.globals = {{{json globals}}}
 </script>
+
+{{#each scripts}}
+	<script type="text/javascript" src="/js/{{this}}"></script>
+{{/each}}

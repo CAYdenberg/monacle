@@ -2,7 +2,8 @@ var express = require('express');
 var _ = require('underscore');
 
 const React = require('react');
-const reactRenderToString = require('react-dom/server').renderToString;
+const ReactDOMServer = require('react-dom/server');
+const Folders = require('../components/Folders');
 
 var router = express.Router();
 
@@ -32,20 +33,23 @@ router.get('/about', function(req, res) {
 });
 
 router.get('/search', function(req, res) {
+
+  var folderStore = Object.create(require('../stores/folderStore'));
+  var userStore = Object.create(require('../stores/userStore'));
+
   req.context.pagename = 'app search';
   req.context.globals.query = req.query.query;
   var folderCollection = req.db.folders;
-  var folderStore = Object.create(require('../stores/folderStore'));
   folderCollection.find({user: req.user}).then(function(folders) {
-    req.context.folders = _.map(folders, function(folder) {
+    req.context.globals.folders = _.map(folders, function(folder) {
       return {
         name: folder.name,
         slug: folder.slug
       }
     });
-    folderStore.setAll(req.context.folders);
-    req.context.foldersHtml = reactRenderToString(<Folders store={folderStore} />);
-    console.log(folderStore);
+    folderStore.setAll(req.context.globals.folders);
+    userStore.update(req.user);
+    req.context.foldersHtml = ReactDOMServer.renderToString(<Folders store={folderStore} userStore={userStore} />);
     res.render('app', req.context);
   });
 });
