@@ -18,7 +18,7 @@ const Folders = React.createClass({
     return {
       folders: this.store.folders,
       newFolderName: '',
-      loggedIn: this.userStore.loggedIn
+      loggedIn: this.userStore.userEmail
     }
   },
 
@@ -31,7 +31,7 @@ const Folders = React.createClass({
     });
     this.userStore.onUpdate(() => {
       this.setState({
-        loggedIn: this.userStore.loggedIn
+        loggedIn: this.userStore.userEmail
       });
     });
   },
@@ -45,13 +45,7 @@ const Folders = React.createClass({
   },
 
   render: function() {
-
-
-
-    if (true) {
-
-
-
+    if (this.state.userEmail) {
       return (
         <div>
           <ul className="folder-list">

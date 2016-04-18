@@ -9,8 +9,8 @@ const folderStore = require('../stores/folderStore'),
   userStore = require('../stores/userStore');
   // citationStore = require('../stores/citationStore');
 
-folderStore.setAll(globals.folders);
-userStore.update(globals.user);
+folderStore.setAll(window.monocle.folders);
+userStore.update(window.monocle.user);
 
 
 //get container components

@@ -1,5 +1,7 @@
 var express = require('express');
 var _ = require('underscore');
+const ncbi = require('node-ncbi');
+const utils = require('../utils');
 
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
@@ -20,12 +22,16 @@ router.all('/*', function(req, res, next) {
 	req.context.stylesheets = ['style.css'];
 	req.context.scripts = ['script.js'];
 
+  //add the user to the global state and populate back-end store
   req.context.state = {
     user: req.user
   };
   req.userStore.update(req.context.state.user);
 
+  //find folders and attach to request
   req.db.folders.find({user: req.user}).then(function(folders) {
+
+    //add folders to the global state and create store
     req.context.state.folders = _.map(folders, function(folder) {
       return {
         name: folder.name,
@@ -33,6 +39,10 @@ router.all('/*', function(req, res, next) {
       }
     });
     req.folderStore.setAll(req.context.state.folders);
+
+    //the Folders and Account HTML can now be rendered, even if we don't end up using them
+    req.context.foldersHtml = ReactDOMServer.renderToString(<Folders store={req.folderStore} userStore={req.userStore} />);
+
     next();
   });
 });
@@ -50,14 +60,23 @@ router.get('/about', function(req, res) {
 
 router.get('/search', function(req, res) {
   req.context.pagename = 'app search';
-  req.context.foldersHtml = ReactDOMServer.renderToString(<Folders store={req.folderStore} userStore={req.userStore} />);
+  var citationStore = Object.create(require('../stores/citationStore'));
+  var search = ncbi.createSearch(req.query.query);
+  search.getPage().then((papers) => {
+    const convertedPapers = _.map(papers, (paper) => {
+      return utils.convertPubmedRecord(paper)
+    });
+    citationStore.importItems(convertedPapers);
+    citationStore.total = parseInt(search.count());
+    console.log(citationStore);
+  });
 
   res.render('app', req.context);
 });
 
 router.get('/profile', function(req, res) {
-  var folderCollection = req.db.folders;
   req.context.pagename = 'app profile';
+  var folderCollection = req.db.folders;
   folderCollection.find({user: req.user}).then(function(folders) {
     req.context.folders = _.map(folders, function(folder) {
       return {
