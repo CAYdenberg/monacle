@@ -9,6 +9,10 @@ const folderStore = require('../stores/folderStore'),
   userStore = require('../stores/userStore');
   // citationStore = require('../stores/citationStore');
 
+folderStore.setAll(window.monocle.folders);
+userStore.update(window.monocle.user);
+
+
 //get container components
 // const CitationList = require('../components/CitationList');
 // const AccountArea = require('../components/AccountArea');
@@ -23,10 +27,7 @@ if (bodyClasses.contains('app')) {
   // ReactDOM.render(<AccountArea store={userStore} />, document.getElementById('account-area'));
   // ReactDOM.render(<SigninForm  store={userStore} />, document.getElementById('signin-form-wrapper'));
   // ReactDOM.render(<SignupForm  store={userStore} />, document.getElementById('signup-form-wrapper'));
-  ReactDOM.render(<Folders store={folderStore} userStore={userStore} />, document.getElementById('folders'));
-  utils.dispatcher.dispatch({
-    type: 'GET_FOLDERS'
-  });
+  ReactDOM.render(<Folders store={folderStore} userStore={userStore} />, document.getElementById('folders-container'));
 
   // ReactDOM.render(<CitationList citationStore={citationStore} folderStore={folderStore} />, document.getElementById('citations'));
 }
