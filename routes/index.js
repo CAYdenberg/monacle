@@ -1,11 +1,12 @@
 var express = require('express');
 var _ = require('underscore');
 const ncbi = require('node-ncbi');
-const utils = require('../utils');
+const utils = require('../lib');
 
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 const Folders = require('../components/Folders');
+// const Citations = require('../components/Citations');
 
 var router = express.Router();
 
@@ -60,18 +61,23 @@ router.get('/about', function(req, res) {
 
 router.get('/search', function(req, res) {
   req.context.pagename = 'app search';
+
   var citationStore = Object.create(require('../stores/citationStore'));
+
+  // perform a search and populate store and application state
   var search = ncbi.createSearch(req.query.query);
   search.getPage().then((papers) => {
-    const convertedPapers = _.map(papers, (paper) => {
+    req.context.state.citations = _.map(papers, (paper) => {
       return utils.convertPubmedRecord(paper)
     });
-    citationStore.importItems(convertedPapers);
-    citationStore.total = parseInt(search.count());
-    console.log(citationStore);
-  });
+    citationStore.importItems(req.context.state.citations);
+    req.context.state.totalCitations = citationStore.total = parseInt(search.count());
 
-  res.render('app', req.context);
+    //render the citations HTML
+    req.context.citationsHtml = ReactDOMServer.renderToString(<Citations store={citationStore} folderStore={req.folderStore} />);
+
+    res.render('app', req.context);
+  });
 });
 
 router.get('/profile', function(req, res) {

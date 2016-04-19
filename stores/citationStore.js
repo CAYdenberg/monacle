@@ -4,6 +4,10 @@ const popsicle = require('popsicle');
 
 const emitter = require('event-emitter')({});
 
+const utils = require('../lib');
+const dispatcher = utils.dispatcher;
+const notifier = utils.notifier;
+
 /**
  * How a single paper is represented in the store:
  {
