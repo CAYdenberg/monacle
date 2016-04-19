@@ -45,7 +45,7 @@ const Folders = React.createClass({
   },
 
   render: function() {
-    if (this.state.userEmail) {
+    if (this.state.loggedIn) {
       return (
         <div>
           <ul className="folder-list">
