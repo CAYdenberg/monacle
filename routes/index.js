@@ -6,7 +6,7 @@ const utils = require('../lib');
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 const Folders = require('../components/Folders');
-// const Citations = require('../components/Citations');
+const Citations = require('../components/Citations');
 
 var router = express.Router();
 

@@ -1,15 +1,16 @@
 const React = require('react');
-const ReactDOM = require('react-dom');
 
-const utils = require('../utils');
+const utils = require('../../lib');
 const dispatcher = utils.dispatcher;
 
 const CitationList = require('./CitationList');
-const SingleCitation = require('./SingleCitation');
+// const SingleCitation = require('./SingleCitation');
 
 const Citations = React.createClass({
+
   store: null,
-  // folderStore: null,
+  folderStore: null,
+
   getInitialState: function() {
     this.store = this.props.store;
     this.folderStore = this.props.folderStore;
@@ -19,6 +20,7 @@ const Citations = React.createClass({
       totalItems: this.store.total
     });
   },
+
   componentDidMount: function() {
     this.store.onUpdate(() => {
       this.setState({
@@ -28,18 +30,20 @@ const Citations = React.createClass({
       });
     });
   },
+
   render: function() {
+    // <div data-todo="render single citation here" />
     return (
       <div className="row">
         <div className="col-sm-12 col-md-6">
           <CitationList items={this.state.items} totalItems={this.state.totalItems} folderStore={this.folderStore} />
         </div>
         <div className="col-md-6">
-          <SingleCitation item={this.state.currentItem} folderStore={this.folderStore} />
         </div>
       </div>
     );
   }
+
 });
 
 //NOTE: the action which triggers this method also opens the accordion
@@ -75,4 +79,4 @@ const Citations = React.createClass({
 //   }
 // },
 
-module.export = Citations;
+module.exports = Citations;

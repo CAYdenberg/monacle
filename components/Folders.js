@@ -4,9 +4,6 @@ const utils = require('../lib');
 const dispatcher = utils.dispatcher;
 const createTypingCallback = utils.createTypingCallback;
 
-// var store = null;
-// var userStore = null;
-
 const Folders = React.createClass({
 
   userStore: null,

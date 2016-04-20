@@ -1,30 +1,31 @@
 var React = require('react');
 
 //subcomponents
-const CitationDetails = require('./CitationDetails');
-const ProgressBar = require('./partials/ProgressBar');
+// const CitationDetails = require('./CitationDetails');
+// const ProgressBar = require('../partials/ProgressBar');
 
 /**
 * The full list of citations, located at #citations
 * This component is exported.
 **/
-var CitationList = React.createClass({
-  render : function() {
+const CitationList = React.createClass({
+  render: function() {
     if (this.props.totalItems === 0) {
       return (
         <h2 className="nothing-found">No papers found</h2>
       );
     } else {
-      return (
-        <div className="panel-group" id="accordion">
-          {
-            this.props.items.map(function(item) {
-              return ( <Citation key={item.pmid} data={item} folderStore={this.props.folderStore} /> );
-            })
-          }
-          <LoadMoreButton nMore={this.props.totalItems - this.props.items.length} />
-        </div>
-      );
+      return (<span>ITEMS</span>);
+        // <div className="panel-group" id="accordion">
+        //   {
+        //     this.props.items.map(function(item) {
+        //       return ( <span>ITEM</span> );
+        //     })
+        //   }
+        // </div>
+
+      // return ( <Citation key={item.pmid} data={item} folderStore={this.props.folderStore} /> );
+      // <LoadMoreButton nMore={this.props.totalItems - this.props.items.length} />
     }
   }
 });
@@ -36,7 +37,6 @@ var CitationList = React.createClass({
  * Mounted by CitaionList
  */
 var Citation = React.createClass({
-
   render: function() {
     const headingId = "heading-PMID" + this.props.data.pmid;
     const collapseId = "collapse-PMID" + this.props.data.pmid;
@@ -55,11 +55,11 @@ var Citation = React.createClass({
         </a>
         <div className="panel-collapse collapse" id={collapseId}>
           <div className="panel-body">
-            <CitationDetails data={this.props.data} folderStore={folderStore} />
           </div>
         </div>
       </div>
-    )
+    );
+    // <CitationDetails data={this.props.data} folderStore={this.props.folderStore} />
   }
 });
 
