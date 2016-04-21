@@ -15,17 +15,18 @@ const CitationList = React.createClass({
         <h2 className="nothing-found">No papers found</h2>
       );
     } else {
-      return (<span>ITEMS</span>);
-        // <div className="panel-group" id="accordion">
-        //   {
-        //     this.props.items.map(function(item) {
-        //       return ( <span>ITEM</span> );
-        //     })
-        //   }
-        // </div>
-
-      // return ( <Citation key={item.pmid} data={item} folderStore={this.props.folderStore} /> );
-      // <LoadMoreButton nMore={this.props.totalItems - this.props.items.length} />
+      return (
+        <div className="citations-pane">
+          <div className="panel-group citations-panel">
+            {
+              this.props.items.map((item) => {
+                return ( <Citation key={item.pmid} data={item} folderStore={this.props.folderStore} /> );
+              })
+            }
+          </div>
+          <LoadMoreButton nMore={this.props.totalItems - this.props.items.length} />
+        </div>
+      );
     }
   }
 });
@@ -36,7 +37,7 @@ const CitationList = React.createClass({
  * and triggers the dispatcher to grab details if they aren't available.
  * Mounted by CitaionList
  */
-var Citation = React.createClass({
+const Citation = React.createClass({
   render: function() {
     const headingId = "heading-PMID" + this.props.data.pmid;
     const collapseId = "collapse-PMID" + this.props.data.pmid;
@@ -54,8 +55,7 @@ var Citation = React.createClass({
           </div>
         </a>
         <div className="panel-collapse collapse" id={collapseId}>
-          <div className="panel-body">
-          </div>
+          <div className="panel-body"></div>
         </div>
       </div>
     );
@@ -72,7 +72,7 @@ var Citation = React.createClass({
  * Figures out for itself if the store is loading results, updates itself
  * accordingly.
  **/
-var LoadMoreButton = React.createClass({
+const LoadMoreButton = React.createClass({
   render : function() {
     // if (this.state.loading) {
     //   return (
