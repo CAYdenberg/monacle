@@ -8,6 +8,10 @@ const ReactDOMServer = require('react-dom/server');
 const Folders = require('../components/Folders');
 const Citations = require('../components/Citations');
 
+const FolderStore = require('../stores/FolderStore');
+const UserStore = require('../stores/UserStore');
+const CitationStore = require('../stores/citationStore');
+
 var router = express.Router();
 
 router.get('/lens/*', function(req, res) {
@@ -16,8 +20,8 @@ router.get('/lens/*', function(req, res) {
 
 /* GET other pages. */
 router.all('/*', function(req, res, next) {
-  req.folderStore = Object.create(require('../stores/folderStore'));
-  req.userStore = Object.create(require('../stores/userStore'));
+  req.folderStore = FolderStore();
+  req.userStore = UserStore();
 
   req.context = {};
 	req.context.stylesheets = ['style.css'];
@@ -62,7 +66,7 @@ router.get('/about', function(req, res) {
 router.get('/search', function(req, res) {
   req.context.pagename = 'app search';
 
-  var citationStore = Object.create(require('../stores/citationStore'));
+  const citationStore = CitationStore();
 
   // perform a search and populate store and application state
   var search = ncbi.createSearch(req.query.query);

@@ -108,7 +108,7 @@ dispatcher.register(function(payload) {
     case 'MOVE_CITATION':
       popsicle({
         method: 'PUT',
-        url: citationStore.apiUrlBase + payload.content.data.pmid + '/',
+        url: citationStore.APIURLBASE + payload.content.data.pmid + '/',
         body: {
           addFolder: payload.content.newFolder,
           removeFolder: payload.content.oldFolder
@@ -129,7 +129,7 @@ dispatcher.register(function(payload) {
     case 'GET_FOLDERS':
       popsicle({
         method : 'GET',
-        url : folderStore.apiUrlBase
+        url : folderStore.APIURLBASE
       }).then((res) => {
         folderStore.setAll(res.body);
       });
@@ -138,7 +138,7 @@ dispatcher.register(function(payload) {
     case 'ADD_FOLDER':
       popsicle({
         method : 'POST',
-        url: folderStore.apiUrlBase,
+        url: folderStore.APIURLBASE,
         body: {
           name: payload.content.name
         }
@@ -187,7 +187,7 @@ dispatcher.register(function(payload) {
       popsicle({
         method: 'POST',
         body: {email: payload.content.email, password: payload.content.password},
-        url: userStore.apiUrlBase + 'signup/'
+        url: userStore.APIURLBASE + 'signup/'
       }).then((res) => {
         if (res.status === 200) {
           userStore.update(res.body.email);

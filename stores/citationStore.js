@@ -54,7 +54,6 @@ const CitationStore = {
     });
     this.sortItems();
     emitter.emit('UPDATE');
-    console.log(this);
   },
 
   setTotal: function(total) {
