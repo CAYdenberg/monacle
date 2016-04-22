@@ -1,12 +1,5 @@
 const _ = require('underscore');
-const ncbi = require('node-ncbi');
-const popsicle = require('popsicle');
-
 const emitter = require('event-emitter')({});
-
-const utils = require('../lib');
-const dispatcher = utils.dispatcher;
-const notifier = utils.notifier;
 
 /**
  * How a single paper is represented in the store:
@@ -21,15 +14,9 @@ const notifier = utils.notifier;
  }
  */
 
-var citationStore = {
-  items: [],
+const CitationStore = {
 
-  index: [],
-
-  //this is different from this.items.length as it is agnostic whether all items are loaded:
-  total: null,
-
-  apiUrlBase: "/citations",
+  APIURLBASE: "/citations",
 
   onUpdate: function(callback) {
     emitter.on('UPDATE', callback);
@@ -105,124 +92,12 @@ var citationStore = {
 
 }
 
-dispatcher.register(function(payload) {
-  switch (payload.type) {
-
-    case 'NEW_SEARCH':
-      var search = ncbi.createSearch(payload.content.queryString);
-      search.getPage().then(function(papers) {
-        citationStore.total = parseInt(search.count());
-        citationStore.importItems(papers);
-      }).catch(function(err) {
-        notifier.create({
-          class: 'danger',
-          message: 'Cannot connect to NCBI',
-          payload: payload
-        });
-        console.log(err);
-      });
-      break;
-
-    case 'LOAD_MORE':
-      if ( citationStore.items.length < citationStore.total ) {
-        search.nextPage().then(function(papers) {
-          citationStore.importItems(papers);
-        });
-      }
-      break;
-
-    case 'GET_DETAILS':
-      ncbi.createCitation(payload.content.pmid).abstract().then(function(abstract) {
-        citationStore.updateItem(payload.content.pmid, {abstract: abstract});
-      });
-      break;
 
 
-    case 'GET_FOLDER_CONTENTS':
-      popsicle({
-        method: 'GET',
-        url: '/folders/' + payload.content.folder + '/'
-      }).then(function(res) {
-        if (res.status === 200) {
-          citationStore.importItems(res.body);
-          citationStore.total = citationStore.items.length;
-        }
-      }, function(err) {
-        console.log(err);
-        notifier.create({
-          class: 'danger',
-          message: 'Cannot retrieve papers at this time',
-          payload: payload
-        });
-      });
-      break;
-
-    case 'SAVE_CITATION':
-      popsicle({
-        method: 'POST',
-        url: '/folders/' + payload.content.folder + '/',
-        body: payload.content.data
-      }).then(function(res) {
-
-        switch (res.status) {
-          case 200:
-            notifier.create({
-              class: 'success',
-              message: 'Paper added to folder',
-              autodismiss: true
-            });
-            break;
-
-          case 400:
-            notifier.create({
-              class: 'warning',
-              message: 'That paper is already in that folder'
-            });
-            break;
-
-          case 404:
-            notifier.create({
-              class: 'danger',
-              message: 'Cannot complete action'
-            });
-            break;
-        }
-
-      }, function(err) {
-        console.log(err);
-        notifier.create({
-          class: 'danger',
-          message: 'Cannot add paper at this time',
-          payload: payload
-        });
-      })
-      break;
-
-    case 'MOVE_CITATION':
-      popsicle({
-        method: 'PUT',
-        url: citationStore.apiUrlBase + payload.content.data.pmid + '/',
-        body: {
-          addFolder: payload.content.newFolder,
-          removeFolder: payload.content.oldFolder
-        }
-      }).then(function(res) {
-        citationStore.saveCitationNotice(res);
-        citationStore.deleteItem(payload.content.data.pmid);
-      }, function(err) {
-        console.log(err);
-        notifier.create({
-          class: 'danger',
-          message: 'Cannot add paper at this time',
-          payload: payload
-        });
-      });
-      break;
-
-    default:
-      break;
-
-  }
-});
-
-module.exports = citationStore;
+module.exports = () => {
+  const citationStore = Object.create(CitationStore);
+  citationStore.items = [];
+  citationStore.index = [];
+  citationStore.total = null;
+  return citationStore;
+}

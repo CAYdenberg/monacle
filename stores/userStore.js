@@ -1,17 +1,9 @@
-const popsicle = require('popsicle');
-
 const emitter = require('event-emitter')({});
 
-const lib = require('../lib');
-const dispatcher = lib.dispatcher;
 
-var userStore = {
+const UserStore = {
 
-  apiUrlBase: '/user/',
-
-  loginError: '',
-
-  userEmail: null,
+  APIURLBASE: '/user/',
 
   onUpdate: function(callback) {
     emitter.on('UPDATE', callback);
@@ -32,63 +24,16 @@ var userStore = {
     emitter.emit('UPDATE');
   },
 
-  login: function(email, password) {
-    popsicle({
-      method: 'POST',
-      body: {email: email, password: password},
-      url: userStore.apiUrlBase + 'signin/'
-    }).then((res) => {
-      if (res.status === 200) {
-        this.update(res.body.email);
-      } else {
-        this.loginError = "Email address and password do not match";
-        emitter.emit('ERROR');
-      }
-    });
-  },
-
-  create: function(email, password) {
-    popsicle({
-      method: 'POST',
-      body: {email: email, password: password},
-      url: userStore.apiUrlBase + 'signup/'
-    }).then((res) => {
-      if (res.status === 200) {
-        this.update(res.body.email);
-      } else {
-        //create an error
-      }
-    });
-  },
-
-  logout: function() {
-    popsicle({
-      method: 'GET',
-      url: userStore.apiUrlBase + '/logout/'
-    }).then((res) => {
-      this.update(res.body.email);
-    });
+  setLoginError: function(message) {
+    this.loginError = message;
+    emitter.emit('ERROR');
   }
 
 }
 
-dispatcher.register((payload) => {
-  switch (payload.type) {
-    case 'LOG_IN':
-      userStore.login(payload.content.email, payload.content.password);
-      break;
-
-    case 'LOG_OUT':
-      userStore.logout();
-      break;
-
-    case 'CREATE_USER':
-      userStore.create(payload.content.email, payload.content.password);
-      break;
-
-    default:
-      break;
-  }
-});
-
-module.exports = userStore;
+module.exports = () => {
+  const userStore = Object.create(UserStore);
+  userStore.loginError = null;
+  userStore.userEmail = null;
+  return userStore;
+}
