@@ -9,10 +9,10 @@ const stores = require('../stores');
 
 stores.folderStore.setAll(window.monocle.folders);
 stores.userStore.update(window.monocle.user);
-
+stores.citationStore.importItems(window.monocle.citations);
 
 // get container components
-// const CitationList = require('../components/CitationList');
+const Citations = require('../components/Citations');
 // const AccountArea = require('../components/AccountArea');
 // const SigninForm = require('../components/SigninForm');
 // const SignupForm = require('../components/SignupForm');
@@ -27,9 +27,11 @@ if (bodyClasses.contains('app')) {
   // ReactDOM.render(<SignupForm  store={userStore} />, document.getElementById('signup-form-wrapper'));
   ReactDOM.render(<Folders store={stores.folderStore} userStore={stores.userStore} />, document.getElementById('folders-container'));
 
-  // ReactDOM.render(<CitationList citationStore={citationStore} folderStore={folderStore} />, document.getElementById('citations'));
+
+  if (bodyClasses.contains('search')) {
+    ReactDOM.render(<Citations store={stores.citationStore} folderStore={stores.folderStore} />, document.getElementById('citations-wrapper'));
+  }
 }
-// if (bodyClasses.contains('search')) {
 //   utils.dispatcher.dispatch({
 //     type: 'NEW_SEARCH',
 //     content: {queryString: globals.query}

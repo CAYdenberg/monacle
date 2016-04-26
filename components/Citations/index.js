@@ -14,6 +14,7 @@ const Citations = React.createClass({
   getInitialState: function() {
     this.store = this.props.store;
     this.folderStore = this.props.folderStore;
+    console.log(this);
     return ({
       items: this.store.items,
       currentItem: null,
@@ -31,12 +32,25 @@ const Citations = React.createClass({
     });
   },
 
+  openCitation: function(pmid) {
+    this.setState({
+      currentItem: this.store.getItem(pmid)
+    });
+  },
+
   render: function() {
     // <div data-todo="render single citation here" />
+    // openCitation={this.openCitation}
     return (
       <div className="row">
         <div className="col-sm-12 col-md-6">
-          <CitationList items={this.state.items} totalItems={this.state.totalItems} folderStore={this.folderStore} />
+          <CitationList
+            items={this.state.items}
+            currentItem={this.state.currentItem}
+            totalItems={this.state.totalItems}
+            openCitation={this.openCitation}
+            folderStore={this.folderStore}
+          />
         </div>
         <div className="col-md-6">
         </div>

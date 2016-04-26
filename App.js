@@ -61,7 +61,7 @@ module.exports = function(config) {
     }
 
     // TEMPORARY: MOCK OVER THE USER VARIABLE SO WE CAN TEST THIS FUCKING THING
-    req.user = 'ydenberg@gmail.com';
+    req.user = 'user@gmail.com';
 
     next();
   });

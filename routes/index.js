@@ -78,7 +78,7 @@ router.get('/search', function(req, res) {
     req.context.state.totalCitations = citationStore.total = parseInt(search.count());
 
     //render the citations HTML
-    req.context.citationsHtml = ReactDOMServer.renderToString(<Citations store={citationStore} folderStore={req.folderStore} />);
+    // req.context.citationsHtml = ReactDOMServer.renderToString(<Citations store={citationStore} folderStore={req.folderStore} />);
 
     res.render('app', req.context);
   });

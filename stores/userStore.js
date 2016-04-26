@@ -32,8 +32,8 @@ const UserStore = {
 }
 
 module.exports = () => {
-  const userStore = Object.create(UserStore);
-  userStore.loginError = null;
-  userStore.userEmail = null;
-  return userStore;
+  return Object.assign(Object.create(UserStore), {
+    loginError: null,
+    userEmail: null
+  });
 }

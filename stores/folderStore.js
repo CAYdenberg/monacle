@@ -20,8 +20,8 @@ const FolderStore = {
 }
 
 module.exports = () => {
-  const folderStore = Object.create(FolderStore);
-  folderStore.folders = [];
-  folderStore.currentFolder = null;
-  return folderStore;
+  return Object.assign(Object.create(FolderStore), {
+    folders: [],
+    currentFolder: null
+  });
 }

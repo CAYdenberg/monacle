@@ -91,12 +91,10 @@ const CitationStore = {
 
 }
 
-
-
 module.exports = () => {
-  const citationStore = Object.create(CitationStore);
-  citationStore.items = [];
-  citationStore.index = [];
-  citationStore.total = null;
-  return citationStore;
+  return Object.assign(Object.create(CitationStore), {
+    items: [],
+    index: [],
+    total: null
+  });
 }

@@ -2,16 +2,15 @@ var React = require('react');
 var _ = require('underscore');
 
 //required components
-var CitationControls = require('./CitationControls');
-
-var ProgressBar = require('./partials/ProgressBar.js');
+const CitationControls = require('./CitationControls');
+const ProgressBar = require('../partials/ProgressBar');
 
 /**
  * Of the details of a citation.
  * Rendered by Citation and SingleCitation.
  * Sets the reference to the folder store so that it can be used to show the select.
  */
-var CitationDetails = React.createClass({
+const CitationDetails = React.createClass({
   render: function() {
     if (_.isNull(this.props.data.abstract)) {
       return (
@@ -39,7 +38,7 @@ var CitationDetails = React.createClass({
  * Displayed ONLY if there is a PMC identifier (best way we have right now of
 telling if article is open access)
  */
-var LensLink = React.createClass({
+const LensLink = React.createClass({
   render: function() {
     if (this.props.link) {
       return (

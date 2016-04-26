@@ -1,7 +1,7 @@
 var React = require('react');
 
 //subcomponents
-// const CitationDetails = require('./CitationDetails');
+const CitationDetails = require('./CitationDetails');
 // const ProgressBar = require('../partials/ProgressBar');
 
 /**
@@ -20,7 +20,14 @@ const CitationList = React.createClass({
           <div className="panel-group citations-panel">
             {
               this.props.items.map((item) => {
-                return ( <Citation key={item.pmid} data={item} folderStore={this.props.folderStore} /> );
+                return (
+                  <Citation
+                    key={item.pmid}
+                    data={item}
+                    folderStore={this.props.folderStore}
+                    openCitation={this.props.openCitation}
+                  />
+                );
               })
             }
           </div>
@@ -39,12 +46,10 @@ const CitationList = React.createClass({
  */
 const Citation = React.createClass({
   render: function() {
-    const headingId = "heading-PMID" + this.props.data.pmid;
-    const collapseId = "collapse-PMID" + this.props.data.pmid;
     return (
       <div className="panel panel-info">
-        <a href="#" onClick={this.toggleDetails} data-toggle="collapse" data-parent="#accordion" data-target={"#" + collapseId}>
-          <div className="panel-heading" id={headingId}>
+        <a href="#">
+          <div className="panel-heading">
             <h4>
               {this.props.data.pubmedSummary.title}
             </h4>
@@ -54,12 +59,13 @@ const Citation = React.createClass({
             </h5>
           </div>
         </a>
-        <div className="panel-collapse collapse" id={collapseId}>
-          <div className="panel-body"></div>
+        <div className="panel-collapse collapse in">
+          <div className="panel-body">
+            <CitationDetails data={this.props.data} folderStore={this.props.folderStore} />
+          </div>
         </div>
       </div>
     );
-    // <CitationDetails data={this.props.data} folderStore={this.props.folderStore} />
   }
 });
 
