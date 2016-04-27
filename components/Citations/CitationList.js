@@ -26,12 +26,12 @@ const CitationList = React.createClass({
                     data={item}
                     folderStore={this.props.folderStore}
                     openCitation={this.props.openCitation}
+                    isCurrent={(item === this.props.currentItem)}
                   />
                 );
               })
             }
           </div>
-          <LoadMoreButton nMore={this.props.totalItems - this.props.items.length} />
         </div>
       );
     }
@@ -45,10 +45,14 @@ const CitationList = React.createClass({
  * Mounted by CitaionList
  */
 const Citation = React.createClass({
+  open: function() {
+    this.props.openCitation(this.props.data.pmid);
+  },
+
   render: function() {
     return (
       <div className="panel panel-info">
-        <a href="#">
+        <a href="#" onClick={this.open}>
           <div className="panel-heading">
             <h4>
               {this.props.data.pubmedSummary.title}
@@ -59,41 +63,13 @@ const Citation = React.createClass({
             </h5>
           </div>
         </a>
-        <div className="panel-collapse collapse in">
+        <div className={'panel-collapse collapse ' + (this.props.isCurrent ? 'in' : '')}>
           <div className="panel-body">
             <CitationDetails data={this.props.data} folderStore={this.props.folderStore} />
           </div>
         </div>
       </div>
     );
-  }
-});
-
-/**
- * Displayed at the end of the citation list.
- * Shows a progress bar if the store is currently loading,
- * an end of results message if there are no more results,
- * and a link to load more results if there are more results.
- * Rendered by CitationList, passed the number of remaining results.
- * Figures out for itself if the store is loading results, updates itself
- * accordingly.
- **/
-const LoadMoreButton = React.createClass({
-  render : function() {
-    // if (this.state.loading) {
-    //   return (
-    //     <ProgressBar />
-    //   );
-    // } else
-    if (!this.props.nMore) {
-      return (
-        <span className="results-end">End of results</span>
-      )
-    } else {
-      return (
-        <a href="#" onClick={this.loadMore}>Load more ...</a>
-      );
-    }
   }
 });
 

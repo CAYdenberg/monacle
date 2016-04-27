@@ -1,10 +1,9 @@
 var React = require('react');
 
-var utils = require('../utils');
+var utils = require('../../lib');
 var dispatcher = utils.dispatcher;
 
 //store references
-var folderStore = null;
 
 /**
 * Menu of folders to save citation to. Triggers save method in folder store (via the Dispatcher)
@@ -13,22 +12,23 @@ var folderStore = null;
 * but dumb with respect to citations (passed the data from SingleCitation or CitationList/Citation).
 */
 var CitationControls = React.createClass({
+  store: null,
 
   getInitialState: function() {
-    folderStore = this.props.folderStore;
+    this.store = this.props.folderStore;
     return ({
-      folders: folderStore.folders,
-      currentFolder: folderStore.currentFolder
+      folders: this.store.folders,
+      currentFolder: this.store.currentFolder
     });
   },
 
   componentWillMount: function() {
-    folderStore.onUpdate(function() {
+    this.store.onUpdate(() => {
       this.setState({
-        folders: folderStore.folders,
-        currentFolder: folderStore.currentFolder
+        folders: this.tore.folders,
+        currentFolder: this.store.currentFolder
       });
-    }.bind(this));
+    });
   },
 
   render: function() {
@@ -49,7 +49,7 @@ var CitationControls = React.createClass({
   }
 });
 
-var MoveMenu = React.createClass({
+const MoveMenu = React.createClass({
   saveCitation: function(e) {
     var newFolder = e.target.value;
     var oldFolder = this.props.currentFolder;
@@ -79,7 +79,7 @@ var MoveMenu = React.createClass({
   }
 });
 
-var SaveMenu = React.createClass({
+const SaveMenu = React.createClass({
   getInitialState: function() {
     return ({
       currentFolder: ''

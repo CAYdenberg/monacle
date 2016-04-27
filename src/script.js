@@ -9,7 +9,12 @@ const stores = require('../stores');
 
 stores.folderStore.setAll(window.monocle.folders);
 stores.userStore.update(window.monocle.user);
+
+//TODO: this hydration is awkward and needs to be handled better,
+//possibly within node-ncbi
 stores.citationStore.importItems(window.monocle.citations);
+stores.citationStore.total = window.monocle.totalCitations;
+stores.citationStore.page = 1;
 
 // get container components
 const Citations = require('../components/Citations');

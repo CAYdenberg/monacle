@@ -20,6 +20,7 @@ dispatcher.register(function(payload) {
       search.getPage().then(function(papers) {
         citationStore.total = parseInt(search.count());
         citationStore.importItems(papers);
+        citationStore.page++;
       }).catch(function(err) {
         notifier.create({
           class: 'danger',
@@ -31,11 +32,10 @@ dispatcher.register(function(payload) {
       break;
 
     case 'LOAD_MORE':
-      if ( citationStore.items.length < citationStore.total ) {
-        search.nextPage().then(function(papers) {
-          citationStore.importItems(papers);
-        });
-      }
+      search.getPage(citationStore.page).then(function(papers) {
+        citationStore.importItems(papers);
+        citationStore.page++;
+      });
       break;
 
     case 'GET_DETAILS':

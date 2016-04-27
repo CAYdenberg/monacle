@@ -87,6 +87,10 @@ const CitationStore = {
     this.items.splice(index, 1);
     this.createIndex();
     emitter.emit('UPDATE');
+  },
+
+  nMore: function() {
+    return (this.total - this.items.length);
   }
 
 }
@@ -95,6 +99,7 @@ module.exports = () => {
   return Object.assign(Object.create(CitationStore), {
     items: [],
     index: [],
+    page: 0,
     total: null
   });
 }

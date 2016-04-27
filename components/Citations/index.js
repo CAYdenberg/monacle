@@ -4,7 +4,7 @@ const utils = require('../../lib');
 const dispatcher = utils.dispatcher;
 
 const CitationList = require('./CitationList');
-// const SingleCitation = require('./SingleCitation');
+const SingleCitation = require('./SingleCitation');
 
 const Citations = React.createClass({
 
@@ -14,11 +14,12 @@ const Citations = React.createClass({
   getInitialState: function() {
     this.store = this.props.store;
     this.folderStore = this.props.folderStore;
-    console.log(this);
     return ({
       items: this.store.items,
       currentItem: null,
-      totalItems: this.store.total
+      totalItems: this.store.total,
+      loading: false,
+      more: (this.store.nMore() > 0)
     });
   },
 
@@ -27,14 +28,29 @@ const Citations = React.createClass({
       this.setState({
         items: this.store.items,
         //the number of results remaining:
-        totalItems: this.store.total
+        totalItems: this.store.total,
+        loading: false
       });
     });
   },
 
   openCitation: function(pmid) {
+    const item = this.store.getItem(pmid);
     this.setState({
-      currentItem: this.store.getItem(pmid)
+      currentItem: item
+    });
+    if (!item.abstract) {
+      dispatcher.dispatch({
+        type: 'GET_DETAILS',
+        content: {pmid: pmid}
+      });
+    }
+  },
+
+  loadMore: function() {
+    this.setState({loading: true});
+    dispatcher.dispatch({
+      type: 'LOAD_MORE'
     });
   },
 
@@ -51,8 +67,17 @@ const Citations = React.createClass({
             openCitation={this.openCitation}
             folderStore={this.folderStore}
           />
+          <LoadMoreButton
+            loading={this.state.loading}
+            more={this.state.more}
+            loadMore={this.loadMore}
+          />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-6 hidden-sm hidden-xs">
+          <SingleCitation
+            data={this.state.currentItem}
+            folderStore={this.folderStore}
+          />
         </div>
       </div>
     );
@@ -60,37 +85,31 @@ const Citations = React.createClass({
 
 });
 
-//NOTE: the action which triggers this method also opens the accordion
-// toggleDetails : function(e) {
-//   e.preventDefault();
-//   //kill and then re-render the single citation area
-//   if (!this.props.data.abstract) {
-//     //... then lets go get it
-//     dispatcher.dispatch({
-//       type: 'GET_DETAILS',
-//       content: {pmid: this.props.data.pmid}
-//     });
-//   }
-// },
-// componentWillMount : function() {
-//   store.onUpdate(function() {
-//     this.setState({loading: false});
-//   }.bind(this));
-// },
-// loadMore : function(e) {
-//   e.preventDefault();
-//   if (this.props.nMore > 0) {
-//     this.setState({loading: true});
-//     dispatcher.dispatch({
-//       type: 'LOAD_MORE',
-//       content: {queryString: window.globals.query}
-//     });
-//   }
-// },
-// getInitialState : function() {
-//   return {
-//     loading : true
-//   }
-// },
+/**
+ * Displayed at the end of the citation list.
+ * Shows a progress bar if the store is currently loading,
+ * an end of results message if there are no more results,
+ * and a link to load more results if there are more results.
+ * Rendered by CitationList, passed the number of remaining results.
+ * Figures out for itself if the store is loading results, updates itself
+ * accordingly.
+ **/
+const LoadMoreButton = React.createClass({
+  render : function() {
+    if (this.props.loading) {
+      return (
+        <ProgressBar />
+      );
+    } else if (!this.props.more) {
+      return (
+        <span className="results-end">End of results</span>
+      )
+    } else {
+      return (
+        <a href="#" onClick={this.loadMore}>Load more ...</a>
+      );
+    }
+  }
+});
 
 module.exports = Citations;

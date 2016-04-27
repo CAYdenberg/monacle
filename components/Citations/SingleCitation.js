@@ -1,13 +1,7 @@
-var React = require('react');
-
-var utils = require('../utils');
-
-//bind to stores
-var store = null;
-var folderStore = null;
+const React = require('react');
 
 //subcomponents
-var CitationDetails = require('./CitationDetails.js');
+const CitationDetails = require('./CitationDetails');
 
 /**
  * Rendered at #single-citation BY the Citation component.
@@ -15,32 +9,27 @@ var CitationDetails = require('./CitationDetails.js');
  * It has direct access to the citation store, where it grabs data for a particular
  * citation, based on its pmid property.
  */
-var SingleCitation = React.createClass({
-  getInitialState: function() {
-    store = this.props.store;
-    folderStore = this.props.folderStore;
-    return {
-      data: store.getItem(this.props.pmid)
-    }
-  },
-  citationsUpdated: function() {
-    this.setState({data: store.getItem(this.props.pmid)});
-  },
-  componentWillMount: function() {
-    store.onUpdate(this.citationsUpdated);
-  },
-  componentWillUnmount: function() {
-    store.offUpdate(this.citationsUpdated);
-  },
+const SingleCitation = React.createClass({
+
   render: function() {
-    return (
-      <div>
-        <h5><span className="year">{utils.formatYear(this.state.data.pubmedSummary.pubdate)}</span></h5>
-        <h4>{this.state.data.pubmedSummary.title}</h4>
-        <h5 className="author-list">{utils.formatAuthorList(this.state.data.pubmedSummary.authors)}</h5>
-        <CitationDetails data={this.state.data} folderStore={folderStore} />
-      </div>
-    )
+    if (this.props.data) {
+
+      return (
+        <div>
+          <h5><span className="year">{this.props.data.year}</span></h5>
+          <h4>{this.props.data.pubmedSummary.title}</h4>
+          <h5 className="author-list">{this.props.data.authorStr}</h5>
+          <CitationDetails data={this.props.data} folderStore={this.props.folderStore} />
+        </div>
+      )
+
+    } else {
+
+      return (
+        <div />
+      );
+
+    }
   }
 });
 
