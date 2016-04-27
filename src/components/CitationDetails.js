@@ -44,7 +44,7 @@ var LensLink = React.createClass({
     if (this.props.link) {
       return (
         <div className="margin-vertical">
-          <a href={"/lens/" + this.props.link} target="_blank" className="btn btn-success">
+          <a href={"/lens/PMC" + this.props.link} target="_blank" className="btn btn-success">
             <span className="icon-lens"></span> View in Lens
           </a>
         </div>
