@@ -9,7 +9,6 @@ var uglify = require('gulp-uglify');
 var less = require('gulp-less-sourcemap');
 var minifyCSS = require('gulp-minify-css');
 var concat = require('gulp-concat');
-var sourcemaps = require('gulp-sourcemaps');
 var gutil = require('gulp-util');
 
 var config = require('./config.js');
@@ -63,16 +62,14 @@ gulp.task('lint', function() {
 
 gulp.task('js', function () {
   // set up the browserify instance on a task basis
-  var b = browserify({
-    entries: ['./src/script.js'],
-    debug: true
-  }).transform("babelify", {presets: ['es2015', 'react']});
+  var b = browserify('./src/script.js')
+    .transform("babelify", {presets: ['es2015', 'react']});
 
   if (config.env === 'development') {
     return b.bundle()
       .pipe(source('script.js'))
       .pipe(buffer())
-      .pipe(sourcemaps.init({loadMaps: true}))
+      .on('error', gutil.log)
       .pipe(gulp.dest('./dist/js'))
       .pipe(browserSync.stream());
   } else {

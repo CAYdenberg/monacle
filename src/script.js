@@ -1,4 +1,5 @@
-/** @jsx React.DOM */
+window.jQuery = require('jquery');
+require('bootstrap/dist/js/npm.js');
 
 var React = require('react');
 var ReactDOM = require('react-dom');
