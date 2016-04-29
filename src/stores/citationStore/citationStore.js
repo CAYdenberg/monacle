@@ -21,13 +21,20 @@ var dispatcher = utils.dispatcher;
 
 function CitationStore() {
 
+
   this.items = [];
   this.index = [];
   this.total = null; //this is different from this.items.length as it is agnostic whether all items are loaded
   this.apiUrlBase = '/citations/';
 
+  var o = this;
+
   dispatcher.register(function(payload) {
     switch (payload.type) {
+
+      case 'GET_DETAILS':
+        //get citing papers here
+        break;
 
       default:
         return true;

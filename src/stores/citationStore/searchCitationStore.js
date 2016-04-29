@@ -7,6 +7,8 @@ var notifier = utils.notifier;
 
 var Parent = require('./citationStore.js');
 
+const RESULTS_PER_PAGE = 10;
+
 function CitationStore() {
 
   Parent.constructor.call(this);
@@ -16,9 +18,12 @@ function CitationStore() {
     switch (payload.type) {
 
       case 'NEW_SEARCH':
-        ncbi.pubmedSearch(payload.content.queryString).then(function(data) {
-          o.total = parseInt(data.count, 10);
-          o.importItems(data.papers);
+        var search = ncbi.createSearch(payload.content.queryString, {
+          resultsPerPage: RESULTS_PER_PAGE
+        });
+        search.search().then(function(data) {
+          o.total = parseInt(search.count(), 10);
+          o.importItems(data);
         }).catch(function(err) {
           notifier.create({
             class: 'danger',
@@ -31,19 +36,22 @@ function CitationStore() {
 
       case 'LOAD_MORE':
         if ( o.items.length < o.total ) {
-          ncbi.pubmedSearch(payload.content.queryString, {
-            start: o.items.length,
-            end: o.items.length + 10
-          }).then(function(data) {
-            o.importItems(data.papers);
+          const page = Math.floor(o.items.length / RESULTS_PER_PAGE);
+          ncbi.createSearch(payload.content.queryString, {
+            resultsPerPage: RESULTS_PER_PAGE
+          }).getPage(page).then(function(data) {
+            o.importItems(data);
           });
         }
         break;
 
       case 'GET_DETAILS':
-        ncbi.getAbstract(payload.content.pmid).then(function(data) {
-          o.updateItem(payload.content.pmid, {abstract: data});
-        });
+        //retrieve abstract from NCBI if we don't already have it
+        if (!o.getItem(payload.content.pmid).abstract) {
+          ncbi.createCitation(payload.content.pmid).abstract().then(function(data) {
+            o.updateItem(payload.content.pmid, {abstract: data});
+          });
+        }
         break;
 
     }

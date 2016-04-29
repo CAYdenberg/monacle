@@ -6,6 +6,7 @@ var CitationControls = require('./CitationControls');
 
 var ProgressBar = require('./partials/ProgressBar.js');
 
+
 /**
  * Of the details of a citation.
  * Rendered by Citation and SingleCitation.

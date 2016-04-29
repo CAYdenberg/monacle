@@ -68,13 +68,10 @@ var Citation = React.createClass({
     //kill and then re-render the single citation area
     ReactDOM.unmountComponentAtNode(document.getElementById('single-citation'));
     ReactDOM.render(<SingleCitation pmid={this.props.data.pmid} store={store} folderStore={folderStore} />, document.getElementById('single-citation'));
-    if (!this.props.data.abstract) {
-      //... then lets go get it
-      dispatcher.dispatch({
-        type: 'GET_DETAILS',
-        content: {pmid: this.props.data.pmid}
-      });
-    }
+    dispatcher.dispatch({
+      type: 'GET_DETAILS',
+      content: {pmid: this.props.data.pmid}
+    });
   },
   render: function() {
     var headingId = "heading-PMID" + this.props.data.pmid;
