@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var ncbi = require('node-ncbi');
+var pubmed = require('node-ncbi').pubmed;
 var utils = require('../../utils');
 
 var dispatcher = utils.dispatcher;
@@ -16,7 +16,7 @@ function CitationStore() {
     switch (payload.type) {
 
       case 'NEW_SEARCH':
-        ncbi.pubmedSearch(payload.content.queryString).then(function(data) {
+        pubmed.search(payload.content.queryString).then(function(data) {
           o.total = parseInt(data.count, 10);
           o.importItems(data.papers);
         }).catch(function(err) {
@@ -31,17 +31,14 @@ function CitationStore() {
 
       case 'LOAD_MORE':
         if ( o.items.length < o.total ) {
-          ncbi.pubmedSearch(payload.content.queryString, {
-            start: o.items.length,
-            end: o.items.length + 10
-          }).then(function(data) {
+          pubmed.search(payload.content.queryString, (o.items.length / 10)).then(function(data) {
             o.importItems(data.papers);
           });
         }
         break;
 
       case 'GET_DETAILS':
-        ncbi.getAbstract(payload.content.pmid).then(function(data) {
+        pubmed.abstract(payload.content.pmid).then(function(data) {
           o.updateItem(payload.content.pmid, {abstract: data});
         });
         break;
