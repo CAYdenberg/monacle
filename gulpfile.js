@@ -1,53 +1,24 @@
 'use strict';
 
-var browserify = require('browserify');
+require('dotenv').config();
+
 var gulp = require('gulp');
-var rename = require('gulp-rename');
-var source = require('vinyl-source-stream');
-var buffer = require('vinyl-buffer');
-var uglify = require('gulp-uglify');
-var less = require('gulp-less-sourcemap');
-var minifyCSS = require('gulp-minify-css');
-var concat = require('gulp-concat');
 var gutil = require('gulp-util');
 
-var config = require('./config.js');
-
 //dev-dependencies
-if (config.env === 'development') {
+if (process.env.ENV === 'development') {
   var browserSync = require('browser-sync');
   var nodemon = require('gulp-nodemon');
   var eslint = require('gulp-eslint');
   var mocha = require('gulp-mocha');
 }
 
-
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-* BUILD VENDOR FILES AND SEND TO DIST FOLDER
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-gulp.task('lens-css', function() {
-  var file = './node_modules/lens-starter/lens.css';
-  return gulp.src(file)
-    .pipe(gulp.dest('./dist/css/'));
-});
-
-gulp.task('lens-js', function() {
-  var files = ['./node_modules/lens-starter/lens.js'];
-  return gulp.src(files)
-    .pipe(concat('lens.js'))
-    .pipe(gulp.dest('./dist/js/'));
-});
-
-gulp.task('lens', ['lens-css', 'lens-js']);
-
-
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 * PRINCIPLE BUILD TASKS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 gulp.task('lint', function() {
-  if (config.env === 'development') {
+  if (process.env.env === 'development') {
     return gulp.src(['**/*.js','!node_modules/**', '!dist/**'])
       // eslint() attaches the lint output to the "eslint" property
       // of the file object so it can be used by other modules.
@@ -58,54 +29,15 @@ gulp.task('lint', function() {
   } else {
     return true;
   }
-})
+});
 
 gulp.task('js', function () {
-  // set up the browserify instance on a task basis
-  var b = browserify('./src/script.js')
-    .transform("babelify", {presets: ['es2015', 'react']});
-
-  if (config.env === 'development') {
-    return b.bundle()
-      .pipe(source('script.js'))
-      .pipe(buffer())
-      .on('error', gutil.log)
-      .pipe(gulp.dest('./dist/js'))
-      .pipe(browserSync.stream());
-  } else {
-    return b.bundle()
-      .pipe(source('script.js'))
-      .pipe(buffer())
-      .pipe(uglify().on('error', gutil.log))
-      .pipe(gulp.dest('./dist/js'));
-  }
+  return true
 });
 
 gulp.task('css', function() {
-  if (config.env === 'development') {
-    return gulp.src('./src/main.less')
-      .pipe(rename('style'))
-      .pipe(rename({extname : '.css'}))
-      .pipe(less())
-      .on('error', gutil.log)
-      .pipe(gulp.dest('./dist/css'))
-      .pipe(browserSync.stream());
-  } else {
-    return gulp.src('./src/main.less')
-      .pipe(rename('style'))
-      .pipe(rename({extname : '.css'}))
-      .pipe(less())
-      .on('error', gutil.log)
-      .pipe(minifyCSS())
-      .pipe(gulp.dest('./dist/css'));
-  }
+  return true
 });
-
-//do everything
-gulp.task('build', ['lint', 'js', 'css', 'vendor-js']);
-
-//default. Just the primary (non-vendor) CSS and JS
-gulp.task('default', ['lint', 'js', 'css']);
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~

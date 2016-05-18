@@ -2,7 +2,7 @@ node_modules/*
 bower_components/*
 npm-debug.log
 
-config.js
+.env
 dist/css/*
 dist/js/*
 data/*

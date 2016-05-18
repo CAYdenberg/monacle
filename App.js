@@ -5,25 +5,12 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var hbs = require('express-hbs');
 
-var passport = require('passport');
-var expressSession = require('express-session');
-
 var routes = require('./routes/index');
-var user = require('./routes/user');
-var folders = require('./routes/folders');
-var citations = require('./routes/citations');
+var api = require('./routes/api');
 
-module.exports = function(config) {
+module.exports = function() {
 
   var app = express();
-  config = config || require('./config');
-
-  // Make our db accessible to our router
-  var db = require('./db')(config.dbConnect);
-  app.use(function(req, res, next){
-    req.db = db;
-    next();
-  });
 
   // view engine setup
   app.engine('hbs', hbs.express3({
@@ -42,26 +29,8 @@ module.exports = function(config) {
   app.use(cookieParser());
   app.use(express.static(path.join(__dirname, 'dist')));
 
-  app.use(expressSession({
-      secret : config.secretKey,
-      resave : true,
-      saveUninitialized : false
-  }));
-  app.use(passport.initialize());
-  app.use(passport.session());
-  app.use(function(req, res, next) {
-    if (req.session.passport.user) {
-      req.user = req.session.passport.user.email;
-    } else {
-      req.user = null;
-    }
-    next();
-  });
-
   app.use('/', routes);
-  app.use('/user', user);
-  app.use('/folders', folders);
-  app.use('/citations', citations);
+  app.use('/api', api);
 
   // catch 404 and forward to error handler
   app.use(function(req, res, next) {
@@ -74,7 +43,7 @@ module.exports = function(config) {
 
   // development error handler
   // will print stacktrace
-  if (config.env === 'development') {
+  if (process.env.ENV === 'development') {
     app.use(function(err, req, res) {
       res.status(err.status || 500);
         res.render('error', {
@@ -93,6 +62,8 @@ module.exports = function(config) {
       error: {}
     });
   });
+
+  app.set('port', process.env.PORT || 3000);
 
   return app;
 }

@@ -1,7 +1,4 @@
 {
-  "plugins": [
-    "react"
-  ],
   "ecmaFeatures": {
     "jsx": true
   },
@@ -10,12 +7,6 @@
     "node": true
   },
   "globals": {
-    "jQuery": false,
-    "$": true,
-    "describe": true,
-    "before": true,
-    "it": true,
-    "beforeAll": true,
     "globals": true
   },
   "extends": "eslint:recommended",
