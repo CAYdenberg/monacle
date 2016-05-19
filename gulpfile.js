@@ -94,7 +94,7 @@ gulp.task('watch', ['nodemon'], function () {
 
 gulp.task('test', function() {
 	return gulp.src(['test/*.js'], { read: false })
-		.pipe(mocha({ reporter: 'list' }))
+		.pipe(mocha({reporter: 'list'}))
 		.on('error', gutil.log);
 });
 
