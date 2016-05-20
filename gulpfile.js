@@ -4,6 +4,9 @@ require('dotenv').config();
 
 var gulp = require('gulp');
 var gutil = require('gulp-util');
+var rename = require('gulp-rename');
+var sass = require('gulp-sass');
+var minifyCSS = require('gulp-minify-css');
 
 //dev-dependencies
 if (process.env.ENV === 'development') {
@@ -18,7 +21,7 @@ if (process.env.ENV === 'development') {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 gulp.task('lint', function() {
-  if (process.env.env === 'development') {
+  if (process.env.ENV === 'development') {
     return gulp.src(['**/*.js','!node_modules/**', '!dist/**'])
       // eslint() attaches the lint output to the "eslint" property
       // of the file object so it can be used by other modules.
@@ -36,7 +39,18 @@ gulp.task('js', function () {
 });
 
 gulp.task('css', function() {
-  return true
+  var file = gulp.src('./src/main.scss')
+    .pipe(rename('style.css'))
+    .pipe(sass())
+    .on('error', gutil.log)
+    .pipe(gulp.dest('./dist/css'))
+  if (process.env.ENV === 'development') {
+    file.pipe(browserSync.stream())
+  } else {
+    file.pipe(rename({extname: '.min.css'}))
+      .pipe(minifyCSS())
+      .pipe(gulp.dest('./dist/css'));
+  }
 });
 
 
