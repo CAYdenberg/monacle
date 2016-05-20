@@ -20,6 +20,17 @@ describe('Pubmed API', function() {
       .end(done);
   });
 
+  it('should return an empty set with a count of zero if the query did not find any results', function(done) {
+    request(app)
+      .get('/api/pubmed/boioioioioioioioioing')
+      .expect(200)
+      .expect(function(res) {
+        check.zero(res.body.count);
+        check.emptyArray(res.body.papers);
+      })
+      .end(done);
+  });
+
   it('should retrieve a pubmed summary', function(done) {
     request(app)
       .get('/api/pubmed/summary/19188495/')
