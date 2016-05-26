@@ -1,20 +1,74 @@
-<div class="jumbotron jumbotron-landing intro background-{{background}}">
+<div>
   <div class="container">
     <h1>Monocle</h1>
-    <p>Medline searches for the modern web</p>
-
-    <form method="GET" action="search">
-      <div class="form-group home-searchbox">
-        <label for="home-searchbox__input" class="">Enter a PubMed query</label>
-        <input id="home-searchbox__input" class="input-lg form-control" type="text" placeholder="Enter a PubMed query" name="query">
-      </div>
-      <div class="form-group home-searchbox__submit">
-        <button type="submit" class="btn btn-success" id="search-button"><span class="icon-pubmed"></span> Search</button>
-      </div>
-    </form>
-
+    <p>API and UI for the NCBI eUtils</p>
   </div>
 </div>
+
+<p>Monocle simplifies queries to the National Center for Biotechnology Information (NCBI) eUtils services by providing shortcuts for the most common queries.</p>
+
+<p>Monocle is RESTful API which serves data in JSON format. To query NCBI from your JavaScript application directly, use <a>node-ncbi</a>.
+
+<h2>Queries</h2>
+
+<p>All queries are made to http://www.ncbi.site/api/. Right now, the only available queries are to PubMed (the literature database.)</p>
+
+<h3>Search PubMed</h3>
+
+<table class="api-output">
+  <th>
+    <td>Example Request</td>
+    <td>Example Response</td>
+  </th>
+  <tr>
+    <td>GET /pubmed/mcclintock+b/</td>
+    <td>
+      <pre>
+        {
+          count: 43,
+          papers: (Array of 10 Summary objects containing citation information)
+        }
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>GET /pubmed/mcclintock+b/?page=1</td>
+    <td>
+      Gets the second page of results (results are 0-indexed).
+    </td>
+  </tr>
+</table>
+
+<h3>Get information about a paper</h3>
+
+<p>Various types of information about a particular paper can be retrieved by its PubMed ID number (PMID)</p>
+
+<table class="api-outout">
+  <th>
+    <td>Example Request</td>
+    <td>Example Response</td>
+  </th>
+  <tr>
+    <td>GET /pubmed/summary/1023138/</td>
+    <td>Object (PubMed summary)</td>
+  </tr>
+  <tr>
+    <td>GET /pubmed/abstract/1023138/</td>
+    <td>String (the abstract)</td>
+  </tr>
+  <tr>
+    <td>GET /pubmed/cites/1023138/</td>
+    <td>Array of PubMed summaries</td>
+  </tr>
+  <tr>
+    <td>GET /pubmed/citedby/1023138/</td>
+    <td>Array of PubMed summaries</td>
+  </tr>
+  <tr>
+    <td>GET /pubmed/similar/1023138</td>
+    <td>Array of PubMed summaries</td>
+  </tr>
+</table>
 
 <footer class="navbar navbar-inverse navbar-fixed-bottom">
   <div class="container-fluid">

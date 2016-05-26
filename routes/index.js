@@ -7,8 +7,6 @@ router.get('/lens/*', function(req, res) {
 });
 
 router.get('/', function(req, res) {
-  req.context.pagename = 'home';
-  req.context.background = Math.ceil( Math.random() * 3 );
   res.render('home', req.context);
 });
 
