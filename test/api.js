@@ -31,6 +31,28 @@ describe('Pubmed API', function() {
       .end(done);
   });
 
+  it('should return an empty set if we have passed the last page of results', function(done) {
+    request(app)
+      .get('/api/pubmed/ydenberg+ca/?page=1')
+      .expect(200)
+      .expect(function(res) {
+        check.number(res.body.count);
+        check.emptyArray(res.body.papers);
+      })
+      .end(done);
+  });
+
+  it('should return the second page of results', function(done) {
+    request(app)
+      .get('/api/pubmed/rose+md/?page=1')
+      .expect(200)
+      .expect(function(res) {
+        check.number(res.body.count);
+        check.array(res.body.papers);
+      })
+      .end(done);
+  });
+
   it('should retrieve a pubmed summary', function(done) {
     request(app)
       .get('/api/pubmed/summary/19188495/')

@@ -9,7 +9,8 @@ router.get('/*', (req, res, next) => {
 });
 
 router.get('/pubmed/:query/', (req, res) => {
-  pubmed.search(req.params.query).then(result => {
+  const page = req.query.page || 0;
+  pubmed.search(req.params.query, page).then(result => {
     res.json({
       count: Number(result.count),
       papers: result.papers
