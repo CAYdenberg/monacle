@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
   <meta charset="utf-8">
+
   <title>Monocle</title>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
 
   <!--prevent favicon request-->
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+
+  {{#each stylesheets}}
+    <link href="{{this}}" rel="stylesheet" type="text/css">
+  {{/each}}
 
 </head>
 
@@ -18,7 +23,6 @@
   <div id="alert-area" class="alert-area-wrapper"></div>
 
 	{{{ body }}}
-
 
 </body>
 </html>

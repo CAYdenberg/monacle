@@ -97,7 +97,7 @@ gulp.task('watch', ['nodemon'], function () {
   });
 
   gulp.watch(['src/**/*.js', 'lib/**/*.js'], ['js']);
-  gulp.watch(['src/**/*.less'], ['css']);
+  gulp.watch(['src/**/*.scss'], ['css']);
   gulp.watch(['views/**/*.hbs']).on('change', browserSync.reload);
 });
 
@@ -115,3 +115,6 @@ gulp.task('test', function() {
 gulp.task('test-watch', function() {
 	gulp.watch(['**/*.js'], ['test']);
 });
+
+
+gulp.task('default', ['lint', 'css', 'js']);

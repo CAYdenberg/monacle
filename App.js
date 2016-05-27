@@ -29,6 +29,15 @@ module.exports = function() {
   app.use(cookieParser());
   app.use(express.static(path.join(__dirname, 'dist')));
 
+  //specify assets
+  app.use(function(req, res, next) {
+    req.context = {
+      stylesheets: ['https://fonts.googleapis.com/css?family=News+Cycle:400,700', '/css/style.css']
+    };
+    next();
+  });
+
+  //specify routes
   app.use('/', routes);
   app.use('/api', api);
 
