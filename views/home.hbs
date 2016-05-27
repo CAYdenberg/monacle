@@ -1,78 +1,90 @@
 {{!< default}}
 
-<div>
-  <div class="container">
-    <h1>Monocle</h1>
-    <p>API and UI for the NCBI eUtils</p>
+<header class="page-header page-header--home">
+  <div class="row">
+    <h1 class="page-header__title">Monocle</h1>
+    <p class="page-header__about">API and UI for the NCBI eUtils</p>
   </div>
-</div>
+</header>
 
-<p>Monocle simplifies queries to the National Center for Biotechnology Information (NCBI) eUtils services by providing shortcuts for the most common queries.</p>
+<section>
+  <div class="row">
 
-<p>Monocle is RESTful API which serves data in JSON format. To query NCBI from your JavaScript application directly, use <a>node-ncbi</a>.
+    <h2>About</h2>
 
-<h2>Queries</h2>
+    <p>Monocle simplifies queries to the National Center for Biotechnology Information (NCBI) eUtils services by providing shortcuts for the most common queries.</p>
 
-<p>All queries are made to http://www.ncbi.site/api/. Right now, the only available queries are to PubMed (the literature database.)</p>
+    <p>Monocle is RESTful API which serves data in JSON format. To query NCBI from your JavaScript application directly, use <a href="https://www.npmjs.com/package/node-ncbi">node-ncbi</a>.
 
-<h3>Search PubMed</h3>
+    <h2>Queries</h2>
 
-<table class="api-output">
-  <th>
-    <td>Example Request</td>
-    <td>Example Response</td>
-  </th>
-  <tr>
-    <td>GET /pubmed/mcclintock+b/</td>
-    <td>
-      <pre>
-        {
-          count: 43,
-          papers: (Array of 10 Summary objects containing citation information)
-        }
-      </pre>
-    </td>
-  </tr>
-  <tr>
-    <td>GET /pubmed/mcclintock+b/?page=1</td>
-    <td>
-      Gets the second page of results (results are 0-indexed).
-    </td>
-  </tr>
-</table>
+    <p>All queries are made to <a href="http://www.ncbi.site/api/">http://www.ncbi.site/api/</a>. Right now, the only available queries are to PubMed (the literature database.)</p>
 
-<h3>Get information about a paper</h3>
+    <h3>Search PubMed</h3>
 
-<p>Various types of information about a particular paper can be retrieved by its PubMed ID number (PMID)</p>
+    <table class="api-output">
+      <thead>
+        <tr>
+          <th>Example Request</th>
+          <th>Example Response</th>
+        </tr>
+      </thead>
+      <tr>
+        <td>GET /pubmed/mcclintock+b/</td>
+        <td>
+          <pre>
+{
+  count: 43,
+  papers: (Array of 10 Summary objects containing citation information)
+}
+          </pre>
+        </td>
+      </tr>
+      <tr>
+        <td>GET /pubmed/mcclintock+b/?page=1</td>
+        <td>
+          Gets the second page of results (results are 0-indexed).
+        </td>
+      </tr>
+    </table>
 
-<table class="api-outout">
-  <th>
-    <td>Example Request</td>
-    <td>Example Response</td>
-  </th>
-  <tr>
-    <td>GET /pubmed/summary/1023138/</td>
-    <td>Object (PubMed summary)</td>
-  </tr>
-  <tr>
-    <td>GET /pubmed/abstract/1023138/</td>
-    <td>String (the abstract)</td>
-  </tr>
-  <tr>
-    <td>GET /pubmed/cites/1023138/</td>
-    <td>Array of PubMed summaries</td>
-  </tr>
-  <tr>
-    <td>GET /pubmed/citedby/1023138/</td>
-    <td>Array of PubMed summaries</td>
-  </tr>
-  <tr>
-    <td>GET /pubmed/similar/1023138</td>
-    <td>Array of PubMed summaries</td>
-  </tr>
-</table>
+    <h3>Get information about a paper</h3>
 
-<footer class="navbar navbar-inverse navbar-fixed-bottom">
+    <p>Various types of information about a particular paper can be retrieved by its PubMed ID number (PMID)</p>
+
+    <table class="api-outout">
+      <thead>
+        <tr>
+          <th>Example Request</th>
+          <th>Example Response</th>
+        </tr>
+      </thead>
+      <tr>
+        <td>GET /pubmed/summary/1023138/</td>
+        <td>Object (PubMed summary)</td>
+      </tr>
+      <tr>
+        <td>GET /pubmed/abstract/1023138/</td>
+        <td>String (the abstract)</td>
+      </tr>
+      <tr>
+        <td>GET /pubmed/cites/1023138/</td>
+        <td>Array of PubMed summaries</td>
+      </tr>
+      <tr>
+        <td>GET /pubmed/citedby/1023138/</td>
+        <td>Array of PubMed summaries</td>
+      </tr>
+      <tr>
+        <td>GET /pubmed/similar/1023138</td>
+        <td>Array of PubMed summaries</td>
+      </tr>
+    </table>
+
+  </div>
+</section>
+
+<footer class="page-footer">
   <div class="container-fluid">
     {{>footer}}
   </div>

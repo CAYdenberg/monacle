@@ -32,7 +32,11 @@ module.exports = function() {
   //specify assets
   app.use(function(req, res, next) {
     req.context = {
-      stylesheets: ['https://fonts.googleapis.com/css?family=News+Cycle:400,700', '/css/style.css']
+      stylesheets: [
+        'https://fonts.googleapis.com/css?family=News+Cycle:400,700',
+        '/fonts/icomoon/icomoon.css',
+        '/css/style.css'
+      ]
     };
     next();
   });

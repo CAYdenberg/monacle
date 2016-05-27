@@ -3,3 +3,34 @@
 @import "../node_modules/foundation-sites/scss/foundation.scss";
 
 @include foundation-everything;
+
+header,
+section,
+footer {
+  padding: ($global-padding * 3) 0;
+}
+
+.page-header {
+  color: $white;
+  background: url('../img/187.jpg') no-repeat;
+  background-size: cover;
+  font-size: 200%;
+}
+.page-header__title {
+  color: $white;
+  font-size: 200%;
+}
+
+.page-footer {
+  background: $dark-gray;
+}
+
+.menu--footer {
+  color: $white;
+  a {
+    color: $white;
+    &:hover, &:focus, &:active {
+      color: $light-gray;
+    }
+  }
+}

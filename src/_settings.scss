@@ -102,8 +102,8 @@ $block-grid-max: 8;
 // 4. Base Typography
 // ------------------
 
-$header-font-family: $body-font-family;
-$header-font-weight: $global-weight-normal;
+$header-font-family: "News Cycle", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$header-font-weight: 700;
 $header-font-style: normal;
 $font-family-monospace: Consolas, 'Liberation Mono', Courier, monospace;
 $header-sizes: (
@@ -124,8 +124,8 @@ $header-sizes: (
     'h6': 16,
   ),
 );
-$header-color: inherit;
-$header-lineheight: 1.4;
+$header-color: $black;
+$header-lineheight: 1.3;
 $header-margin-bottom: 0.5rem;
 $header-text-rendering: optimizeLegibility;
 $small-font-size: 80%;
@@ -503,7 +503,7 @@ $table-striped-background: smart-scale($table-background, $table-color-scale);
 $table-stripe: even;
 $table-head-background: smart-scale($table-background, $table-color-scale / 2);
 $table-foot-background: smart-scale($table-background, $table-color-scale);
-$table-head-font-color: $body-font-color;
+$table-head-font-color: map-get($foundation-palette, primary);
 $show-header-for-stacked: false;
 
 // 32. Tabs
