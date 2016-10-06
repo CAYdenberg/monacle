@@ -7,6 +7,11 @@ var gutil = require('gulp-util');
 var rename = require('gulp-rename');
 var less = require('gulp-less');
 var minifyCSS = require('gulp-minify-css');
+var uglify = require('gulp-uglify');
+
+const browserify = require('browserify');
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
 
 //dev-dependencies
 if (process.env.ENV === 'development') {
@@ -14,6 +19,7 @@ if (process.env.ENV === 'development') {
   var nodemon = require('gulp-nodemon');
   var eslint = require('gulp-eslint');
   var mocha = require('gulp-mocha');
+
 }
 
 
@@ -36,15 +42,35 @@ gulp.task('lint', function() {
 });
 
 gulp.task('js', function () {
-  return true
+  // set up the browserify instance on a task basis
+  var b = browserify('src/script.js')
+    .transform("babelify", {presets: ['es2015', 'react']});
+
+  var file = b.bundle()
+    .pipe(source('script.js'))
+    .pipe(buffer())
+    .on('error', gutil.log)
+    .pipe(gulp.dest('./dist/js'))
+
+  if (process.env.ENV === 'development') {
+    return file.pipe(browserSync.stream());
+  } else {
+    return file.pipe(rename({extname: '.min.js'}))
+      .pipe(uglify())
+      .pipe(gulp.dest('./dist/js'));
+  }
+
 });
 
+
 gulp.task('css', function() {
+
   var file = gulp.src('./src/main.less')
     .pipe(less())
     .pipe(rename('style.css'))
     .on('error', gutil.log)
     .pipe(gulp.dest('./dist/css'))
+
   if (process.env.ENV === 'development') {
     file.pipe(browserSync.stream())
   } else {
@@ -52,6 +78,7 @@ gulp.task('css', function() {
       .pipe(minifyCSS())
       .pipe(gulp.dest('./dist/css'));
   }
+
 });
 
 

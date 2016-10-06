@@ -20,9 +20,14 @@
 
 <body class="{{pagename}}">
 
-  <div id="alert-area" class="alert-area-wrapper"></div>
-
 	{{{ body }}}
+
+  <script type="text/javascript">
+    window.appData = {{{json appData}}}
+  </script>
+  {{#each scripts}}
+    <script src={{this}} type="text/javascript"></script>
+  {{/each}}
 
 </body>
 </html>

@@ -36,6 +36,9 @@ module.exports = function() {
         'https://fonts.googleapis.com/css?family=News+Cycle:400,700',
         '/fonts/icomoon/icomoon.css',
         '/css/style.css'
+      ],
+      scripts: [
+        '/js/script.js'
       ]
     };
     next();
