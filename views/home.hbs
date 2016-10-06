@@ -1,14 +1,25 @@
 {{!< default}}
 
-<header class="page-header page-header--home">
-  <div class="row">
-    <h1 class="page-header__title">Monocle</h1>
-    <p class="page-header__about">API and UI for the NCBI eUtils</p>
-  </div>
-</header>
+<div class="jumbotron jumbotron-landing intro background-{{background}}">
+  <div class="container">
+    <h1>Monocle</h1>
+    <p>Medline searches for the modern web</p>
 
-<section>
-  <div class="row">
+    <form method="GET" action="search">
+      <div class="form-group home-searchbox">
+        <label for="home-searchbox__input" class="">Enter a PubMed query</label>
+        <input id="home-searchbox__input" class="input-lg form-control" type="text" placeholder='Enter a PubMed query (e.g. "cancer" or "mcclinktock b[author])"' name="query">
+      </div>
+      <div class="form-group home-searchbox__submit">
+        <button type="submit" class="btn btn-success" id="search-button"><span class="icon-pubmed"></span> Search</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<section class="margin-vertical">
+  <div class="container">
 
     <h2>About</h2>
 
@@ -22,7 +33,7 @@
 
     <h3>Search PubMed</h3>
 
-    <table class="api-output">
+    <table class="table table-responsive">
       <thead>
         <tr>
           <th>Example Request</th>
@@ -32,12 +43,11 @@
       <tr>
         <td>GET /pubmed/mcclintock+b/</td>
         <td>
-          <pre>
-{
+
+<pre>{
   count: 43,
   papers: (Array of 10 Summary objects containing citation information)
-}
-          </pre>
+}</pre>
         </td>
       </tr>
       <tr>
@@ -52,7 +62,7 @@
 
     <p>Various types of information about a particular paper can be retrieved by its PubMed ID number (PMID)</p>
 
-    <table class="api-outout">
+    <table class="table table-responsive">
       <thead>
         <tr>
           <th>Example Request</th>

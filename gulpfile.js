@@ -5,7 +5,7 @@ require('dotenv').config();
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var rename = require('gulp-rename');
-var sass = require('gulp-sass');
+var less = require('gulp-less');
 var minifyCSS = require('gulp-minify-css');
 
 //dev-dependencies
@@ -15,6 +15,7 @@ if (process.env.ENV === 'development') {
   var eslint = require('gulp-eslint');
   var mocha = require('gulp-mocha');
 }
+
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 * PRINCIPLE BUILD TASKS
@@ -39,9 +40,9 @@ gulp.task('js', function () {
 });
 
 gulp.task('css', function() {
-  var file = gulp.src('./src/main.scss')
+  var file = gulp.src('./src/main.less')
+    .pipe(less())
     .pipe(rename('style.css'))
-    .pipe(sass())
     .on('error', gutil.log)
     .pipe(gulp.dest('./dist/css'))
   if (process.env.ENV === 'development') {
@@ -97,7 +98,7 @@ gulp.task('watch', ['nodemon'], function () {
   });
 
   gulp.watch(['src/**/*.js', 'lib/**/*.js'], ['js']);
-  gulp.watch(['src/**/*.scss'], ['css']);
+  gulp.watch(['src/**/*.less'], ['css']);
   gulp.watch(['views/**/*.hbs']).on('change', browserSync.reload);
 });
 

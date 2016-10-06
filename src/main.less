@@ -1,0 +1,257 @@
+@import "../node_modules/bootstrap/less/bootstrap.less";
+
+@import "../node_modules/bootswatch/journal/variables.less";
+@import "../node_modules/bootswatch/journal/bootswatch.less";
+
+@import "../node_modules/jasny-bootstrap/less/jasny-bootstrap.less";
+
+/*=================================
+* VARIABLES
+=================================*/
+
+@font-size-base: 18px;
+
+@font-size-h4: ceil((@font-size-base * 1.1));
+@font-size-h5: ceil((@font-size-base * 0.85));
+
+@navbar-inverse-color: white;
+@navbar-inverse-bg: transparent;
+@navbar-inverse-link-hover-bg: rgba(0, 0, 0, 0.5);
+
+
+/*=================================
+* GENERAL
+=================================*/
+
+
+a {
+	text-decoration: none !important;
+}
+
+.progress-bar {
+	width: 100%;
+	height: 30px;
+	border-radius: 15px;
+	border: 1px solid @gray-light;
+	margin-top: @padding-base-vertical;
+	margin-bottom: @padding-base-vertical;
+}
+
+.margin-vertical {
+	margin-top: ceil(@line-height-computed);
+	margin-bottom: ceil(@line-height-computed);
+}
+
+.horizontal-list {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	&>li {
+		display: inline-block;
+		padding-right: 10px;
+	}
+	&>li:last-child {
+		padding-right: 0;
+	}
+}
+
+.waiting {
+	cursor: wait;
+	button {
+		opacity: 0.7;
+		font-style: italic;
+	}
+}
+
+/*================================
+* APP ACCORDION
+=================================*/
+
+body.app {
+	padding-left: @mobile-nav-width;
+	@media (min-width: @screen-sm) {
+		padding-left: @navmenu-width;
+	}
+	// overflow: hidden;
+}
+
+.citation-list,
+.single-citation {
+	height: 100vh;
+	padding-top: (@padding-base-vertical);
+	padding-bottom: (@padding-base-vertical);
+	overflow-y: scroll;
+}
+
+@media (min-width: @screen-md) {
+	.paper-details {
+		display: none;
+	}
+	.citation-list .panel-body {
+		display: none;
+	}
+	.paper-details {
+		display: block;
+	}
+}
+
+.panel-heading {
+	background: @gray-lighter;
+	color: @gray-dark;
+	h4, h5 { color: inherit }
+	a:hover &,
+	a[aria-expanded=true] & {
+		color: @brand-primary;
+	}
+}
+
+.author-list {
+	font-weight: inherit;
+}
+
+.year {
+	font-weight: 700;
+}
+
+
+/*================================
+Alert Area
+=================================*/
+
+.alert-area-wrapper {
+	position: fixed;
+	top: 0;
+	z-index: 10000;
+}
+
+/* ===============================
+* NAVIGATION
+=============================== */
+
+@mobile-nav-width: 74px;
+
+.navbar-toggle {
+	left: 15px;
+}
+
+.mobile-nav {
+	width: @mobile-nav-width;
+	z-index: 100;
+}
+
+.navmenu {
+	padding: 15px;
+}
+
+.close-wrapper {
+	text-align: right;
+	margin-bottom: 15px;
+	@media (min-width: @screen-sm) {
+		display: none;
+	}
+}
+
+.account-area,
+.folders {
+	margin-bottom: 15px;
+}
+
+.account-area {
+	a:hover,
+	.open>a,
+	.open>a:hover,
+	.open>a:focus {
+		background: transparent;
+	}
+	.navmenu-nav.dropdown-menu {
+		background-color: transparent;
+	}
+}
+
+.navmenu-inverse .navbar-toggle {
+	border-color: white;
+	.icon-bar {
+		background-color: white;
+	}
+}
+
+.folder-list {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.new-folder-input {
+	padding: 0;
+	background: transparent;
+	border-radius: 0;
+	border: none;
+	border-bottom: 1px solid @brand-primary;
+	color: white;
+	line-height: 1.1;
+	height: 20px;
+	&:focus {
+		border: none;
+		border-bottom: 1px solid @brand-primary;
+		box-shadow: none;
+		-webkit-box-shadow: none;
+	}
+}
+
+.btn-new-folder {
+	background: transparent;
+	border: none;
+	color: @brand-primary;
+	font-weight: 900;
+	font-size: 30px;
+	line-height: 1;
+}
+
+.navbar-footer {
+	position: absolute;
+	bottom: 0;
+	padding-left: (@padding-base-vertical);
+	.nav>li>a:hover {
+		background: transparent;
+	}
+}
+
+
+/*=================================
+* LANDING PAGE
+=================================*/
+
+body.home {
+	min-height: 100%;
+}
+
+header {
+	padding-top: 15px;
+}
+
+.jumbotron-landing {
+	height: 100vh;
+	margin-bottom: 0;
+	color: white;
+	&.background-1 { background-image: url(../img/187.jpg); }
+	&.background-2 { background-image: url(../img/7245.jpg); }
+	&.background-3 { background-image: url(../img/35618.jpg); }
+	background-size: cover;
+	h1 {
+		color: inherit;
+	}
+}
+
+label[for="home-searchbox__input"] {
+	display: none;
+}
+
+.navbar {
+	font-size: inherit;
+}
+
+.page-footer {
+	background: @gray-dark;
+	color: white;
+	padding: (@line-height-computed) 0;
+}
