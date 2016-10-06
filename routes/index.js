@@ -8,8 +8,8 @@ const ReactDOMServer = require('react-dom/server');
 const Folders = require('../components/Folders');
 const Citations = require('../components/Citations');
 
-const FolderStore = require('../stores/FolderStore');
-const UserStore = require('../stores/UserStore');
+const FolderStore = require('../stores/folderStore');
+const UserStore = require('../stores/userStore');
 const CitationStore = require('../stores/citationStore');
 
 var router = express.Router();

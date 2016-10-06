@@ -8,9 +8,9 @@ const notifier = utils.notifier;
 const ncbi = require('node-ncbi');
 const popsicle = require('popsicle');
 
-const citationStore = require('./CitationStore')();
-const folderStore = require('./FolderStore')();
-const userStore = require('./UserStore')();
+const citationStore = require('./citationStore')();
+const folderStore = require('./folderStore')();
+const userStore = require('./userStore')();
 
 dispatcher.register(function(payload) {
   switch (payload.type) {
