@@ -2,14 +2,20 @@ const update = require('react-addons-update');
 
 module.exports = function(initialState, action) {
   const state = Object.assign({
-    citations: []
+    totalCitations: 0,
+    citations: [],
+    nextPage: 0
   }, initialState);
 
   switch(action.type) {
-    // append a bunch to the list
-    case 'ADD_CITATIONS':
-      return update(state, {citations: {$push: action.add}});
 
+    // append a bunch of papers to the list
+    case 'ADD_CITATIONS':
+      return update(state, {
+        totalCitations: {$set: action.count},
+        citations: {$push: action.add},
+        nextPage: {$apply: (x) => x + 1}
+      });
 
     // add other info (such as the abstract) to the list
     case 'ADD_CITATION_INFO':
