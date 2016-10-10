@@ -1,13 +1,13 @@
 const popsicle = require('popsicle');
 
-module.exports = actions = {
+const actions = {
 
   searchResponse: function(res) {
     if (res.status === 200) {
       return {
         type: 'ADD_CITATIONS',
         count: res.body.count,
-        citations: res.body.papers
+        add: res.body.papers
       }
     }
   },
@@ -15,7 +15,7 @@ module.exports = actions = {
   search: function(query, page = 0) {
     return function(dispatch) {
 
-      return popsicle.request({
+      return popsicle({
         method: 'GET',
         url: '/api/pubmed/' + query,
         query: {page: page}
@@ -37,12 +37,14 @@ module.exports = actions = {
   getAbstract: function(pmid) {
     return function(dispatch) {
 
-      return popsicle.request({
+      return popsicle({
         method: 'GET',
-        url: '/api/pubmed/abstract' + pmid
+        url: '/api/pubmed/abstract/' + pmid
       }).then(res => dispatch(actions.getAbstractResponse(res)));
 
     }
   }
 
 }
+
+module.exports = actions;
