@@ -124,7 +124,7 @@ gulp.task('watch', ['nodemon'], function () {
 
   });
 
-  gulp.watch(['src/**/*.js', 'lib/**/*.js'], ['js']);
+  gulp.watch(['src/**/*.js', 'lib/**/*.js', 'components/**/*.js', 'store/**/*.js'], ['js']);
   gulp.watch(['src/**/*.less'], ['css']);
   gulp.watch(['views/**/*.hbs']).on('change', browserSync.reload);
 });

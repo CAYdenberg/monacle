@@ -3,7 +3,8 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "stop": "kill $(ps aux | grep 'node bin/www' | awk '{print $2}')"
   },
   "dependencies": {
     "babel-preset-es2015": "^6.16.0",
@@ -32,6 +33,8 @@
     "node-ncbi": "git+https://github.com/CAYdenberg/node-ncbi.git#master",
     "react": "^15.3.2",
     "react-addons-update": "^15.3.2",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.1.0",
     "serve-favicon": "^2.1.3",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
