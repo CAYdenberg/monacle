@@ -3,8 +3,6 @@
 @import "../node_modules/bootswatch/journal/variables.less";
 @import "../node_modules/bootswatch/journal/bootswatch.less";
 
-@import "../node_modules/jasny-bootstrap/less/jasny-bootstrap.less";
-
 /*=================================
 * VARIABLES
 =================================*/
@@ -67,21 +65,10 @@ a {
 * APP ACCORDION
 =================================*/
 
-body.app {
-	padding-left: @mobile-nav-width;
-	@media (min-width: @screen-sm) {
-		padding-left: @navmenu-width;
-	}
-	// overflow: hidden;
+.citations-list {
+
 }
 
-.citation-list,
-.single-citation {
-	height: 100vh;
-	padding-top: (@padding-base-vertical);
-	padding-bottom: (@padding-base-vertical);
-	overflow-y: scroll;
-}
 
 @media (min-width: @screen-md) {
 	.paper-details {
@@ -128,92 +115,9 @@ Alert Area
 * NAVIGATION
 =============================== */
 
-@mobile-nav-width: 74px;
-
-.navbar-toggle {
-	left: 15px;
-}
-
-.mobile-nav {
-	width: @mobile-nav-width;
-	z-index: 100;
-}
-
-.navmenu {
-	padding: 15px;
-}
-
-.close-wrapper {
-	text-align: right;
-	margin-bottom: 15px;
-	@media (min-width: @screen-sm) {
-		display: none;
-	}
-}
-
-.account-area,
-.folders {
-	margin-bottom: 15px;
-}
-
-.account-area {
-	a:hover,
-	.open>a,
-	.open>a:hover,
-	.open>a:focus {
-		background: transparent;
-	}
-	.navmenu-nav.dropdown-menu {
-		background-color: transparent;
-	}
-}
-
-.navmenu-inverse .navbar-toggle {
-	border-color: white;
-	.icon-bar {
-		background-color: white;
-	}
-}
-
-.folder-list {
-	list-style-type: none;
-	padding: 0;
-	margin: 0;
-}
-
-.new-folder-input {
-	padding: 0;
-	background: transparent;
-	border-radius: 0;
-	border: none;
-	border-bottom: 1px solid @brand-primary;
-	color: white;
-	line-height: 1.1;
-	height: 20px;
-	&:focus {
-		border: none;
-		border-bottom: 1px solid @brand-primary;
-		box-shadow: none;
-		-webkit-box-shadow: none;
-	}
-}
-
-.btn-new-folder {
-	background: transparent;
-	border: none;
-	color: @brand-primary;
-	font-weight: 900;
-	font-size: 30px;
-	line-height: 1;
-}
-
-.navbar-footer {
-	position: absolute;
-	bottom: 0;
-	padding-left: (@padding-base-vertical);
-	.nav>li>a:hover {
-		background: transparent;
-	}
+.main-nav {
+	background: @gray-dark;
+	padding: (@padding-base-vertical) 0;
 }
 
 

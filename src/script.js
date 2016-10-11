@@ -12,5 +12,5 @@ const Citations = require('../components/Citations');
 if (window.appData.query) {
   const query = window.appData.query;
   store.dispatch(actions.search(query));
-  ReactDOM.render(<Citations store={store} />, document.getElementById('citation-list'));
+  ReactDOM.render(<Citations store={store} />, document.getElementById('react-entry'));
 }
