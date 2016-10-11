@@ -1,57 +1,53 @@
 const React = require('react');
 
-const utils = require('../../lib');
-const dispatcher = utils.dispatcher;
-
 const CitationList = require('./CitationList');
 const SingleCitation = require('./SingleCitation');
 
 const Citations = React.createClass({
 
   store: null,
-  folderStore: null,
+
+  _mapState: function() {
+    const appState = this.store.getState();
+    return ({
+      items: appState.citations,
+      totalItems: appState.total,
+      more: (appState.totalCitations > appState.citations.length)
+    });
+  },
 
   getInitialState: function() {
     this.store = this.props.store;
-    this.folderStore = this.props.folderStore;
-    return ({
-      items: this.store.items,
+    return Object.assign(this._mapState(), {
       currentItem: null,
-      totalItems: this.store.total,
-      loading: false,
-      more: (this.store.nMore() > 0)
+      loading: false
     });
   },
 
   componentDidMount: function() {
-    this.store.onUpdate(() => {
-      this.setState({
-        items: this.store.items,
-        //the number of results remaining:
-        totalItems: this.store.total,
-        loading: false
-      });
+    this.store.subscribe(() => {
+      this.setState(this._mapState());
     });
   },
 
-  openCitation: function(pmid) {
-    const item = this.store.getItem(pmid);
+  openCitation: function(item) {
     this.setState({
       currentItem: item
     });
     if (!item.abstract) {
-      dispatcher.dispatch({
-        type: 'GET_DETAILS',
-        content: {pmid: pmid}
-      });
+      this.store.dispatch(this.store.actions.getAbstract(item.pmid));
     }
   },
 
+  isCurrent: function(item) {
+    return (this.state.currentItem.pmid === item.pmid);
+  },
+
   loadMore: function() {
-    this.setState({loading: true});
-    dispatcher.dispatch({
-      type: 'LOAD_MORE'
+    this.setState({
+      loading: true
     });
+    this.store.dispatch(this.store.actions.search(window.appData.query, this.store.getState().nextPage()));
   },
 
   render: function() {
@@ -65,7 +61,7 @@ const Citations = React.createClass({
             currentItem={this.state.currentItem}
             totalItems={this.state.totalItems}
             openCitation={this.openCitation}
-            folderStore={this.folderStore}
+            isCurrent={this.isCurrent}
           />
           <LoadMoreButton
             loading={this.state.loading}
@@ -76,7 +72,6 @@ const Citations = React.createClass({
         <div className="col-md-6 hidden-sm hidden-xs">
           <SingleCitation
             data={this.state.currentItem}
-            folderStore={this.folderStore}
           />
         </div>
       </div>

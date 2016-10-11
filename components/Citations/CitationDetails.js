@@ -2,7 +2,6 @@ var React = require('react');
 var _ = require('underscore');
 
 //required components
-const CitationControls = require('./CitationControls');
 const ProgressBar = require('../partials/ProgressBar');
 
 /**
@@ -26,7 +25,6 @@ const CitationDetails = React.createClass({
               <span className="icon-pubmed"></span> View on PubMed
             </a>
           </div>
-          <CitationControls data={this.props.data} folderStore={this.props.folderStore} />
         </div>
       )
     }

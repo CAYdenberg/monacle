@@ -24,9 +24,8 @@ const CitationList = React.createClass({
                   <Citation
                     key={item.pmid}
                     data={item}
-                    folderStore={this.props.folderStore}
                     openCitation={this.props.openCitation}
-                    isCurrent={(item === this.props.currentItem)}
+                    isCurrent={this.props.isCurrent}
                   />
                 );
               })
@@ -55,11 +54,11 @@ const Citation = React.createClass({
         <a href="#" onClick={this.open}>
           <div className="panel-heading">
             <h4>
-              {this.props.data.pubmedSummary.title}
+              {this.props.data.title}
             </h4>
             <h5 className="author-list">
-              {this.props.data.authorStr},
-              <span className="year">{this.props.data.year}</span>
+              {this.props.data.authors},
+              <span className="year">{this.props.pubDate}</span>
             </h5>
           </div>
         </a>
