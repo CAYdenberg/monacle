@@ -6,16 +6,17 @@ const actions = {
 
     const respond = function(res) {
       if (res.status === 200) {
+        const data = JSON.parse(res.body);
         return {
           type: 'ADD_CITATIONS',
-          count: res.body.count,
-          add: res.body.papers
+          count: data.count,
+          add: data.papers
         }
       }
     };
 
     return function(dispatch) {
-      return popsicle({
+      return popsicle.request({
         method: 'GET',
         url: '/api/pubmed/' + query,
         query: {page: page}
@@ -38,7 +39,7 @@ const actions = {
     }
 
     return function(dispatch) {
-      return popsicle({
+      return popsicle.request({
         method: 'GET',
         url: '/api/pubmed/abstract/' + pmid
       }).then(res => dispatch(respond(res)));

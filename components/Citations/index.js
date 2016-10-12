@@ -3,6 +3,8 @@ const React = require('react');
 const CitationList = require('./CitationList');
 const SingleCitation = require('./SingleCitation');
 
+const actions = require('../../store/actions');
+
 const Citations = React.createClass({
 
   store: null,
@@ -35,19 +37,19 @@ const Citations = React.createClass({
       currentItem: item
     });
     if (!item.abstract) {
-      this.store.dispatch(this.store.actions.getAbstract(item.pmid));
+      this.store.dispatch(actions.getAbstract(item.pmid));
     }
   },
 
   isCurrent: function(item) {
-    return (this.state.currentItem.pmid === item.pmid);
+    return this.state.currentItem && (this.state.currentItem === item);
   },
 
   loadMore: function() {
     this.setState({
       loading: true
     });
-    this.store.dispatch(this.store.actions.search(window.appData.query, this.store.getState().nextPage()));
+    this.store.dispatch(actions.search(window.appData.query, this.store.getState().nextPage()));
   },
 
   render: function() {
@@ -60,8 +62,7 @@ const Citations = React.createClass({
             items={this.state.items}
             currentItem={this.state.currentItem}
             totalItems={this.state.totalItems}
-            openCitation={this.openCitation}
-            isCurrent={this.isCurrent}
+            controller={this}
           />
           <LoadMoreButton
             loading={this.state.loading}

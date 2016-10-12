@@ -24,8 +24,7 @@ const CitationList = React.createClass({
                   <Citation
                     key={item.pmid}
                     data={item}
-                    openCitation={this.props.openCitation}
-                    isCurrent={this.props.isCurrent}
+                    controller={this.props.controller}
                   />
                 );
               })
@@ -45,7 +44,7 @@ const CitationList = React.createClass({
  */
 const Citation = React.createClass({
   open: function() {
-    this.props.openCitation(this.props.data.pmid);
+    this.props.controller.openCitation(this.props.data.pmid);
   },
 
   render: function() {
@@ -62,9 +61,9 @@ const Citation = React.createClass({
             </h5>
           </div>
         </a>
-        <div className={'panel-collapse collapse ' + (this.props.isCurrent ? 'in' : '')}>
+        <div className={'panel-collapse collapse ' + (this.props.controller.isCurrent() ? 'in' : '')}>
           <div className="panel-body">
-            <CitationDetails data={this.props.data} folderStore={this.props.folderStore} />
+            <CitationDetails data={this.props.data} />
           </div>
         </div>
       </div>
