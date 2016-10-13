@@ -32,12 +32,22 @@ const Citations = React.createClass({
     });
   },
 
-  openCitation: function(item) {
+  getItemData: function(pmid) {
+    return this.state.items.reduce((data, item) => {
+      if (data) {
+        return data;
+      } else {
+        return (pmid === item.pmid) ? item : null;
+      }
+    }, null);
+  },
+
+  openCitation: function(pmid) {
     this.setState({
-      currentItem: item
+      currentItem: pmid
     });
-    if (!item.abstract) {
-      this.store.dispatch(actions.getAbstract(item.pmid));
+    if (!this.getItemData(pmid) || !this.getItemData(pmid).abstract) {
+      this.store.dispatch(actions.getAbstract(pmid));
     }
   },
 
@@ -53,8 +63,7 @@ const Citations = React.createClass({
   },
 
   render: function() {
-    // <div data-todo="render single citation here" />
-    // openCitation={this.openCitation}
+
     return (
       <div className="row">
         <div className="col-sm-12 col-md-6">
@@ -72,7 +81,7 @@ const Citations = React.createClass({
         </div>
         <div className="col-md-6 hidden-sm hidden-xs">
           <SingleCitation
-            data={this.state.currentItem}
+            data={this.getItemData(this.state.currentItem)}
           />
         </div>
       </div>

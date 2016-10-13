@@ -20,10 +20,11 @@ module.exports = function(initialState, action) {
     // add other info (such as the abstract) to the list
     case 'ADD_CITATION_INFO':
       const citations = state.citations.map(citation => {
-        if (parseInt(citation.uid, 10) === parseInt(action.pmid, 10)) {
+        if (citation.pmid === action.pmid) {
           return update(citation, {$merge: action.changes})
+        } else {
+          return citation;
         }
-        return citation;
       });
       return update(state, {citations: {$set: citations}});
 

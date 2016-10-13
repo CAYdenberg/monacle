@@ -56,8 +56,8 @@ const Citation = React.createClass({
               {this.props.data.title}
             </h4>
             <h5 className="author-list">
-              {this.props.data.authors},
-              <span className="year">{this.props.pubDate}</span>
+              {this.props.data.authors},&nbsp;
+              <span className="year">{this.props.data.pubDate}</span>
             </h5>
           </div>
         </a>
