@@ -11,10 +11,10 @@ const ProgressBar = require('../partials/ProgressBar');
  */
 const CitationDetails = React.createClass({
   render: function() {
-    if (_.isNull(this.props.data.abstract)) {
+    if (!this.props.data.abstract) {
       return (
         <ProgressBar />
-      )
+      );
     } else {
       return (
         <div className="citation-details">

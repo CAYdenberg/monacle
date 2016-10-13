@@ -6,7 +6,7 @@ const CitationDetails = require('./CitationDetails');
 const SingleCitation = React.createClass({
 
   render: function() {
-    console.log(this.props.data);
+
     if (this.props.data) {
 
       return (

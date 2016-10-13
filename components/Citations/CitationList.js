@@ -61,7 +61,7 @@ const Citation = React.createClass({
             </h5>
           </div>
         </a>
-        <div className={'panel-collapse collapse ' + (this.props.controller.isCurrent() ? 'in' : '')}>
+        <div className={'panel-collapse collapse ' + (this.props.controller.isCurrent(this.props.data.pmid) ? 'in' : '')}>
           <div className="panel-body">
             <CitationDetails data={this.props.data} />
           </div>

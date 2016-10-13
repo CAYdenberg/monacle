@@ -2,6 +2,7 @@ const React = require('react');
 
 const CitationList = require('./CitationList');
 const SingleCitation = require('./SingleCitation');
+const ProgressBar = require('../partials/ProgressBar')
 
 const actions = require('../../store/actions');
 
@@ -22,13 +23,14 @@ const Citations = React.createClass({
     this.store = this.props.store;
     return Object.assign(this._mapState(), {
       currentItem: null,
-      loading: false
+      loading: true
     });
   },
 
   componentDidMount: function() {
     this.store.subscribe(() => {
       this.setState(this._mapState());
+      this.setState({loading: false});
     });
   },
 
@@ -51,15 +53,16 @@ const Citations = React.createClass({
     }
   },
 
-  isCurrent: function(item) {
-    return this.state.currentItem && (this.state.currentItem === item);
+  isCurrent: function(pmid) {
+    console.log(this.state.currentItem);
+    return (this.state.currentItem === pmid);
   },
 
   loadMore: function() {
     this.setState({
       loading: true
     });
-    this.store.dispatch(actions.search(window.appData.query, this.store.getState().nextPage()));
+    this.store.dispatch(actions.search(window.appData.query, this.store.getState().nextPage));
   },
 
   render: function() {
@@ -111,7 +114,7 @@ const LoadMoreButton = React.createClass({
       )
     } else {
       return (
-        <a href="#" onClick={this.loadMore}>Load more ...</a>
+        <a href="#" onClick={this.props.loadMore}>Load more ...</a>
       );
     }
   }
