@@ -65,10 +65,21 @@ a {
 * APP ACCORDION
 =================================*/
 
-.citations-list {
-
+.citation-panel-wrapper {
+	height: 100vh;
+	padding-top: 75px;
+	overflow: hidden;
+	@media (min-width: @screen-md) {
+		width: 50%;
+		float: left;
+	}
 }
 
+.citation-panel {
+	height: 100%;
+	padding: 15px;
+	overflow-y: scroll;
+}
 
 @media (min-width: @screen-md) {
 	.paper-details {
@@ -116,8 +127,12 @@ Alert Area
 =============================== */
 
 .main-nav {
+	position: fixed;
+	top: 0;
+	width: 100%;
 	background: @gray-dark;
-	padding: (@padding-base-vertical) 0;
+	color: white;
+	padding: 15px;
 }
 
 
