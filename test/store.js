@@ -7,9 +7,9 @@ const reducer = require('../store/reducer');
 describe('State reducer', function() {
   const initialState = {
     citations: [
-      {uid: '11111', title: 'Citation One'},
-      {uid: '22222', title: 'Citation Two'},
-      {uid: '33333', title: 'Citation Three'}
+      {pmid: 11111, title: 'Citation One'},
+      {pmid: 22222, title: 'Citation Two'},
+      {pmid: 33333, title: 'Citation Three'}
     ]
   };
 

@@ -68,7 +68,7 @@ describe('Pubmed API', function() {
       .get('/api/pubmed/abstract/19188495/')
       .expect(200)
       .expect(function(res) {
-        check.string(res.body);
+        check.string(res.text);
       })
       .end(done);
   });
