@@ -30,7 +30,11 @@ router.get('/pubmed/:method/:pmid', (req, res) => {
     res.status(404).json();
   }
   pubmed[req.params.method](req.params.pmid).then(result => {
-    res.json(result);
+    if (typeof result === "object") {
+      res.json(result);
+    } else {
+      res.send(result);
+    }
   });
 });
 
