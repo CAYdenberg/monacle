@@ -25,7 +25,7 @@
 
     <p>Monocle simplifies queries to the National Center for Biotechnology Information (NCBI) eUtils services by providing shortcuts for the most common queries.</p>
 
-    <p>Monocle is RESTful API which serves data in JSON format. To query NCBI from your JavaScript application directly, use <a href="https://www.npmjs.com/package/node-ncbi">node-ncbi</a>.
+    <p>Monocle is RESTful API which serves data in JSON format. You can try it out with the form above.</p>
 
     <h2>Queries</h2>
 
@@ -45,8 +45,16 @@
         <td>
 
 <pre>{
-  count: 43,
-  papers: (Array of 10 Summary objects containing citation information)
+  count: (Number),
+  papers: [
+    raw: (Pubmed Summary object),
+    pubDate: (String),
+    title: (String),
+    authors: (String),
+    pmid: (Integer),
+    pmc: (Integer if available),
+    doi: (String if available)
+  ]
 }</pre>
         </td>
       </tr>
