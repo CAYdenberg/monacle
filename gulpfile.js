@@ -12,6 +12,7 @@ var uglify = require('gulp-uglify');
 const browserify = require('browserify');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
+const concat = require('gulp-concat');
 
 //dev-dependencies
 if (process.env.ENV === 'development') {
@@ -21,6 +22,25 @@ if (process.env.ENV === 'development') {
   var mocha = require('gulp-mocha');
 
 }
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* BUILD VENDOR FILES AND SEND TO DIST FOLDER
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+gulp.task('lens-css', function() {
+  var file = './node_modules/lens-starter/lens.css';
+  return gulp.src(file)
+    .pipe(gulp.dest('./dist/css/'));
+});
+
+gulp.task('lens-js', function() {
+  var files = ['./node_modules/lens-starter/lens.js'];
+  return gulp.src(files)
+    .pipe(concat('lens.js'))
+    .pipe(gulp.dest('./dist/js/'));
+});
+
+gulp.task('lens', ['lens-css', 'lens-js']);
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

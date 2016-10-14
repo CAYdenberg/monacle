@@ -2,8 +2,8 @@ var express = require('express');
 
 var router = express.Router();
 
-router.get('/lens/*', function(req, res) {
-  res.render('lens');
+router.get('/lens/:pmcid', function(req, res) {
+  res.render('lens', {pmcid: req.params.pmcid});
 });
 
 router.get('/search', function(req, res) {

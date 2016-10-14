@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:mml="http://www.w3.org/1998/Math/MathML">
+  <head>
+    <title>eLife Lens</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css' rel='stylesheet' type='text/css'/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=10.0, user-scalable=yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <link href='/css/lens.css' rel='stylesheet' type='text/css'/>
+
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      "HTML-CSS": { linebreaks: { automatic: true } },
+             SVG: { linebreaks: { automatic: true } }
+    });
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src='/js/lens.js'></script>
+
+    <script>
+
+
+      if (window.Lens === undefined) {
+        window.Lens = require("/src/lens.js");
+      }
+
+
+      // Check for devices
+      // --------
+      //
+
+      function isIOSDevice() {
+        var iPadAgent = navigator.userAgent.match(/iPad/i) != null;
+        var iPodAgent = navigator.userAgent.match(/iPhone/i) != null;
+        return iPadAgent || iPodAgent;
+      }
+
+      function isIphone() {
+        var iPhoneAgent = navigator.userAgent.match(/iPhone/i) != null;
+        return iPhoneAgent;
+      }
+
+      function isMobile() {
+        var iPadAgent = navigator.userAgent.match(/iPad/i) != null;
+        var iPodAgent = navigator.userAgent.match(/iPhone/i) != null;
+        var AndroidAgent = navigator.userAgent.match(/Android/i) != null;
+        var webOSAgent = navigator.userAgent.match(/webOS/i) != null;
+
+        return iPadAgent || iPodAgent || AndroidAgent || webOSAgent;
+      }
+
+      function isTouchDevice() {
+        return 'ontouchstart' in document.documentElement;
+      }
+
+      var document_url = "/api/pmc/" + {{pmcid}};
+
+      var app = new Lens({
+        document_url : document_url
+      });
+
+      $(function() {
+        try {
+          app.start();
+        } catch(e) {
+          console.log(e);
+        }
+        console.log(app);
+
+        if (isTouchDevice()) {
+          $('#container').addClass('touchable');
+        }
+
+        if (isIOSDevice()) {
+          $('#container').addClass('ios');
+        }
+
+        if (isIphone()) {
+          $('#container').addClass('iphone');
+        }
+      });
+
+    </script>
+  </head>
+  <body class="loading">
+
+  </body>
+</html>
