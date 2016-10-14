@@ -1,8 +1,10 @@
 var React = require('react');
+const formatYear = require('../../lib/formatYear');
 
 //subcomponents
 const CitationDetails = require('./CitationDetails');
 // const ProgressBar = require('../partials/ProgressBar');
+
 
 /**
 * The full list of citations, located at #citations
@@ -57,7 +59,7 @@ const Citation = React.createClass({
             </h4>
             <h5 className="author-list">
               {this.props.data.authors},&nbsp;
-              <span className="year">{this.props.data.pubDate}</span>
+              <span className="year">{formatYear(this.props.data.pubDate)}</span>
             </h5>
           </div>
         </a>
