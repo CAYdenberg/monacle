@@ -54,7 +54,6 @@ const Citations = React.createClass({
   },
 
   isCurrent: function(pmid) {
-    console.log(this.state.currentItem);
     return (this.state.currentItem === pmid);
   },
 
@@ -68,25 +67,32 @@ const Citations = React.createClass({
   render: function() {
 
     return (
-      <div className="row">
-        <div className="col-sm-12 col-md-6">
-          <CitationList
-            items={this.state.items}
-            currentItem={this.state.currentItem}
-            totalItems={this.state.totalItems}
-            controller={this}
-          />
-          <LoadMoreButton
-            loading={this.state.loading}
-            more={this.state.more}
-            loadMore={this.loadMore}
-          />
-        </div>
-        <div className="col-md-6 hidden-sm hidden-xs">
+      <div>
+
+        <div className="citation-panel-wrapper">
+          <div className="citation-panel">
+            <CitationList
+              items={this.state.items}
+              currentItem={this.state.currentItem}
+              totalItems={this.state.totalItems}
+              controller={this}
+            />
+            <LoadMoreButton
+              loading={this.state.loading}
+              more={this.state.more}
+              loadMore={this.loadMore}
+            />
+          </div>
+      </div>
+
+      <div className="citation-panel-wrapper hidden-sm hidden-xs">
+        <div className="citation-panel">
           <SingleCitation
             data={this.getItemData(this.state.currentItem)}
           />
         </div>
+      </div>
+
       </div>
     );
   }
@@ -114,7 +120,7 @@ const LoadMoreButton = React.createClass({
       )
     } else {
       return (
-        <a href="#" onClick={this.props.loadMore}>Load more ...</a>
+        <a href="#" onClick={this.props.loadMore} className="btn btn-lg btn-success">Load more ...</a>
       );
     }
   }

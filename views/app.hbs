@@ -1,7 +1,17 @@
 {{!< default}}
 
-{{> nav}}
+<nav id="main-nav" class="main-nav" role="navigation">
+  <div class="container">
 
-<div class="container-fluid">
-  <div id="react-entry"></div>
-</div>
+    <form role="search" method="GET" action="/search" class="form-inline">
+      <div class="form-group">
+        <label for="query" class="sr-only">Search</label>
+        <input type="text" class="form-control" name="query" id="query" placeholder="Search">
+        <button type="submit" class="btn btn-success hidden-sm hidden-xs"><span class="icon-pubmed"></span></button>
+      </div>
+    </form>
+
+  </div>
+</nav>
+
+<div id="react-entry"></div>
