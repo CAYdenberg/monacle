@@ -1,5 +1,4 @@
 var React = require('react');
-var _ = require('underscore');
 
 //required components
 const ProgressBar = require('../partials/ProgressBar');
