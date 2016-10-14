@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const pubmed = require('node-ncbi').pubmed;
+const popsicle = require('popsicle');
 
 router.get('/*', (req, res, next) => {
   res.set('Access-Control-Allow-Origin', '*');
@@ -30,6 +31,19 @@ router.get('/pubmed/:method/:pmid', (req, res) => {
   }
   pubmed[req.params.method](req.params.pmid).then(result => {
     res.json(result);
+  });
+});
+
+router.get('/pmc/:pmcid', (req, res) => {
+  popsicle.get({
+    url: 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi',
+    query: {
+      db: 'pmc',
+      id: req.params.pmcid
+    }
+  }).then(ncbiRes => {
+    res.set('Content-Type', 'text/xml');
+    res.send(ncbiRes.body);
   });
 });
 
