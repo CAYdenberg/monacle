@@ -34,7 +34,7 @@ This project uses parts of [http://github.com/ivangrub/oa-sandbox](OA-Sandbox) b
 
 1. `cp config_sample.js config.js`
 
-1. Open config.js in a text eidtor. Enter a port (usually 3000) and leave env as `development`. Enter a random secret key (I use one from https://api.wordpress.org/secret-key/1.1/salt/) and your Mongo connection information (e.g. `localhost:27017/data`).
+1. Open config.js in a text editor. Enter a port (usually 3000) and leave env as `development`. Enter a random secret key (I use one from https://api.wordpress.org/secret-key/1.1/salt/) and your Mongo connection information (e.g. `localhost:27017/data`).
 
 1. Run `gulp build` to build resources.
 

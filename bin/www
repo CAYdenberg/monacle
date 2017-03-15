@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* eslint-disable */
+
 var app = require('../App')(false);
 
 var server = app.listen(app.get('port'), function() {
