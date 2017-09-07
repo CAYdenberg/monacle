@@ -45,6 +45,28 @@ const actions = {
       }).then(res => dispatch(respond(res)));
     }
 
+  },
+
+  getOaLocations: function(pmid, doi) {
+
+    const respond = function(res) {
+      const data = JSON.parse(res.body);
+      if (res.status === 200) {
+        return {
+          type: 'ADD_CITATION_INFO',
+          pmid,
+          changes: {oaLocations: data.oa_locations}
+        }
+      }
+    }
+
+    return function(dispatch) {
+      return popsicle.request({
+        method: 'GET',
+        url: `https://api.oadoi.org/v2/${doi}?email=ydenberg@gmail.com`
+      }).then(res => dispatch(respond(res)));
+    }
+
   }
 }
 

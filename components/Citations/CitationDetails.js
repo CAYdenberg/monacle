@@ -18,12 +18,16 @@ const CitationDetails = React.createClass({
       return (
         <div className="citation-details">
           <div className="abstract">{this.props.data.abstract}</div>
+
           <LensLink link={this.props.data.pmc} />
+
           <div className="margin-vertical">
             <a href={"http://www.ncbi.nlm.nih.gov/pubmed/" + this.props.data.pmid} className="btn btn-info" target="_blank">
               <span className="icon-pubmed"></span> View on PubMed
             </a>
           </div>
+
+          <OaLocations locations={this.props.data.oaLocations} />
         </div>
       )
     }
@@ -52,5 +56,25 @@ const LensLink = React.createClass({
     }
   }
 });
+
+const OaLocations = React.createClass({
+  render: function() {
+    if (this.props.locations && this.props.locations.length) {
+      return (
+        <div className="oa-locations">
+          <h5 className="oa-location__title">Open-access locations (oadoi.org)</h5>
+          <ul className="oa-location__item">
+            {this.props.locations.map(location =>
+              <li><a href={location.url}>{location.url}</a></li>
+            )}
+          </ul>
+        </div>
+      )
+    }
+    return (
+      <div />
+    )
+  }
+})
 
 module.exports = CitationDetails;

@@ -48,8 +48,10 @@ const Citations = React.createClass({
     this.setState({
       currentItem: pmid
     });
-    if (!this.getItemData(pmid) || !this.getItemData(pmid).abstract) {
+    const itemData = this.getItemData(pmid)
+    if (!itemData || !itemData.abstract) {
       this.store.dispatch(actions.getAbstract(pmid));
+      this.store.dispatch(actions.getOaLocations(pmid, itemData.doi));
     }
   },
 
