@@ -1,4 +1,4 @@
-const update = require('react-addons-update');
+const update = require('immutability-helper');
 
 module.exports = function(initialState, action) {
   const state = Object.assign({

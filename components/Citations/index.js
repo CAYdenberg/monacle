@@ -6,35 +6,37 @@ const ProgressBar = require('../partials/ProgressBar')
 
 const actions = require('../../store/actions');
 
-const Citations = React.createClass({
+class Citations extends React.Component {
+  constructor(props) {
+    super(props)
+    this.store = props.store
 
-  store: null,
+    this.state = this._mapState()
 
-  _mapState: function() {
+    this._mapState = this._mapState.bind(this)
+    this.getItemData = this.getItemData.bind(this)
+    this.openCitation = this.openCitation.bind(this)
+    this.isCurrent = this.isCurrent.bind(this)
+    this.loadMore = this.loadMore.bind(this)
+  }
+
+  _mapState() {
     const appState = this.store.getState();
     return ({
       items: appState.citations,
       totalItems: appState.total,
       more: (appState.totalCitations > appState.citations.length)
     });
-  },
+  }
 
-  getInitialState: function() {
-    this.store = this.props.store;
-    return Object.assign(this._mapState(), {
-      currentItem: null,
-      loading: true
-    });
-  },
-
-  componentDidMount: function() {
+  componentDidMount() {
     this.store.subscribe(() => {
       this.setState(this._mapState());
       this.setState({loading: false});
     });
-  },
+  }
 
-  getItemData: function(pmid) {
+  getItemData(pmid) {
     return this.state.items.reduce((data, item) => {
       if (data) {
         return data;
@@ -42,9 +44,9 @@ const Citations = React.createClass({
         return (pmid === item.pmid) ? item : null;
       }
     }, null);
-  },
+  }
 
-  openCitation: function(pmid) {
+  openCitation(pmid) {
     this.setState({
       currentItem: pmid
     });
@@ -53,21 +55,20 @@ const Citations = React.createClass({
       this.store.dispatch(actions.getAbstract(pmid));
       this.store.dispatch(actions.getOaLocations(pmid, itemData.doi));
     }
-  },
+  }
 
-  isCurrent: function(pmid) {
+  isCurrent(pmid) {
     return (this.state.currentItem === pmid);
-  },
+  }
 
-  loadMore: function() {
+  loadMore() {
     this.setState({
       loading: true
     });
     this.store.dispatch(actions.search(window.appData.query, this.store.getState().nextPage));
-  },
+  }
 
-  render: function() {
-
+  render() {
     return (
       <div>
 
@@ -98,8 +99,7 @@ const Citations = React.createClass({
       </div>
     );
   }
-
-});
+}
 
 /**
  * Displayed at the end of the citation list.
@@ -110,22 +110,20 @@ const Citations = React.createClass({
  * Figures out for itself if the store is loading results, updates itself
  * accordingly.
  **/
-const LoadMoreButton = React.createClass({
-  render : function() {
-    if (this.props.loading) {
-      return (
-        <ProgressBar />
-      );
-    } else if (!this.props.more) {
-      return (
-        <span className="results-end">End of results</span>
-      )
-    } else {
-      return (
-        <a href="#" onClick={this.props.loadMore} className="btn btn-lg btn-success">Load more ...</a>
-      );
-    }
+const LoadMoreButton = props => {
+  if (props.loading) {
+    return (
+      <ProgressBar />
+    );
+  } else if (!props.more) {
+    return (
+      <span className="results-end">End of results</span>
+    )
+  } else {
+    return (
+      <a href="#" onClick={props.loadMore} className="btn btn-lg btn-success">Load more ...</a>
+    );
   }
-});
+}
 
 module.exports = Citations;
