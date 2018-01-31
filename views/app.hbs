@@ -3,13 +3,18 @@
 <nav id="main-nav" class="main-nav" role="navigation">
   <div class="container-fluid">
 
-    <form role="search" method="GET" action="/search" class="form-inline">
+    <form role="search" method="GET" action="/search" class="form-inline navbar-form navbar-left">
       <div class="form-group">
         <label for="query" class="sr-only">Search</label>
         <input type="text" class="form-control" name="query" id="query" placeholder="Search" value="{{appData.query}}">
         <button type="submit" class="btn btn-success hidden-sm hidden-xs"><span class="icon-pubmed"></span></button>
       </div>
     </form>
+
+    <ul class="nav navbar-nav navbar-right hidden-xs">
+      <li><a href="/">About</a></li>
+      <li><a href="https://github.com/CAYdenberg/monocle"><span class="icon-github"></span></a></li>
+    </ul>
 
   </div>
 </nav>
