@@ -4,7 +4,7 @@ const CitationList = require('./CitationList');
 const SingleCitation = require('./SingleCitation');
 const ProgressBar = require('../partials/ProgressBar')
 
-const actions = require('../../store/actions');
+const actions = require('../../store/citations').actions;
 
 class Citations extends React.Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class Citations extends React.Component {
   }
 
   _mapState() {
-    const appState = this.store.getState();
+    const appState = this.store.getState().citations;
     return ({
       items: appState.citations,
       totalItems: appState.total,

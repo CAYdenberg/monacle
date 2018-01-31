@@ -1,4 +1,12 @@
 const popsicle = require('popsicle');
+const update = require('immutability-helper');
+
+const constants = {
+  ADD_CITATIONS: 'CITATIONS/ADD_CITATIONS',
+  ADD_CITATION_INFO: 'CITATIONS/ADD_CITATION_INFO',
+  NO_RESPONSE: 'CITATIONS/NO_RESPONSE',
+}
+const c = constants
 
 const actions = {
 
@@ -8,7 +16,7 @@ const actions = {
       if (res.status === 200) {
         const data = JSON.parse(res.body);
         return {
-          type: 'ADD_CITATIONS',
+          type: c.ADD_CITATIONS,
           count: data.count,
           add: data.papers
         }
@@ -31,7 +39,7 @@ const actions = {
     const respond = function(res) {
       if (res.status === 200) {
         return {
-          type: 'ADD_CITATION_INFO',
+          type: c.ADD_CITATION_INFO,
           pmid: pmid,
           changes: {abstract: res.body}
         }
@@ -53,13 +61,13 @@ const actions = {
       const data = JSON.parse(res.body);
       if (res.status === 200) {
         return {
-          type: 'ADD_CITATION_INFO',
+          type: c.ADD_CITATION_INFO,
           pmid,
           changes: {oaLocations: data.oa_locations}
         }
       } else {
         return {
-          type: 'NO_RESPONSE'
+          type: c.NO_RESPONSE
         }
       }
     }
@@ -74,4 +82,42 @@ const actions = {
   }
 }
 
-module.exports = actions;
+const reducer = function(initialState, action) {
+  const state = Object.assign({
+    totalCitations: 0,
+    citations: [],
+    nextPage: 0
+  }, initialState);
+
+  switch(action.type) {
+
+    // append a bunch of papers to the list
+    case c.ADD_CITATIONS:
+      return update(state, {
+        totalCitations: {$set: action.count},
+        citations: {$push: action.add},
+        nextPage: {$apply: (x) => x + 1}
+      });
+
+    // add other info (such as the abstract) to the list
+    case c.ADD_CITATION_INFO:
+      const citations = state.citations.map(citation => {
+        if (citation.pmid === action.pmid) {
+          return update(citation, {$merge: action.changes})
+        } else {
+          return citation;
+        }
+      });
+      return update(state, {citations: {$set: citations}});
+
+    default:
+      return state;
+  }
+
+}
+
+module.exports = {
+  constants,
+  actions,
+  reducer,
+}
