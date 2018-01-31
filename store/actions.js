@@ -57,6 +57,10 @@ const actions = {
           pmid,
           changes: {oaLocations: data.oa_locations}
         }
+      } else {
+        return {
+          type: 'NO_RESPONSE'
+        }
       }
     }
 

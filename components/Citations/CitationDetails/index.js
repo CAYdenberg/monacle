@@ -3,6 +3,7 @@ var React = require('react');
 //required components
 const ProgressBar = require('../../partials/ProgressBar');
 const LensLink = require('./LensLink')
+const OaLocations = require('./OaLocations')
 
 /**
  * Of the details of a citation.
@@ -31,24 +32,6 @@ const CitationDetails = props => {
       </div>
     )
   }
-}
-
-const OaLocations = props => {
-  if (props.locations && props.locations.length) {
-    return (
-      <div className="oa-locations">
-        <h5 className="oa-location__title">Open-access locations (oadoi.org)</h5>
-        <ul className="oa-location__item">
-          {props.locations.map(location =>
-            <li><a href={location.url}>{location.url}</a></li>
-          )}
-        </ul>
-      </div>
-    )
-  }
-  return (
-    <div />
-  )
 }
 
 module.exports = CitationDetails;

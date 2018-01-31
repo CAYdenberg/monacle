@@ -34,6 +34,7 @@
     "morgan": "^1.7.0",
     "node-ncbi": "^0.5.1",
     "popsicle": "^8.2.0",
+    "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "redux": "^3.6.0",
