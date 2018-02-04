@@ -162,12 +162,17 @@ const selectors = {
 
   isMorePages: state => {
     return state.citations.total > state.citations.items.length
-  }
+  },
+}
+
+function* sagas() {
+  return
 }
 
 module.exports = {
   constants,
   actions,
   reducer,
-  selectors
+  selectors,
+  sagas,
 }

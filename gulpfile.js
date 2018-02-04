@@ -64,7 +64,7 @@ gulp.task('lint', function() {
 gulp.task('js', function () {
   // set up the browserify instance on a task basis
   var b = browserify('src/script.js')
-    .transform("babelify", {presets: ['es2015', 'react']});
+    .transform("babelify", {presets: ['es2016', 'react']});
 
   var file = b.bundle()
     .pipe(source('script.js'))
