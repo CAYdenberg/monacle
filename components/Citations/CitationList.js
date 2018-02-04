@@ -1,10 +1,10 @@
 var React = require('react');
-const formatYear = require('../../lib/formatYear');
+const PropTypes = require('prop-types')
+
+const CitationListItem = require('./CitationListItem');
 
 //subcomponents
-const CitationDetails = require('./CitationDetails');
 // const ProgressBar = require('../partials/ProgressBar');
-
 
 /**
 * The full list of citations, located at #citations
@@ -22,10 +22,11 @@ const CitationList = props => {
           {
             props.items.map((item) => {
               return (
-                <Citation
+                <CitationListItem
                   key={item.pmid}
                   data={item}
-                  controller={props.controller}
+                  open={props.open}
+                  isOpen={item.pmid === props.currentItem}
                 />
               );
             })
@@ -36,47 +37,12 @@ const CitationList = props => {
   }
 }
 
-/**
- * An individual citation. When clicked, opens the accordion (visible only on small screens)
- * renders the single citation area (pushes citation data and folderStore resource)
- * and triggers the dispatcher to grab details if they aren't available.
- * Mounted by CitaionList
- */
-class Citation extends React.Component {
-  constructor(props) {
-    super(props)
+CitationList.propTypes = {
+  items: PropTypes.array.isRequired,
+  open: PropTypes.func.isRequired,
 
-    this.open = this.open.bind(this)
-  }
-
-  open() {
-    const {props} = this
-    props.controller.openCitation(props.data.pmid);
-  }
-
-  render() {
-    const {props} = this
-    return (
-      <div className="panel panel-info">
-        <a href="#" onClick={this.open}>
-          <div className="panel-heading">
-            <h4>
-              {props.data.title}
-            </h4>
-            <h5 className="author-list">
-              {props.data.authors},&nbsp;
-              <span className="year">{formatYear(props.data.pubDate)}</span>
-            </h5>
-          </div>
-        </a>
-        <div className={'panel-collapse collapse ' + (props.controller.isCurrent(props.data.pmid) ? 'in' : '')}>
-          <div className="panel-body hidden-md hidden-lg">
-            <CitationDetails data={props.data} />
-          </div>
-        </div>
-      </div>
-    );
-  }
+  totalItems: PropTypes.number,
+  currentItem: PropTypes.number,
 }
 
 module.exports = CitationList;

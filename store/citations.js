@@ -2,13 +2,18 @@ const popsicle = require('popsicle');
 const update = require('immutability-helper');
 
 const constants = {
+  REQUEST_CITATIONS: 'CITATIONS/REQUEST_CITATIONS',
   ADD_CITATIONS: 'CITATIONS/ADD_CITATIONS',
   ADD_CITATION_INFO: 'CITATIONS/ADD_CITATION_INFO',
+  SET_CURRENT: 'CITATIONS/SET_CURRENT',
   NO_RESPONSE: 'CITATIONS/NO_RESPONSE',
 }
 const c = constants
 
 const actions = {
+  requestCitations: function() {
+    return {type: c.REQUEST_CITATIONS}
+  },
 
   search: function(query, page = 0) {
 
@@ -24,6 +29,7 @@ const actions = {
     };
 
     return function(dispatch) {
+      dispatch(actions.requestCitations())
       return popsicle.request({
         method: 'GET',
         url: '/api/pubmed/' + query,
@@ -79,45 +85,89 @@ const actions = {
       }).then(res => dispatch(respond(res)));
     }
 
+  },
+
+  setCurrent: function(pmid) {
+    return {type: c.SET_CURRENT, pmid}
+  },
+
+  open: function(pmid) {
+    return function(dispatch, getState) {
+      dispatch(actions.setCurrent(pmid))
+      const requestedItem = getState().citations.items.find(item =>
+        pmid === item.pmid
+      ) || null
+      if (!requestedItem) return
+
+      const {doi, abstract} = requestedItem
+      if (!abstract) {
+        dispatch(actions.getAbstract(pmid))
+        dispatch(actions.getOaLocations(pmid, doi))
+      }
+    }
   }
 }
 
 const reducer = function(initialState, action) {
   const state = Object.assign({
-    totalCitations: 0,
-    citations: [],
-    nextPage: 0
+    loading: false,
+    total: null,
+    items: [],
+    nextPage: 0,
+    current: null,
   }, initialState);
 
   switch(action.type) {
+    case c.REQUEST_CITATIONS: {
+      return update(state, {
+        loading: {$set: true}
+      })
+    }
 
     // append a bunch of papers to the list
     case c.ADD_CITATIONS:
       return update(state, {
-        totalCitations: {$set: action.count},
-        citations: {$push: action.add},
+        loading: {$set: false},
+        total: {$set: action.count},
+        items: {$push: action.add},
         nextPage: {$apply: (x) => x + 1}
       });
 
     // add other info (such as the abstract) to the list
     case c.ADD_CITATION_INFO:
-      const citations = state.citations.map(citation => {
-        if (citation.pmid === action.pmid) {
-          return update(citation, {$merge: action.changes})
+      const items = state.items.map(item => {
+        if (item.pmid === action.pmid) {
+          return update(item, {$merge: action.changes})
         } else {
-          return citation;
+          return item;
         }
       });
-      return update(state, {citations: {$set: citations}});
+      return update(state, {items: {$set: items}});
+
+    case c.SET_CURRENT:
+      return update(state, {current: {$set: action.pmid}})
 
     default:
       return state;
   }
+}
 
+const selectors = {
+  isCurrent: (state, pmid) => {
+    state.citations.current === pmid
+  },
+
+  itemData: (state, pmid) =>
+    state.citations.items.find(item => pmid === item.pmid) || null,
+
+  isMorePages: state => {
+    return state.citations.total > state.citations.items.length
+  }
 }
 
 module.exports = {
   constants,
   actions,
   reducer,
+  selectors
 }
