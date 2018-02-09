@@ -4,9 +4,13 @@ const createSagaMiddleware = require('redux-saga').default
 const {spawn} = require('redux-saga/effects')
 const {combineReducers} = require('redux')
 
+const searches = require('./searches')
 const citations = require('./citations')
 
-const reducer = combineReducers({citations: citations.reducer})
+const reducer = combineReducers({
+  searches: searches.reducer,
+  citations: citations.reducer,
+})
 
 const sagaMiddleware = createSagaMiddleware()
 function* masterSaga() {

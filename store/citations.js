@@ -1,7 +1,9 @@
-const popsicle = require('popsicle');
-const update = require('immutability-helper');
+const popsicle = require('popsicle')
+const update = require('immutability-helper')
+const {takeEvery, put} = require('redux-saga/effects')
 
 const constants = {
+  NEW_SEARCH: 'CITATIONS/NEW_SEARCH',
   REQUEST_CITATIONS: 'CITATIONS/REQUEST_CITATIONS',
   ADD_CITATIONS: 'CITATIONS/ADD_CITATIONS',
   ADD_CITATION_INFO: 'CITATIONS/ADD_CITATION_INFO',
@@ -11,30 +13,34 @@ const constants = {
 const c = constants
 
 const actions = {
+  newSearch: function(query) {
+    return {type: c.NEW_SEARCH, query}
+  },
+
   requestCitations: function() {
     return {type: c.REQUEST_CITATIONS}
   },
 
-  search: function(query, page = 0) {
+  loadMore: function(query, page = 0) {
 
     const respond = function(res) {
       if (res.status === 200) {
-        const data = JSON.parse(res.body);
+        const data = JSON.parse(res.body)
         return {
           type: c.ADD_CITATIONS,
           count: data.count,
-          add: data.papers
+          add: data.papers,
         }
       }
-    };
+    }
 
     return function(dispatch) {
       dispatch(actions.requestCitations())
       return popsicle.request({
         method: 'GET',
         url: '/api/pubmed/' + query,
-        query: {page: page}
-      }).then(res => dispatch(respond(res)));
+        query: {page: page},
+      }).then(res => dispatch(respond(res)))
     }
 
   },
@@ -47,7 +53,7 @@ const actions = {
         return {
           type: c.ADD_CITATION_INFO,
           pmid: pmid,
-          changes: {abstract: res.body}
+          changes: {abstract: res.body},
         }
       }
     }
@@ -55,8 +61,8 @@ const actions = {
     return function(dispatch) {
       return popsicle.request({
         method: 'GET',
-        url: '/api/pubmed/abstract/' + pmid
-      }).then(res => dispatch(respond(res)));
+        url: '/api/pubmed/abstract/' + pmid,
+      }).then(res => dispatch(respond(res)))
     }
 
   },
@@ -64,25 +70,23 @@ const actions = {
   getOaLocations: function(pmid, doi) {
 
     const respond = function(res) {
-      const data = JSON.parse(res.body);
+      const data = JSON.parse(res.body)
       if (res.status === 200) {
         return {
           type: c.ADD_CITATION_INFO,
           pmid,
-          changes: {oaLocations: data.oa_locations}
+          changes: {oaLocations: data.oa_locations},
         }
       } else {
-        return {
-          type: c.NO_RESPONSE
-        }
+        return {type: c.NO_RESPONSE}
       }
     }
 
     return function(dispatch) {
       return popsicle.request({
         method: 'GET',
-        url: `https://api.oadoi.org/v2/${doi}?email=ydenberg@gmail.com`
-      }).then(res => dispatch(respond(res)));
+        url: `https://api.oadoi.org/v2/${doi}?email=ydenberg@gmail.com`,
+      }).then(res => dispatch(respond(res)))
     }
 
   },
@@ -105,22 +109,28 @@ const actions = {
         dispatch(actions.getOaLocations(pmid, doi))
       }
     }
-  }
+  },
 }
 
 const reducer = function(initialState, action) {
-  const state = Object.assign({
+  const defaultState = {
     loading: false,
     total: null,
     items: [],
     nextPage: 0,
     current: null,
-  }, initialState);
+  }
+
+  const state = update(defaultState, {$merge: initialState})
 
   switch(action.type) {
+    case c.NEW_SEARCH: {
+      return defaultState
+    }
+
     case c.REQUEST_CITATIONS: {
       return update(state, {
-        loading: {$set: true}
+        loading: {$set: true},
       })
     }
 
@@ -130,8 +140,8 @@ const reducer = function(initialState, action) {
         loading: {$set: false},
         total: {$set: action.count},
         items: {$push: action.add},
-        nextPage: {$apply: (x) => x + 1}
-      });
+        nextPage: {$apply: (x) => x + 1},
+      })
 
     // add other info (such as the abstract) to the list
     case c.ADD_CITATION_INFO:
@@ -139,16 +149,16 @@ const reducer = function(initialState, action) {
         if (item.pmid === action.pmid) {
           return update(item, {$merge: action.changes})
         } else {
-          return item;
+          return item
         }
-      });
-      return update(state, {items: {$set: items}});
+      })
+      return update(state, {items: {$set: items}})
 
     case c.SET_CURRENT:
       return update(state, {current: {$set: action.pmid}})
 
     default:
-      return state;
+      return state
   }
 }
 
@@ -165,7 +175,13 @@ const selectors = {
   },
 }
 
+function* newSearchSaga(action) {
+  yield put(actions.loadMore(action.query))
+  return action
+}
+
 function* sagas() {
+  yield takeEvery(c.NEW_SEARCH, newSearchSaga)
   return
 }
 

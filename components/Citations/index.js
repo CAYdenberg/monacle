@@ -1,11 +1,30 @@
-const React = require('react');
+const React = require('react')
 const {connect} = require('react-redux')
 
-const CitationList = require('./CitationList');
-const SingleCitation = require('./SingleCitation');
-const LoadMoreButton = require('./LoadMoreButton');
+const CitationList = require('./CitationList')
+const SingleCitation = require('./SingleCitation')
+const LoadMoreButton = require('./LoadMoreButton')
 
-const {actions, selectors} = require('../../store/citations');
+const {actions, selectors} = require('../../store/citations')
+
+const mapStateToProps = (state) => {
+  const {total, current, nextPage, items, loading} = state.citations
+  return {
+    loading,
+    total,
+    current,
+    nextPage,
+    items,
+    isMorePages: selectors.isMorePages(state),
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loadMore: (query, page) => dispatch(actions.loadMore(query, page)),
+    open: (pmid) => dispatch(actions.open(pmid)),
+  }
+}
 
 class Citations extends React.Component {
   constructor(props) {
@@ -15,12 +34,11 @@ class Citations extends React.Component {
   }
 
   _loadMore() {
-    this.props.search(window.appData.query, this.props.nextPage);
+    this.props.loadMore(window.appData.query, this.props.nextPage)
   }
 
   render() {
     const {props} = this
-    console.log(props)
 
     return (
       <div>
@@ -51,27 +69,8 @@ class Citations extends React.Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
-const mapStateToProps = (state) => {
-  const {total, current, nextPage, items, loading} = state.citations
-  return {
-    loading,
-    total,
-    current,
-    nextPage,
-    items,
-    isMorePages: selectors.isMorePages(state),
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    search: (query, page) => dispatch(actions.search(query, page)),
-    open: (pmid) => dispatch(actions.open(pmid))
-  }
-}
-
-module.exports = connect(mapStateToProps, mapDispatchToProps)(Citations);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Citations)
