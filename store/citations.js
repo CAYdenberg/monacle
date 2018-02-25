@@ -112,7 +112,7 @@ const actions = {
   },
 }
 
-const reducer = function(initialState, action) {
+const reducer = function(initialState = {}, action) {
   const defaultState = {
     loading: false,
     total: null,

@@ -1,5 +1,6 @@
 const React = require('react')
 const {connect} = require('react-redux')
+const PropTypes = require('prop-types')
 
 const CitationList = require('./CitationList')
 const SingleCitation = require('./SingleCitation')
@@ -9,7 +10,9 @@ const {actions, selectors} = require('../../store/citations')
 
 const mapStateToProps = (state) => {
   const {total, current, nextPage, items, loading} = state.citations
+  const query = state.searches.current
   return {
+    query,
     loading,
     total,
     current,
@@ -34,7 +37,7 @@ class Citations extends React.Component {
   }
 
   _loadMore() {
-    this.props.loadMore(window.appData.query, this.props.nextPage)
+    this.props.loadMore(this.props.query, this.props.nextPage)
   }
 
   render() {
@@ -71,6 +74,21 @@ class Citations extends React.Component {
       </div>
     )
   }
+}
+
+Citations.propTypes = {
+  query: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
+  total: PropTypes.number,
+  current: PropTypes.number,
+  nextPage: PropTypes.number.isRequired,
+  items: PropTypes.arrayOf(PropTypes.shape({
+    pmid: PropTypes.number.isRequired,
+  })).isRequired,
+  isMorePages: PropTypes.bool.isRequired,
+
+  loadMore: PropTypes.func.isRequired,
+  open: PropTypes.func.isRequired,
 }
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Citations)

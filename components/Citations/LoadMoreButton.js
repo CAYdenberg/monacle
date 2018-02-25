@@ -1,6 +1,6 @@
 const React = require('react')
 const PropTypes = require('prop-types')
-const ProgressBar = require('../partials/ProgressBar');
+const ProgressBar = require('../partials/ProgressBar')
 
 /**
  * Displayed at the end of the citation list.
@@ -15,7 +15,7 @@ const LoadMoreButton = props => {
   if (props.loading) {
     return (
       <ProgressBar />
-    );
+    )
   } else if (!props.more) {
     return (
       <span className="results-end">End of results</span>
@@ -23,7 +23,7 @@ const LoadMoreButton = props => {
   } else {
     return (
       <a href="#" onClick={props.loadMore} className="btn btn-lg btn-success">Load more ...</a>
-    );
+    )
   }
 }
 
