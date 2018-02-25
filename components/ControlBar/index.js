@@ -44,19 +44,36 @@ class ControlBar extends React.Component {
     return (
       <nav id="main-nav" className="main-nav" role="navigation">
         <div className="container-fluid">
+          <div className="navbar-header">
+            <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span className="sr-only">Toggle navigation</span>
+              <span className="icon-bar"></span>
+              <span className="icon-bar"></span>
+              <span className="icon-bar"></span>
+            </button>
+          </div>
 
-          <form role="search" method="GET" action="/search" className="form-inline navbar-form navbar-left" onSubmit={this._onSubmit}>
-            <div className="form-group">
-              <label htmlFor="query" className="sr-only">Search</label>
-              <input type="text" className="form-control" name="query" id="query" placeholder="Search" value={this.state.value} onChange={this._onChange} />
-              <button type="submit" className="btn btn-success hidden-sm hidden-xs"><span className="icon-pubmed"></span></button>
-            </div>
-          </form>
+          <div className="collapse navbar-collapse">
+            <form role="search" method="GET" action="/search" className="form-inline navbar-form navbar-left" onSubmit={this._onSubmit}>
+              <div className="form-group">
+                <label htmlFor="query" className="sr-only">Search</label>
+                <input type="text" className="form-control" name="query" id="query" placeholder="Search" value={this.state.value} onChange={this._onChange} />
+                <button type="submit" className="btn btn-success hidden-sm hidden-xs"><span className="icon-search"></span></button>
+              </div>
+            </form>
+            <ul className="nav navbar-nav">
+              <li><a href="#"><i className="icon-new-folder"></i></a></li>
+              <li>
+                <a href="#"><i className="icon-folder"></i></a>
+              </li>
+            </ul>
 
-          <ul className="nav navbar-nav navbar-right hidden-xs">
-            <li><a href="/">About</a></li>
-            <li><a href="https://github.com/CAYdenberg/monocle"><span className="icon-github"></span></a></li>
-          </ul>
+            <ul className="nav navbar-nav navbar-right">
+              <li><a href="/">About</a></li>
+              <li><a href="https://github.com/CAYdenberg/monocle"><span className="icon-github"></span></a></li>
+              <li><a href="#"><i className="icon-settings"></i></a></li>
+            </ul>
+          </div>
 
         </div>
       </nav>
