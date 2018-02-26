@@ -34,7 +34,7 @@ module.exports = function() {
     req.context = {
       stylesheets: [
         'https://fonts.googleapis.com/css?family=News+Cycle:400,700',
-        '/fonts/icomoon/icomoon.css',
+        '/fonts/icomoon/style.css',
         '/css/style.css'
       ],
       scripts: [
