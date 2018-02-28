@@ -24,7 +24,7 @@ const CitationDetails = props => {
 
         <div className="margin-vertical">
           <a href={"http://www.ncbi.nlm.nih.gov/pubmed/" + props.data.pmid} className="btn btn-info" target="_blank">
-            <span className="icon-pubmed"></span> View on PubMed
+            <i className="icon-book"></i> View on PubMed
           </a>
         </div>
 
