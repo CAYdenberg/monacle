@@ -64,7 +64,7 @@ gulp.task('lint', function() {
 gulp.task('js', function () {
   // set up the browserify instance on a task basis
   var b = browserify('src/script.js')
-    .transform("babelify", {presets: ['es2016', 'react']});
+    .transform("babelify", {presets: ['es2015', 'es2017', 'react']})
 
   var file = b.bundle()
     .pipe(source('script.js'))
@@ -73,14 +73,13 @@ gulp.task('js', function () {
     .pipe(gulp.dest('./dist/js'))
 
   if (process.env.ENV === 'development') {
-    return file.pipe(browserSync.stream());
+    return file.pipe(browserSync.stream())
   } else {
     return file.pipe(rename({extname: '.min.js'}))
       .pipe(uglify())
-      .pipe(gulp.dest('./dist/js'));
+      .pipe(gulp.dest('./dist/js'))
   }
-
-});
+})
 
 
 gulp.task('css', function() {
