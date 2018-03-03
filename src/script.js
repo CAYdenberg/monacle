@@ -1,3 +1,4 @@
+require('regenerator-runtime/runtime')
 
 const React = require('react')
 const ReactDOM = require('react-dom')
@@ -6,6 +7,7 @@ const {newSearch} = require('../store/citations').actions
 
 const App = require('../components')
 const store = require('../store')
+
 
 window.store = store
 
