@@ -70,7 +70,7 @@ class ControlBar extends React.Component {
 
             <ul className="nav navbar-nav navbar-right">
               <li><a href="/">About</a></li>
-              <li><a href="https://github.com/CAYdenberg/monocle"><i className="icon-github"></i></a></li>
+              <li><a href="https://github.com/CAYdenberg/node-ncbi"><i className="icon-github"></i></a></li>
               <li><a href="#"><i className="icon-settings"></i></a></li>
             </ul>
           </div>
