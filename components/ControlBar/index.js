@@ -61,17 +61,11 @@ class ControlBar extends React.Component {
                 <button type="submit" className="btn btn-success hidden-sm hidden-xs"><span className="icon-search"></span></button>
               </div>
             </form>
-            <ul className="nav navbar-nav">
-              <li><a href="#"><i className="icon-folder-add"></i></a></li>
-              <li>
-                <a href="#"><i className="icon-folder"></i></a>
-              </li>
-            </ul>
 
             <ul className="nav navbar-nav navbar-right">
               <li><a href="/">About</a></li>
               <li><a href="https://github.com/CAYdenberg/node-ncbi"><i className="icon-github"></i></a></li>
-              <li><a href="#"><i className="icon-settings"></i></a></li>
+              <li><a href="http://www.caseyy.org">by @CAYdenberg</a></li>
             </ul>
           </div>
 
