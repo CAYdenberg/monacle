@@ -50,6 +50,7 @@ gulp.task('lens', ['lens-css', 'lens-js']);
 gulp.task('js', function () {
   // set up the browserify instance on a task basis
   var b = browserify('src/script.js')
+    .transform("envify")
     .transform("babelify", {presets: ['es2015', 'es2017', 'react']})
 
   var file = b.bundle()
