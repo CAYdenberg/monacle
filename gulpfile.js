@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 'use strict';
 
 require('dotenv').config();
@@ -18,9 +20,7 @@ const concat = require('gulp-concat');
 if (process.env.ENV === 'development') {
   var browserSync = require('browser-sync');
   var nodemon = require('gulp-nodemon');
-  var eslint = require('gulp-eslint');
   var mocha = require('gulp-mocha');
-
 }
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -46,20 +46,6 @@ gulp.task('lens', ['lens-css', 'lens-js']);
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 * PRINCIPLE BUILD TASKS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-gulp.task('lint', function() {
-  if (process.env.ENV === 'development') {
-    return gulp.src(['**/*.js','!node_modules/**', '!dist/**'])
-      // eslint() attaches the lint output to the "eslint" property
-      // of the file object so it can be used by other modules.
-      .pipe(eslint())
-      // eslint.format() outputs the lint results to the console.
-      // Alternatively use eslint.formatEach() (see Docs).
-      .pipe(eslint.format());
-  } else {
-    return true;
-  }
-});
 
 gulp.task('js', function () {
   // set up the browserify instance on a task basis
@@ -164,4 +150,4 @@ gulp.task('test-watch', function() {
 });
 
 
-gulp.task('default', ['lint', 'css', 'js']);
+gulp.task('default', ['css', 'js']);
